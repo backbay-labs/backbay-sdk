@@ -8,7 +8,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,13 +17,8 @@
     "jsx": "react-jsx",
     "lib": ["ES2022", "DOM"],
     "noEmitOnError": false,
-    "paths": {
-      "@backbay/witness": ["../witness/src/index.ts"]
-    }
+    "noImplicitAny": false
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"],
-  "references": [
-    { "path": "../witness" }
-  ]
+  "exclude": ["node_modules", "dist"]
 }

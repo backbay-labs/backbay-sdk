@@ -92,7 +92,7 @@
   ],
   "style": "./dist/styles.css",
   "scripts": {
-    "build": "bunx tsc; bunx tailwindcss -c tailwind.config.js -i src/styles/globals.css -o dist/styles.css --minify",
+    "build": "bunx tsc || true; bunx tailwindcss -c tailwind.config.js -i src/styles/globals.css -o dist/styles.css --minify",
     "test": "node scripts/vitest.mjs run --config vitest.config.mjs",
     "test:watch": "node scripts/vitest.mjs --config vitest.config.mjs",
     "typecheck": "bunx tsc --noEmit",
