@@ -3,13 +3,22 @@
 </p>
 
 <p align="center">
-  <strong>Build for the decentralized autonomous production marketplace</strong>
+  <samp>Build for the decentralized autonomous production marketplace. The factory floor is everywhere.</samp>
+  <br /><em>Ex machina, industria</em>
 </p>
 
+<br />
+
 <p align="center">
-  <a href="#packages">Packages</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#development">Development</a>
+  <a href="#packages"><kbd>Packages</kbd></a>&nbsp;&nbsp;
+  <a href="#quick-start"><kbd>Quick Start</kbd></a>&nbsp;&nbsp;
+  <a href="#development"><kbd>Development</kbd></a>
+</p>
+
+<br />
+
+<p align="center">
+  <sub>Built by <a href="https://backbay.industries">Backbay Industries</a></sub>
 </p>
 
 ---
@@ -18,26 +27,26 @@
 
 ### TypeScript
 
-| Package | Description |
-|---------|-------------|
-| [`@backbay/contract`](./packages/contract) | Shared types and contracts |
-| [`@backbay/api-client`](./packages/api-client) | Typed API client for Backbay services |
-| [`@backbay/speakeasy`](./packages/speakeasy) | P2P encrypted messaging with sigil-based agent handshakes |
-| [`@backbay/glia`](./packages/glia) | Reactive primitives for agent affect and thought |
-| [`@backbay/notary`](./packages/notary) | Web3 attestations, IPFS, and verification |
-| [`@backbay/witness`](./packages/witness) | Browser-side verification of Backbay attestations |
-| [`@backbay/witness-react`](./packages/witness-react) | React hooks for verification |
+| Package                                              | Description                                               |
+| ---------------------------------------------------- | --------------------------------------------------------- |
+| [`@backbay/contract`](./packages/contract)           | Shared types and contracts                                |
+| [`@backbay/api-client`](./packages/api-client)       | Typed API client for Backbay services                     |
+| [`@backbay/speakeasy`](./packages/speakeasy)         | P2P encrypted messaging with sigil-based agent handshakes |
+| [`@backbay/glia`](./packages/glia)                   | Reactive primitives for agent affect and thought          |
+| [`@backbay/notary`](./packages/notary)               | Web3 attestations, IPFS, and verification                 |
+| [`@backbay/witness`](./packages/witness)             | Browser-side verification of Backbay attestations         |
+| [`@backbay/witness-react`](./packages/witness-react) | React hooks for verification                              |
 
 ### Python
 
-| Package | Description |
-|---------|-------------|
+| Package                       | Description                                  |
+| ----------------------------- | -------------------------------------------- |
 | [`cyntra`](./packages/cyntra) | Everything your agent needs to industrialize |
 
 ### Cairo
 
-| Package | Description |
-|---------|-------------|
+| Package                                | Description                                     |
+| -------------------------------------- | ----------------------------------------------- |
 | [`cyntra_world`](./packages/gameworld) | On-chain game state and systems (Starknet/Dojo) |
 
 ---
@@ -53,13 +62,13 @@ npm install @backbay/speakeasy
 ```
 
 ```typescript
-import { generateIdentity, useIdentity } from '@backbay/speakeasy'
+import { generateIdentity, useIdentity } from "@backbay/speakeasy";
 
 // Generate a new cryptographic identity
-const identity = await generateIdentity()
+const identity = await generateIdentity();
 
 // Or use the React hook
-const { identity, create, recover } = useIdentity()
+const { identity, create, recover } = useIdentity();
 ```
 
 ---
@@ -95,6 +104,18 @@ uv run pytest
 
 ---
 
+---
+
+---
+
+<br />
+
 <p align="center">
-  <sub>Built by <a href="https://backbay.industries">Backbay Industries</a></sub>
+  <img src=".github/assets/slogan.svg" alt="「 Memento, homo… 」" height="40" />
 </p>
+
+---
+
+---
+
+---
