@@ -1,0 +1,78 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Package to publish (leave empty for all)"
+        required: false
+        type: string
+      dry-run:
+        description: "Dry run (don't actually publish)"
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    name: Publish npm packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.1.24"
+
+      - name: Setup Node.js for npm publish
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build packages
+        run: bun run build
+
+      - name: Publish packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          PACKAGES=(
+            "packages/contract"
+            "packages/api-client"
+            "packages/speakeasy"
+            "packages/ui"
+            "packages/notary"
+            "packages/verify"
+            "packages/verify-react"
+          )
+
+          DRY_RUN=""
+          if [ "${{ inputs.dry-run }}" == "true" ]; then
+            DRY_RUN="--dry-run"
+          fi
+
+          FILTER="${{ inputs.package }}"
+
+          for pkg in "${PACKAGES[@]}"; do
+            if [ -n "$FILTER" ] && [[ ! "$pkg" == *"$FILTER"* ]]; then
+              echo "Skipping $pkg (filtered)"
+              continue
+            fi
+
+            if [ -f "$pkg/package.json" ]; then
+              echo "Publishing $pkg..."
+              cd "$pkg"
+              npm publish --access public $DRY_RUN || echo "Failed to publish $pkg"
+              cd ../..
+            fi
+          done

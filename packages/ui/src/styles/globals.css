@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * bb-ui Global Styles
+ * Nebula Theme - Clinical Cyberpunk HUD
+ */
+
+@layer base {
+  :root {
+    /* Neon accent colors (HSL values for Tailwind opacity) */
+    --cyan-neon: 187 94% 53%;
+    --magenta-neon: 350 89% 60%;
+    --emerald-neon: 161 94% 40%;
+    --violet-neon: 263 70% 65%;
+    --yellow-warning: 48 96% 47%;
+
+    /* Semantic colors */
+    --background: 220 20% 3%;
+    --foreground: 220 14% 90%;
+
+    --card: 220 18% 5%;
+    --card-foreground: 220 14% 90%;
+
+    --popover: 220 18% 4%;
+    --popover-foreground: 220 14% 90%;
+
+    --primary: 187 94% 53%;
+    --primary-foreground: 220 20% 3%;
+
+    --secondary: 350 89% 60%;
+    --secondary-foreground: 220 14% 96%;
+
+    --muted: 220 14% 12%;
+    --muted-foreground: 220 14% 60%;
+
+    --accent: 220 14% 12%;
+    --accent-foreground: 187 94% 53%;
+
+    --destructive: 350 89% 50%;
+    --destructive-foreground: 220 14% 96%;
+
+    --border: 187 30% 15%;
+    --input: 220 14% 15%;
+    --ring: 187 94% 53%;
+
+    --radius: 0.5rem;
+  }
+
+  /* Light theme variant (solarpunk) */
+  .light {
+    --cyan-neon: 161 84% 35%;
+    --magenta-neon: 330 70% 50%;
+    --emerald-neon: 142 70% 45%;
+    --violet-neon: 271 70% 55%;
+    --yellow-warning: 45 93% 47%;
+
+    --background: 60 9% 98%;
+    --foreground: 220 20% 10%;
+
+    --card: 60 6% 95%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 60 6% 97%;
+    --popover-foreground: 220 20% 10%;
+
+    --primary: 161 84% 35%;
+    --primary-foreground: 60 9% 98%;
+
+    --secondary: 142 70% 45%;
+    --secondary-foreground: 60 9% 98%;
+
+    --muted: 60 4% 90%;
+    --muted-foreground: 220 10% 40%;
+
+    --accent: 60 4% 92%;
+    --accent-foreground: 161 84% 30%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 9% 98%;
+
+    --border: 60 4% 85%;
+    --input: 60 4% 88%;
+    --ring: 161 84% 35%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  /* Glass morphism */
+  .glass {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+  }
+
+  .glass-panel {
+    background: rgba(4, 8, 16, 0.94);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(34, 211, 238, 0.12);
+  }
+
+  /* Text gradients */
+  .text-gradient-cyan {
+    @apply bg-gradient-to-r from-cyan-neon to-emerald-neon bg-clip-text text-transparent;
+  }
+
+  .text-gradient-magenta {
+    @apply bg-gradient-to-r from-magenta-neon to-violet-neon bg-clip-text text-transparent;
+  }
+
+  /* Glow effects */
+  .glow-cyan {
+    box-shadow: 0 0 20px hsl(var(--cyan-neon) / 0.4), 0 0 40px hsl(var(--cyan-neon) / 0.2);
+  }
+
+  .glow-magenta {
+    box-shadow: 0 0 20px hsl(var(--magenta-neon) / 0.4), 0 0 40px hsl(var(--magenta-neon) / 0.2);
+  }
+
+  .glow-emerald {
+    box-shadow: 0 0 20px hsl(var(--emerald-neon) / 0.4), 0 0 40px hsl(var(--emerald-neon) / 0.2);
+  }
+
+  /* HUD scanline effect */
+  .scanlines {
+    position: relative;
+  }
+
+  .scanlines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.05) 2px,
+      rgba(0, 0, 0, 0.05) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* Noise texture */
+  .noise {
+    position: relative;
+  }
+
+  .noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+}
+
+@layer components {
+  /* ------------------------------------------------------------------------ */
+  /* AgentPanel (bb-components)                                                */
+  /* ------------------------------------------------------------------------ */
+
+  .bb-agent-panel {
+    @apply flex flex-col gap-4 rounded-xl border border-border/50 bg-card/80 backdrop-blur-xl p-4;
+  }
+
+  .bb-agent-panel__agents {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .bb-agent-panel__agent {
+    @apply flex items-center justify-between gap-3 rounded-lg border border-border/30 bg-card/40 px-3 py-2 text-left text-sm text-foreground transition-colors hover:bg-accent/40 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .bb-agent-panel__agent--selected {
+    @apply border-ring/50 bg-accent/60;
+  }
+
+  .bb-agent-panel__agent-name {
+    @apply font-medium;
+  }
+
+  .bb-agent-panel__agent-cost {
+    @apply font-mono text-xs text-muted-foreground;
+  }
+
+  .bb-agent-panel__quick-prompts {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .bb-agent-panel__quick-prompt {
+    @apply inline-flex items-center gap-2 rounded-lg border border-border/30 bg-card/30 px-3 py-2 text-sm text-foreground transition-colors hover:bg-cyan-neon/10 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .bb-agent-panel__quick-prompt-icon {
+    @apply text-muted-foreground;
+  }
+
+  .bb-agent-panel__form {
+    @apply flex flex-col gap-3;
+  }
+
+  .bb-agent-panel__input {
+    @apply w-full resize-y rounded-lg border border-input/60 bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/40 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-60;
+    min-height: 3.5rem;
+  }
+
+  .bb-agent-panel__form-footer {
+    @apply flex items-center justify-between gap-3;
+  }
+
+  .bb-agent-panel__estimate {
+    @apply font-mono text-xs text-muted-foreground;
+  }
+
+  .bb-agent-panel__submit {
+    @apply inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .bb-agent-panel__status {
+    @apply rounded-lg border border-border/30 bg-card/40 p-3 text-sm text-foreground;
+  }
+
+  .bb-agent-panel__status-label {
+    @apply font-medium;
+  }
+
+  .bb-agent-panel__output {
+    @apply mt-2 whitespace-pre-wrap rounded-md border border-border/30 bg-background/40 p-3 font-mono text-xs text-foreground;
+  }
+
+  .bb-agent-panel__error {
+    @apply mt-2 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive-foreground;
+  }
+
+  .bb-agent-panel__history {
+    @apply rounded-lg border border-border/30 bg-card/30 p-3;
+  }
+
+  .bb-agent-panel__history-title {
+    @apply mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground;
+  }
+
+  .bb-agent-panel__history-list {
+    @apply flex flex-col gap-2;
+  }
+
+  .bb-agent-panel__history-item {
+    @apply flex items-center justify-between gap-3 rounded-md border border-border/30 bg-background/20 px-3 py-2 text-xs;
+  }
+
+  .bb-agent-panel__history-agent {
+    @apply font-medium text-foreground;
+  }
+
+  .bb-agent-panel__history-prompt {
+    @apply flex-1 truncate text-muted-foreground;
+  }
+
+  .bb-agent-panel__history-cost {
+    @apply font-mono text-muted-foreground;
+  }
+
+  .bb-agent-panel__cost-summary {
+    @apply flex items-center justify-between rounded-lg border border-border/30 bg-card/30 px-3 py-2;
+  }
+
+  .bb-agent-panel__cost-label {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .bb-agent-panel__cost-value {
+    @apply font-mono text-xs text-foreground;
+  }
+}

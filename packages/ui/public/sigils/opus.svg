@@ -1,0 +1,31 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(210 190) rotate(55) scale(360 360)">
+      <stop offset="0" stop-color="#B87333" stop-opacity="0.24" />
+      <stop offset="0.6" stop-color="#B87333" stop-opacity="0.08" />
+      <stop offset="1" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <path
+    d="M256 50 L430 152 V360 L256 462 L82 360 V152 L256 50 Z"
+    fill="url(#bg)"
+    stroke="#B87333"
+    stroke-opacity="0.65"
+    stroke-width="8"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M256 168 C202 168 164 210 164 256 C164 302 202 344 256 344 C310 344 348 302 348 256 C348 210 310 168 256 168 Z"
+    stroke="#FFD9B0"
+    stroke-opacity="0.85"
+    stroke-width="12"
+  />
+  <path
+    d="M256 196 C226 196 204 220 204 256 C204 292 226 316 256 316"
+    stroke="#FFD9B0"
+    stroke-opacity="0.65"
+    stroke-width="12"
+    stroke-linecap="round"
+  />
+</svg>

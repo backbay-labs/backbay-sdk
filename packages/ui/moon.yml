@@ -1,0 +1,50 @@
+$schema: "https://moonrepo.dev/schemas/project.json"
+
+language: "typescript"
+type: "library"
+
+dependsOn:
+  - "backbay-contract"
+
+tasks:
+  build:
+    command: "bun run build"
+    deps:
+      - "backbay-contract:build"
+    inputs:
+      - "src/**/*"
+      - "tailwind.config.js"
+      - "tsconfig.json"
+    outputs:
+      - "dist"
+
+  dev:
+    command: "bun run build --watch"
+    options:
+      persistent: true
+      runInCI: false
+
+  test:
+    command: "bun run test"
+    inputs:
+      - "src/**/*"
+      - "test/**/*"
+    deps:
+      - "~:build"
+
+  typecheck:
+    command: "bun run typecheck"
+    inputs:
+      - "src/**/*"
+      - "tsconfig.json"
+
+  lint:
+    command: "bunx eslint src/"
+    inputs:
+      - "src/**/*"
+
+  storybook:
+    command: "bun run storybook"
+    options:
+      persistent: true
+      runInCI: false

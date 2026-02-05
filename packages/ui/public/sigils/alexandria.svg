@@ -1,0 +1,30 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(190 170) rotate(55) scale(360 360)">
+      <stop offset="0" stop-color="#C9A227" stop-opacity="0.28" />
+      <stop offset="0.55" stop-color="#C9A227" stop-opacity="0.10" />
+      <stop offset="1" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="stroke" x1="140" y1="120" x2="380" y2="392" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF4C0" stop-opacity="0.9" />
+      <stop offset="1" stop-color="#C9A227" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <circle cx="256" cy="256" r="220" fill="url(#bg)" stroke="url(#stroke)" stroke-width="8" />
+  <circle cx="256" cy="256" r="162" stroke="#C9A227" stroke-opacity="0.35" stroke-width="2" />
+
+  <path
+    d="M256 134 L338 318 H312 L289 268 H223 L200 318 H174 L256 134 Z M279 244 L256 194 L233 244 H279 Z"
+    fill="#FFF7D0"
+    fill-opacity="0.9"
+  />
+
+  <path
+    d="M160 372 C208 340 304 340 352 372"
+    stroke="#C9A227"
+    stroke-opacity="0.55"
+    stroke-width="6"
+    stroke-linecap="round"
+  />
+</svg>

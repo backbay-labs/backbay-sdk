@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "references": [
+    { "path": "packages/contract" },
+    { "path": "packages/api-client" },
+    { "path": "packages/baychat-core" },
+    { "path": "packages/baychat-net" },
+    { "path": "packages/baychat-react" },
+    { "path": "packages/ui" },
+    { "path": "packages/notary" },
+    { "path": "packages/verify" },
+    { "path": "packages/verify-react" }
+  ],
+  "exclude": ["node_modules", "**/dist", "**/node_modules"]
+}

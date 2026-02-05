@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://backbay.dev/schemas/bb-ui/audio-proof.schema.json",
+  "title": "bb-ui AudioProof",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "createdAt", "manifest", "proof", "verdict"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "enum": ["1.0"]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "targetAffect", "policy"],
+      "properties": {
+        "traceId": { "type": "string" },
+        "runId": { "type": "string" },
+        "text": { "type": "string", "minLength": 1 },
+        "language": { "type": "string" },
+        "targetAffect": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["valence", "arousal", "openness"],
+          "properties": {
+            "valence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "arousal": { "type": "number", "minimum": 0, "maximum": 1 },
+            "openness": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["safetyMode", "voiceCloningAllowed"],
+          "properties": {
+            "safetyMode": { "type": "boolean" },
+            "trustTier": { "type": "string" },
+            "voiceCloningAllowed": { "type": "boolean" }
+          }
+        },
+        "cognitionSnapshot": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "snapshotVersion": { "type": "string" },
+            "snapshotId": { "type": "string" }
+          }
+        }
+      }
+    },
+    "proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["synthesis", "artifacts", "gates"],
+      "properties": {
+        "synthesis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["providerId", "model", "voice"],
+          "properties": {
+            "providerId": { "type": "string", "minLength": 1 },
+            "model": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "revision": { "type": "string" },
+                "sha256": { "type": "string" }
+              }
+            },
+            "voice": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["voiceId", "licenseCategory"],
+              "properties": {
+                "voiceId": { "type": "string", "minLength": 1 },
+                "licenseCategory": {
+                  "type": "string",
+                  "enum": ["cc0", "cc-by", "cc-by-nc", "custom", "unknown"]
+                },
+                "licenseText": { "type": "string" },
+                "source": { "type": "string" }
+              }
+            },
+            "controls": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "temperature": { "type": "number", "minimum": 0 },
+                "quality": { "type": "number", "minimum": 0 }
+              }
+            },
+            "seed": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["attempt", "artifactRef", "gates"],
+            "properties": {
+              "attempt": { "type": "integer", "minimum": 1 },
+              "artifactRef": { "type": "string", "minLength": 1 },
+              "notes": { "type": "string" },
+              "gates": { "$ref": "#/$defs/gates" }
+            }
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/audioArtifact" }
+        },
+        "gates": { "$ref": "#/$defs/gates" },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["run", "run_receipt", "artifact", "ui"]
+              },
+              "runId": { "type": "string" },
+              "receiptHash": { "type": "string" },
+              "path": { "type": "string" },
+              "digest": { "type": "string" },
+              "componentId": { "type": "string" },
+              "note": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "reason": { "type": "string" },
+        "score": { "type": "number" }
+      }
+    }
+  },
+  "$defs": {
+    "audioArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "format", "sha256", "durationMs"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "uri": { "type": "string" },
+        "format": {
+          "type": "string",
+          "enum": ["wav", "pcm_s16le", "opus", "mp3", "flac"]
+        },
+        "sha256": { "type": "string", "minLength": 32 },
+        "sampleRateHz": { "type": "integer", "minimum": 8000 },
+        "channels": { "type": "integer", "minimum": 1, "maximum": 8 },
+        "durationMs": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "gateResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "metrics": { "type": "object", "additionalProperties": true },
+        "reason": { "type": "string" }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quality", "semantic", "affect"],
+      "properties": {
+        "quality": { "$ref": "#/$defs/gateResult" },
+        "semantic": { "$ref": "#/$defs/gateResult" },
+        "affect": { "$ref": "#/$defs/gateResult" },
+        "multimodalConsistency": { "$ref": "#/$defs/gateResult" },
+        "watermark": { "$ref": "#/$defs/gateResult" },
+        "speakerConsistency": { "$ref": "#/$defs/gateResult" },
+        "antiSpoof": { "$ref": "#/$defs/gateResult" },
+        "mos": { "$ref": "#/$defs/gateResult" },
+        "safetyText": { "$ref": "#/$defs/gateResult" },
+        "safetyAudio": { "$ref": "#/$defs/gateResult" }
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Dry run (don't actually publish)"
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    name: Publish cyntra to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Install build dependencies
+        run: uv pip install build twine
+
+      - name: Build and publish cyntra
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        working-directory: packages/cyntra
+        run: |
+          uv run python -m build
+          if [ "${{ inputs.dry-run }}" != "true" ]; then
+            uv run twine upload dist/*
+          else
+            echo "Dry run - would publish:"
+            ls -la dist/
+          fi

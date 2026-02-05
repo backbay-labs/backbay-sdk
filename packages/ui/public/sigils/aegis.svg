@@ -1,0 +1,38 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(256 190) rotate(90) scale(360 360)">
+      <stop offset="0" stop-color="#4A7BF7" stop-opacity="0.22" />
+      <stop offset="0.55" stop-color="#4A7BF7" stop-opacity="0.08" />
+      <stop offset="1" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="edge" x1="170" y1="110" x2="360" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#BFD2FF" stop-opacity="0.9" />
+      <stop offset="1" stop-color="#4A7BF7" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <path
+    d="M256 68 L372 122 V250 C372 350 316 416 256 446 C196 416 140 350 140 250 V122 L256 68 Z"
+    fill="url(#bg)"
+    stroke="url(#edge)"
+    stroke-width="10"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M256 150 L312 202 V282 C312 330 286 368 256 388 C226 368 200 330 200 282 V202 L256 150 Z"
+    stroke="#EAF1FF"
+    stroke-opacity="0.85"
+    stroke-width="8"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M230 268 L250 288 L286 248"
+    stroke="#EAF1FF"
+    stroke-opacity="0.85"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

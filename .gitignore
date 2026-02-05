@@ -1,0 +1,209 @@
+###############################################################################
+# OS / Editor
+###############################################################################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Local environment files (secrets)
+.env
+.env.local
+.env.*.local
+
+# Claude/Codex local settings (may contain credentials)
+.claude/settings.json
+.claude/settings.local.json
+
+# Cyntra local config overlay (for local toolchain overrides)
+.cyntra/config.local.yaml
+
+###############################################################################
+# Python
+###############################################################################
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Packaging / build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing / linting
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage/
+htmlcov/
+
+# Hatch / Poetry / Pipenv
+.hatch/
+.poetry/
+Pipfile.lock
+
+###############################################################################
+# Node / TypeScript
+###############################################################################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build output
+dist/
+build/
+.out/
+.next/
+.turbo/
+storybook-static/
+
+# Cache
+.cache/
+.eslintcache
+.vite/
+
+###############################################################################
+# Bun (if used)
+###############################################################################
+.bun/
+# bun.lockb - committed for Vercel builds (OOM without lockfile)
+
+###############################################################################
+# Godot (4.x)
+###############################################################################
+.godot/
+.import/
+.export/
+*.translation
+*.tmp
+
+# Godot editor config
+.editorconfig
+.override.cfg
+
+# Exported builds
+bin/
+exports/
+
+# NOTE: The Godot export `bin/` folder pattern above would also ignore Rust
+# multi-binary sources under `src/bin/`. Un-ignore Rust sources.
+!crates/**/src/bin/
+!crates/**/src/bin/**
+
+###############################################################################
+# Blender
+###############################################################################
+# Blender autosaves & backups
+*.blend1
+*.blend2
+*.blend3
+*.blend4
+*.blend@
+
+# Blender cache
+__pycache__/
+cache/
+textures/cache/
+
+# Renders / outputs
+renders/
+output/
+tmp/
+
+#########################
+
+###############################################################################
+# Legacy Dev Kernel (deprecated)
+###############################################################################
+.workcells/
+.dev-kernel/
+
+###############################################################################
+# Legacy artifacts (deprecated)
+###############################################################################
+.glia-fab/
+
+###############################################################################
+# Cyntra (runs/artifacts)
+###############################################################################
+.cyntra/**
+!.cyntra/
+!.cyntra/config.yaml
+!.cyntra/README.md
+
+###############################################################################
+# mise (toolchain manager)
+###############################################################################
+.mise.local.toml
+
+# Embedded repos
+apps/immersa/
+infra/train/URM/
+crates/target/
+
+*storybook.log
+
+# Solana test ledger (large files)
+test-ledger/
+infra/solana/test-ledger/
+
+# Large generated files
+*.baked.blend
+outora_library_baked.blend
+generated_image.png
+
+###############################################################################
+# Terraform
+###############################################################################
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+tfplan.*
+crash.log
+crash.*.log
+
+###############################################################################
+# Local debug artifacts
+###############################################################################
+.tmp_debug_sync*/
+*storybook-dev*.log
+*storybook-dev*.pid
+.vercel
+
+# Developer worktrees
+.worktrees/
+prompt.md
+logs/
+
+# WIP features
+docs/speakeasy-doorman-design.md
+proof.json
+rollout.json
+manifest.json
+
+# Local kernel runtime state
+kernel/.cyntra/

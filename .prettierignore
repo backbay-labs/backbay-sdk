@@ -1,0 +1,4 @@
+fab/assets/viewer/assets/**
+packages/membrane/dist/**
+.claude/skills/**
+.codex/skills

@@ -1,0 +1,36 @@
+{
+  "name": "@backbay/api-client",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@backbay/contract": "workspace:*",
+    "@elysiajs/eden": "^1.0.30"
+  },
+  "peerDependencies": {
+    "elysia": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "elysia": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.16",
+    "@types/node": "^24.3.0",
+    "elysia": "^1.0.0",
+    "typescript": "^5.9.3"
+  }
+}

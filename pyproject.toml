@@ -1,0 +1,23 @@
+[project]
+name = "backbay-sdk"
+version = "0.1.0"
+description = "Backbay SDK - Python packages for the Backbay platform"
+readme = "README.md"
+requires-python = ">=3.13"
+
+[tool.uv.workspace]
+members = [
+    "packages/cyntra",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
