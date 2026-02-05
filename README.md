@@ -22,8 +22,8 @@
 |---------|-------------|
 | [`@backbay/contract`](./packages/contract) | Shared types and contracts |
 | [`@backbay/api-client`](./packages/api-client) | Typed API client for Backbay services |
-| [`@backbay/speakeasy`](./packages/speakeasy) | P2P encrypted messaging — identity, transport, React hooks |
-| [`@backbay/glia`](./packages/glia) | Agent-native UI components and design system |
+| [`@backbay/speakeasy`](./packages/speakeasy) | P2P encrypted messaging with sigil-based agent handshakes |
+| [`@backbay/glia`](./packages/glia) | Reactive primitives for agent affect and thought |
 | [`@backbay/notary`](./packages/notary) | Web3 attestations, IPFS, and verification |
 | [`@backbay/witness`](./packages/witness) | Browser-side verification of Backbay attestations |
 | [`@backbay/witness-react`](./packages/witness-react) | React hooks for verification |
