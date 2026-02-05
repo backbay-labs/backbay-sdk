@@ -10,7 +10,7 @@ import { useElevationTokens, useGlassTokens, useMotionTokens } from "../../../th
 // GLASS PANEL VARIANTS
 // ============================================================================
 
-const glassPanelVariants = cva("relative overflow-hidden backdrop-blur-[var(--glass-blur,24px)]", {
+const glassPanelVariants = cva("relative overflow-hidden", {
   variants: {
     variant: {
       /** Standard panel surface */
@@ -151,17 +151,16 @@ export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(func
     <MotionComponent
       ref={ref}
       className={cn(glassPanelVariants({ variant, elevation, interactive }), className)}
-      style={
-        {
-          "--glass-blur": glassTokens.panelBlur,
+      style={{
+          backdropFilter: `blur(${glassTokens.panelBlur ?? "24px"})`,
+          WebkitBackdropFilter: `blur(${glassTokens.panelBlur ?? "24px"})`,
           background: background ?? glassTokens.panelBg,
           borderWidth: 1,
           borderStyle: "solid",
           borderColor: isActive ? glassTokens.activeBorder : (border ?? glassTokens.panelBorder),
           boxShadow: isActive ? glassTokens.activeShadow : shadowMap[elevation ?? "soft"],
           ...style,
-        } as React.CSSProperties
-      }
+        }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       whileHover={
