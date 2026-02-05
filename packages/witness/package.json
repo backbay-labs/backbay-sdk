@@ -1,7 +1,10 @@
 {
   "name": "@backbay/witness",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.1",
   "description": "Browser-side verification of Backbay attestations",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

@@ -1,7 +1,10 @@
 {
   "name": "@backbay/glia",
-  "version": "0.2.0",
-  "description": "Agent-native web UI standard and component library",
+  "version": "0.2.0-alpha.1",
+  "description": "Reactive primitives for agent affect and thought",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "homepage": "https://github.com/backbay/glia#readme",
   "repository": {
@@ -97,7 +100,7 @@
     "build-storybook": "node scripts/storybook.mjs build"
   },
   "dependencies": {
-    "@backbay/contract": "workspace:*",
+    "@backbay/contract": "0.1.0-alpha.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.4.0",

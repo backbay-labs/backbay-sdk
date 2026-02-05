@@ -1,7 +1,10 @@
 {
   "name": "@backbay/speakeasy",
-  "version": "0.1.0",
-  "description": "P2P encrypted messaging - identity, transport, and React hooks",
+  "version": "0.1.0-alpha.1",
+  "description": "P2P encrypted messaging with sigil-based agent handshakes",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
