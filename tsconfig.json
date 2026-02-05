@@ -17,13 +17,11 @@
   "references": [
     { "path": "packages/contract" },
     { "path": "packages/api-client" },
-    { "path": "packages/baychat-core" },
-    { "path": "packages/baychat-net" },
-    { "path": "packages/baychat-react" },
-    { "path": "packages/ui" },
+    { "path": "packages/speakeasy" },
+    { "path": "packages/glia" },
     { "path": "packages/notary" },
-    { "path": "packages/verify" },
-    { "path": "packages/verify-react" }
+    { "path": "packages/witness" },
+    { "path": "packages/witness-react" }
   ],
   "exclude": ["node_modules", "**/dist", "**/node_modules"]
 }

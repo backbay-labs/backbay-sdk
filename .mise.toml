@@ -1,0 +1,320 @@
+# Glia Fab toolchain
+# https://mise.jdx.dev
+
+[tools]
+python = "3.13"
+node = "24.11.0"
+bun = "1.1.24"
+rust = "1.85"
+
+[env]
+# Ensure uv uses mise's Python
+UV_PYTHON = "{{env.HOME}}/.local/share/mise/installs/python/3.13/bin/python"
+
+[tasks.dev]
+description = "Start desktop app in dev mode"
+run = """
+(cd packages/ag-ui-ext && bun run build)
+(cd apps/origin/client/desktop && bun run tauri dev)
+"""
+
+[tasks.kernel]
+description = "Run cyntra kernel once"
+run = "crates/target/release/cyntra run --once"
+
+[tasks.kernel-py]
+description = "Run cyntra kernel (Python) once"
+run = "uv run --project kernel --extra dev --extra api python -m cyntra.cli run --once"
+
+[tasks.kernel-py-watch]
+description = "Run cyntra kernel (Python) in watch mode"
+run = "uv run --project kernel --extra dev --extra api python -m cyntra.cli run --watch"
+
+[tasks.sleeptime]
+description = "Run full sleeptime processing (memory consolidation + dynamics + patterns)"
+run = """
+uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:history-ingester --inputs-json '{\"max_runs\": 50}'
+uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:pattern-distiller
+uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:trap-detector
+uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:memory-block-writer
+"""
+
+[tasks.psn-canary]
+description = "PSN: run backbone canary (ingests InvocationTraces)"
+run = "uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:psn-skill-canary --inputs-json '{\"min_interval_hours\": 0}'"
+
+[tasks.psn-backlog-dry]
+description = "PSN: preview backlog minting (dry-run)"
+run = "uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:psn-backlog-builder --inputs-json '{\"dry_run\": true, \"max_issues\": 10}'"
+
+[tasks.psn-issue-factory]
+description = "PSN: run canary then mint PSN repair issues"
+run = """
+uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:psn-skill-canary --inputs-json '{\"min_interval_hours\": 0}'
+uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:psn-backlog-builder --inputs-json '{\"dry_run\": false, \"max_issues\": 10}'
+"""
+
+[tasks.psn-issue-factory-dry]
+description = "PSN: run canary then preview PSN repair issues"
+run = """
+uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:psn-skill-canary --inputs-json '{\"min_interval_hours\": 0}'
+uv run --project kernel --extra dev python -m cyntra.cli skills run sleeptime:psn-backlog-builder --inputs-json '{\"dry_run\": true, \"max_issues\": 10}'
+"""
+
+[tasks.build-cyntra]
+description = "Build Rust cyntra binary"
+run = "cd crates && cargo build --release -p cyntra"
+
+[tasks.test]
+description = "Run all tests"
+run = """
+cd kernel && pytest -v
+cd ../apps/origin/client/desktop && bun run test
+"""
+
+[tasks.glia-check]
+description = "glia: typecheck, test, build"
+run = """
+cd packages/glia
+bun run typecheck
+bun run test
+bun run build
+"""
+
+[tasks.glyph-validate]
+description = "Validate glyph GLB assets (sync + loop seams)"
+run = "node scripts/validate-glyph-assets.mjs"
+
+[tasks.glyph-snapshot-validate]
+description = "Validate glyph render snapshots vs baseline"
+run = "python scripts/validate-glyph-snapshots.py"
+
+[tasks.glyph-check]
+description = "Glyph: validate assets + glia checks"
+run = "mise run glyph-validate && mise run glyph-snapshot-validate && mise run glia-check"
+
+[tasks.godot-qa]
+description = "Run Godot headless QA tests"
+run = """
+scripts/godot-qa-runner.sh --project research/backbay-imperium/client --scene res://tests/run_all_tests.tscn
+scripts/godot-qa-runner.sh --project research/backbay-imperium/client --scene res://tests/qa_validate_scripts.tscn
+"""
+
+[tasks.backbay-qa]
+description = "Run Backbay Imperium Godot QA tests + script validation"
+run = """
+scripts/godot-qa-runner.sh --project research/backbay-imperium/client --scene res://tests/run_all_tests.tscn
+scripts/godot-qa-runner.sh --project research/backbay-imperium/client --scene res://tests/qa_validate_scripts.tscn
+"""
+
+[tasks.backbay-bridge]
+description = "Build backbay-godot GDExtension and link into research/backbay-imperium/client/bin"
+run = "cd research/backbay-imperium && ./scripts/build_godot_bridge.sh"
+
+[tasks.backbay-client]
+description = "Build backbay-godot and run the Backbay Imperium Godot client"
+run = "cd research/backbay-imperium && ./scripts/build_godot_bridge.sh --run"
+
+[tasks.index-db-up]
+description = "Start CocoIndex Postgres (pgvector)"
+run = "docker compose -f infra/services/cocoindex/compose.yaml up -d"
+
+[tasks.index-db-down]
+description = "Stop CocoIndex Postgres (pgvector)"
+run = "docker compose -f infra/services/cocoindex/compose.yaml down"
+
+[tasks.index-neo4j-up]
+description = "Start Neo4j (optional graph export)"
+run = "docker compose -f infra/services/cocoindex/compose.neo4j.yaml up -d"
+
+[tasks.index-neo4j-down]
+description = "Stop Neo4j (optional graph export)"
+run = "docker compose -f infra/services/cocoindex/compose.neo4j.yaml down"
+
+[tasks.index-setup]
+description = "CocoIndex: setup internal schemas"
+run = "uv run --project kernel --extra indexing cyntra index setup --env-file .env --force"
+
+[tasks.index-update]
+description = "CocoIndex: incremental update"
+run = "uv run --project kernel --extra indexing cyntra index update --env-file .env"
+
+[tasks.index-serve]
+description = "CocoIndex: serve query API (reload + CORS for desktop dev)"
+run = "uv run --project kernel --extra indexing cyntra index serve --env-file .env --address 127.0.0.1:8020 --cors-local 1420 --live --reload"
+
+[tasks.index-serve-prod]
+description = "CocoIndex: serve query API (prod defaults; bind localhost)"
+run = "uv run --project kernel --extra indexing cyntra index serve --env-file .env --address 127.0.0.1:8020 --live"
+
+[tasks.dev-ag-ui-ext]
+description = "Watch ag-ui-ext package builds"
+run = "cd packages/ag-ui-ext && bun run dev"
+
+[tasks.dev-backbay-web]
+description = "Backbay web client (port 3000)"
+run = "cd apps/backbay/client/web && bun run dev"
+
+# ─── Cluster Docs Apps ──────────────────────────────────────────────────────────
+# Each cluster has a docs portal at apps/{cluster}/client/docs/
+# Ports: alexandria=3001, alpha=3002, opus=3003, baia=3004, kdot=3005, aegis=3006, providence=3007
+
+[tasks.dev-alexandria-docs]
+description = "Alexandria cluster docs (port 3001)"
+run = "cd apps/alexandria/client/docs && bun run dev"
+
+[tasks.dev-alpha-docs]
+description = "Alpha cluster docs (port 3002)"
+run = "cd apps/alpha/client/docs && bun run dev"
+
+[tasks.dev-opus-docs]
+description = "Opus cluster docs (port 3003)"
+run = "cd apps/opus/client/docs && bun run dev"
+
+[tasks.dev-baia-docs]
+description = "Baia cluster docs (port 3004)"
+run = "cd apps/baia/client/docs && bun run dev"
+
+[tasks.dev-kdot-docs]
+description = "KDoT cluster docs (port 3005)"
+run = "cd apps/kdot/client/docs && bun run dev"
+
+[tasks.dev-aegis-docs]
+description = "Aegis cluster docs (port 3006)"
+run = "cd apps/aegis/client/docs && bun run dev"
+
+[tasks.dev-providence-docs]
+description = "Providence cluster docs (port 3007)"
+run = "cd apps/providence/client/docs && bun run dev"
+
+[tasks.install-cluster-docs]
+description = "Install dependencies for all cluster docs apps"
+run = """
+(cd apps/alexandria/client/docs && bun install) &
+(cd apps/alpha/client/docs && bun install) &
+(cd apps/opus/client/docs && bun install) &
+(cd apps/baia/client/docs && bun install) &
+(cd apps/kdot/client/docs && bun install) &
+(cd apps/aegis/client/docs && bun install) &
+(cd apps/providence/client/docs && bun install) &
+wait
+"""
+
+[tasks.build-cluster-docs]
+description = "Build all cluster docs apps"
+run = """
+(cd apps/alexandria/client/docs && bun run build) &
+(cd apps/alpha/client/docs && bun run build) &
+(cd apps/opus/client/docs && bun run build) &
+(cd apps/baia/client/docs && bun run build) &
+(cd apps/kdot/client/docs && bun run build) &
+(cd apps/aegis/client/docs && bun run build) &
+(cd apps/providence/client/docs && bun run build) &
+wait
+"""
+
+[tasks.dev-cluster-docs]
+description = "All cluster docs apps (ports 3001-3007)"
+run = "mise run -j 7 dev-alexandria-docs ::: dev-alpha-docs ::: dev-opus-docs ::: dev-baia-docs ::: dev-kdot-docs ::: dev-aegis-docs ::: dev-providence-docs"
+
+[tasks.dev-backbay-full]
+description = "Backbay web + BFF + notary + all cluster docs (ports 3000-3007)"
+run = "mise run -j 10 dev-backbay-web ::: dev-backbay-bff ::: dev-notary ::: dev-cluster-docs"
+
+[tasks.dev-backbay-bff]
+description = "Backbay BFF service"
+run = "cd apps/backbay/services/bff && bun run dev"
+
+[tasks.dev-backbay-docs]
+description = "Backbay unified API docs (port 8090)"
+run = "cd apps/backbay/services/docs && bun run src/index.ts"
+
+[tasks.dev-backbay-play-session-gateway]
+description = "Backbay play session gateway"
+run = "cd apps/backbay/services/play-session-gateway && bun run dev"
+
+[tasks.dev-backbay-openrct2-adapter]
+description = "Backbay OpenRCT2 RPC adapter"
+run = "cd apps/backbay/services/openrct2-rpc-adapter && bun run dev"
+
+[tasks.dev-backbay-bbdoom-adapter]
+description = "Backbay BB DOOM RPC adapter"
+run = "cd apps/backbay/services/bbdoom-rpc-adapter && bun run dev"
+
+[tasks.dev-notary]
+description = "Notary service (wallet auth + attestations)"
+run = "cd packages/notary && bun run dev"
+
+[tasks.dev-backbay]
+description = "Backbay clients + services (no clusters)"
+run = "mise run -j 9 dev-backbay-web ::: dev-backbay-bff ::: dev-backbay-play-session-gateway ::: dev-backbay-openrct2-adapter ::: dev-backbay-bbdoom-adapter ::: dev-notary"
+
+[tasks.dev-backbay-ecosystem]
+description = "Backbay + all services + all cluster docs"
+run = "mise run -j 16 dev-backbay ::: dev-cluster-docs"
+
+[tasks.dev-origin-web]
+description = "Origin web client"
+run = "cd apps/origin/client/web && bun run dev"
+
+[tasks.dev-origin-chatgpt-web]
+description = "Origin ChatGPT web client"
+run = "cd apps/origin/client/chatgpt/web && bun run dev"
+
+[tasks.dev-origin-mobile]
+description = "Origin mobile client (Expo)"
+run = "cd apps/origin/client/mobile && bun run start"
+
+[tasks.dev-origin-desktop]
+description = "Origin desktop client"
+run = "cd apps/origin/client/desktop && bun run dev"
+
+[tasks.dev-origin-bff]
+description = "Origin BFF service"
+run = "cd apps/origin/services/bff && bun run dev"
+
+[tasks.dev-origin-terminal-glia]
+description = "Origin Glia terminal CLI"
+run = "cd apps/origin/terminal/glia && bun run dev"
+
+[tasks.dev-origin-terminal-cod3x]
+description = "Origin Cod3x terminal CLI"
+run = "cd apps/origin/terminal/cod3x && bun run dev"
+
+[tasks.dev-origin]
+description = "Origin clients + services"
+run = "mise run -j 10 dev-origin-web ::: dev-origin-chatgpt-web ::: dev-origin-mobile ::: dev-origin-desktop ::: dev-origin-bff ::: dev-origin-terminal-glia ::: dev-origin-terminal-cod3x"
+
+[tasks.dev-medica-web]
+description = "Medica web client"
+run = "cd apps/medica/client/web && bun run dev"
+
+[tasks.dev-medica-chatgpt-web]
+description = "Medica ChatGPT web client"
+run = "cd apps/medica/client/chatgpt/web && bun run dev"
+
+[tasks.dev-medica-mobile]
+description = "Medica mobile client (Expo)"
+run = "cd apps/medica/client/mobile && bun run start"
+
+[tasks.dev-medica-bff]
+description = "Medica BFF service"
+run = "cd apps/medica/services/bff && bun run dev"
+
+[tasks.dev-medica]
+description = "Medica clients + services"
+run = "mise run -j 8 dev-medica-web ::: dev-medica-chatgpt-web ::: dev-medica-mobile ::: dev-medica-bff"
+
+[tasks.dev-all]
+description = "All apps/services (desktop, Backbay, Origin, Medica)"
+run = "mise run -j 24 dev ::: dev-ag-ui-ext ::: dev-backbay ::: dev-origin ::: dev-medica"
+
+# ─── Deep Research Workflow ─────────────────────────────────────────────────────
+
+[tasks.deep-research]
+description = "Launch autonomous deep research workflow with Claude Code"
+run = "./scripts/deep-research.sh"
+
+[tasks.deep-research-interactive]
+description = "Start Claude Code with deep-research skill loaded"
+run = "claude --print '/deep-research'"

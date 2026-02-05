@@ -12,7 +12,7 @@ It's the bridge between "offchain proof bundles" and "onchain pointers".
 
 - **Kernel → Notary (publish):** `kernel/src/cyntra/trust/notary/client.py` calls Notary to upload artifacts and mint an EAS attestation.
 - **Starknet registry consumes attestations:** `packages/bb-dojo/` stores the attestation UID and can verify its existence via Herodotus proofs.
-- **Clients verify receipts:** `packages/verify/` fetches and verifies attestations (Rekor/EAS/Solana) in-browser.
+- **Clients verify receipts:** `packages/witness/` fetches and verifies attestations (Rekor/EAS/Solana) in-browser.
 
 ## Run locally
 

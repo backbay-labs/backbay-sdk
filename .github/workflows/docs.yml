@@ -42,10 +42,10 @@ jobs:
             --entryPoints packages/baychat-core/src/index.ts \
             --entryPoints packages/baychat-net/src/index.ts \
             --entryPoints packages/baychat-react/src/index.ts \
-            --entryPoints packages/ui/src/index.ts \
+            --entryPoints packages/glia/src/index.ts \
             --entryPoints packages/notary/src/index.ts \
-            --entryPoints packages/verify/src/index.ts \
-            --entryPoints packages/verify-react/src/index.ts \
+            --entryPoints packages/witness/src/index.ts \
+            --entryPoints packages/witness-react/src/index.ts \
             --out docs/api \
             --name "Backbay SDK" \
             --readme README.md

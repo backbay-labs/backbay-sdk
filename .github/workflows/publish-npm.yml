@@ -50,10 +50,10 @@ jobs:
             "packages/contract"
             "packages/api-client"
             "packages/speakeasy"
-            "packages/ui"
+            "packages/glia"
             "packages/notary"
-            "packages/verify"
-            "packages/verify-react"
+            "packages/witness"
+            "packages/witness-react"
           )
 
           DRY_RUN=""
