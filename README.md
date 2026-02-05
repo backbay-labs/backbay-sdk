@@ -32,7 +32,7 @@
 
 | Package | Description |
 |---------|-------------|
-| [`cyntra`](./packages/cyntra) | Ever |
+| [`cyntra`](./packages/cyntra) | Everything your agent needs to industrialize |
 
 ### Cairo
 
