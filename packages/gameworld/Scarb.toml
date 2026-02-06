@@ -11,8 +11,8 @@ sierra-replace-ids = true
 [dependencies]
 dojo = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0" }
 
-[[target.starknet-contract]]
-build-external-contracts = ["dojo::world::world_contract::world"]
+[[target.dojo]]
+build-external-contracts = []
 
 [dev-dependencies]
 dojo_cairo_test = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0" }
