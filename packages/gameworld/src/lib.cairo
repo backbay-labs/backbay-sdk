@@ -10,17 +10,17 @@
 //! - Attestation UIDs are stored here for verification
 //! - IPFS CIDs reference the actual 3D assets
 
-mod models {
-    mod asset;
-    mod player;
-    mod world_meta;
+pub mod models {
+    pub mod asset;
+    pub mod player;
+    pub mod world_meta;
 }
 
-mod systems {
-    mod asset_registry;
-    mod spawn;
-    mod attestation_verifier;
-    mod verified_registry;
+pub mod systems {
+    pub mod asset_registry;
+    pub mod spawn;
+    pub mod attestation_verifier;
+    pub mod verified_registry;
 }
 
 #[cfg(test)]

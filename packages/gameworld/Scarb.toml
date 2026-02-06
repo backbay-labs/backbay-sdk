@@ -1,7 +1,7 @@
 [package]
 name = "cyntra_world"
 version = "0.1.0"
-cairo-version = "=2.8.4"
+edition = "2024_07"
 description = "Cyntra onchain world - provable game state with asset attestations"
 homepage = "https://github.com/ConnorWhelan11/cyntra"
 
@@ -9,13 +9,18 @@ homepage = "https://github.com/ConnorWhelan11/cyntra"
 sierra-replace-ids = true
 
 [dependencies]
-dojo = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0" }
+dojo = "1.8.0"
+starknet = "2.13"
 
-[[target.dojo]]
+[[target.starknet-contract]]
 build-external-contracts = []
 
+[tool.scarb]
+allow-prebuilt-plugins = ["dojo_cairo_macros"]
+
 [dev-dependencies]
-dojo_cairo_test = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0" }
+cairo_test = "2.13"
+dojo_cairo_test = "1.8.0"
 
 [tool.dojo]
 initializer_class_hash = "0x0"

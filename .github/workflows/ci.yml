@@ -67,19 +67,25 @@ jobs:
   cairo:
     name: Cairo
     runs-on: ubuntu-latest
-    continue-on-error: true  # dojo v1.0.0 compiler plugin not in binary release; needs Rust build or dojo upgrade
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Dojo v1.0.0
+      - name: Install Scarb 2.13.1
+        uses: software-mansion/setup-scarb@v1
+        with:
+          scarb-version: "2.13.1"
+
+      - name: Install Dojo v1.8.0
         run: |
           mkdir -p $HOME/.dojo/bin
-          curl -L "https://github.com/dojoengine/dojo/releases/download/v1.0.0/dojo_v1.0.0_linux_amd64.tar.gz" \
+          curl -L "https://github.com/dojoengine/dojo/releases/download/v1.8.0/dojo_v1.8.0_linux_amd64.tar.gz" \
             | tar -xzC $HOME/.dojo/bin
           echo "$HOME/.dojo/bin" >> $GITHUB_PATH
 
       - name: Verify toolchain
-        run: sozo --version
+        run: |
+          scarb --version
+          sozo --version
 
       - name: Build Cairo contracts
         working-directory: packages/gameworld
