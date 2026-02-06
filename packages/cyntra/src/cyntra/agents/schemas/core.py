@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Any
 
 from pydantic import Field
+
 from cyntra.commons import BaseSchema
 
 
@@ -34,9 +35,7 @@ class MissionPriority(str, Enum):
 class GraphNodeRef(BaseSchema):
     """Reference into Outora/Segrada graph(s)."""
 
-    graph_id: str = Field(
-        ..., description="Name/id of the graph (e.g. 'semester_2025')."
-    )
+    graph_id: str = Field(..., description="Name/id of the graph (e.g. 'semester_2025').")
     node_id: str = Field(..., description="Node ID within the graph.")
     weight: float = Field(
         1.0,
@@ -47,9 +46,7 @@ class GraphNodeRef(BaseSchema):
 class MissionConstraints(BaseSchema):
     """User / life constraints specific to this mission."""
 
-    max_daily_minutes: int | None = Field(
-        None, description="Soft cap on time per day for this mission."
-    )
+    max_daily_minutes: int | None = Field(None, description="Soft cap on time per day for this mission.")
     no_nights_after: int | None = Field(
         None,
         description="Hour in 24h time after which Glyph shouldn't schedule (e.g. 23).",
@@ -71,9 +68,7 @@ class MissionPreferences(BaseSchema):
         None,
         description="Freeform or enum later (e.g. 'chill', 'normal', 'sprint').",
     )
-    notes_for_glyph: str | None = Field(
-        None, description="Anything the user wants Glyph to remember for this mission."
-    )
+    notes_for_glyph: str | None = Field(None, description="Anything the user wants Glyph to remember for this mission.")
 
 
 class Mission(BaseSchema):
@@ -95,15 +90,11 @@ class Mission(BaseSchema):
     planned_start_date: date | None = None
     deadline_date: date | None = None
 
-    estimated_total_minutes: int | None = Field(
-        None, description="Rough total effort in minutes."
-    )
+    estimated_total_minutes: int | None = Field(None, description="Rough total effort in minutes.")
 
     tags: list[str] = Field(default_factory=list)
 
-    graph_links: list[GraphNodeRef] = Field(
-        default_factory=list, description="Concept nodes this mission is tied to."
-    )
+    graph_links: list[GraphNodeRef] = Field(default_factory=list, description="Concept nodes this mission is tied to.")
 
     constraints: MissionConstraints = Field(default_factory=MissionConstraints)
     preferences: MissionPreferences = Field(default_factory=MissionPreferences)
@@ -142,12 +133,8 @@ class Block(BaseSchema):
 
     status: BlockStatus = BlockStatus.PLANNED
 
-    title: str | None = Field(
-        None, description="Short label, e.g. 'Org Chem Ch. 5 practice problems'."
-    )
-    plan_note: str | None = Field(
-        None, description="What Glyph/user agreed to focus on this block."
-    )
+    title: str | None = Field(None, description="Short label, e.g. 'Org Chem Ch. 5 practice problems'.")
+    plan_note: str | None = Field(None, description="What Glyph/user agreed to focus on this block.")
 
     # High-level outcome fields for quick stats
     outcome_note: str | None = None
@@ -180,9 +167,7 @@ class LeakEvent(BaseSchema):
 
     timestamp: datetime
     category: LeakCategory
-    source: str = Field(
-        ..., description="Domain or app name, e.g. 'twitter.com', 'discord'."
-    )
+    source: str = Field(..., description="Domain or app name, e.g. 'twitter.com', 'discord'.")
     duration_seconds: int | None = None
     note: str | None = None
 
@@ -229,12 +214,8 @@ class Episode(BaseSchema):
     mood_before: EmotionLabel | None = None
     mood_after: EmotionLabel | None = None
 
-    focus_score: int | None = Field(
-        None, ge=1, le=5, description="User self-rated focus quality (1–5)."
-    )
-    energy_score: int | None = Field(
-        None, ge=1, le=5, description="Self-rated energy (1–5)."
-    )
+    focus_score: int | None = Field(None, ge=1, le=5, description="User self-rated focus quality (1–5).")
+    energy_score: int | None = Field(None, ge=1, le=5, description="Self-rated energy (1–5).")
 
     time_focused_minutes: int | None = None
     time_leaked_minutes: int | None = None

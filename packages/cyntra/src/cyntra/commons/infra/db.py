@@ -27,8 +27,7 @@ def create_async_engine_from_config(config: DatabaseConfig) -> "AsyncEngine":
         from sqlalchemy.ext.asyncio import create_async_engine
     except ImportError as e:
         raise ImportError(
-            "sqlalchemy is required for database helpers. "
-            "Install with: pip install segrada-commons[db]"
+            "sqlalchemy is required for database helpers. Install with: pip install segrada-commons[db]"
         ) from e
 
     return create_async_engine(
@@ -61,8 +60,7 @@ def create_session_factory(
         from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
     except ImportError as e:
         raise ImportError(
-            "sqlalchemy is required for database helpers. "
-            "Install with: pip install segrada-commons[db]"
+            "sqlalchemy is required for database helpers. Install with: pip install segrada-commons[db]"
         ) from e
 
     return async_sessionmaker(

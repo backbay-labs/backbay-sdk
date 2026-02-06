@@ -3,8 +3,6 @@
 from enum import Enum
 from typing import Any
 
-from cyntra.commons import ErrorCode, ServiceError, get_logger
-
 from cyntra.agents.memory.interfaces import RepositoryBundle
 from cyntra.agents.schemas import (
     PlanMissionRequest,
@@ -14,6 +12,7 @@ from cyntra.agents.schemas import (
     RunSessionRequest,
     RunSessionResponse,
 )
+from cyntra.commons import ErrorCode, ServiceError, get_logger
 
 from .archivist_graph import run_archivist
 from .base import GlyphMode

@@ -6,18 +6,18 @@ from .kernel import KernelTools
 from .memory import MemoryTools
 from .mission import MissionTools
 from .timeline import TimelineTools
+from .ui_registry_tools import (
+    ComponentInfo,
+    ComponentManifest,
+    UIRegistryTools,
+    create_ui_registry_tool_definitions,
+)
 from .ui_tools import (
     NotificationPriority,
     NotificationType,
     PendingNotification,
     UIState,
     UITools,
-)
-from .ui_registry_tools import (
-    ComponentInfo,
-    ComponentManifest,
-    UIRegistryTools,
-    create_ui_registry_tool_definitions,
 )
 from .workflow import WorkflowTools
 

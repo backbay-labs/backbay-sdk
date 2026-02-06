@@ -54,20 +54,14 @@ class InMemoryMissionsRepository:
         offset: int = 0,
     ) -> list[Mission]:
         missions = [
-            m
-            for m in self._missions.values()
-            if m.user_id == user_id and (status is None or m.status == status)
+            m for m in self._missions.values() if m.user_id == user_id and (status is None or m.status == status)
         ]
         # Sort by created_at descending
         missions.sort(key=lambda m: m.created_at, reverse=True)
         return missions[offset : offset + limit]
 
     async def get_active_mission(self, user_id: str) -> Mission | None:
-        active = [
-            m
-            for m in self._missions.values()
-            if m.user_id == user_id and m.status == MissionStatus.ACTIVE
-        ]
+        active = [m for m in self._missions.values() if m.user_id == user_id and m.status == MissionStatus.ACTIVE]
         if not active:
             return None
         # Return most recently updated active mission
@@ -107,14 +101,10 @@ class InMemoryBlocksRepository:
         limit: int = 100,
     ) -> list[Block]:
         blocks = [
-            b
-            for b in self._blocks.values()
-            if b.mission_id == mission_id and (status is None or b.status == status)
+            b for b in self._blocks.values() if b.mission_id == mission_id and (status is None or b.status == status)
         ]
         # Sort by sequence_index, then scheduled_start
-        blocks.sort(
-            key=lambda b: (b.sequence_index or 0, b.scheduled_start or datetime.max)
-        )
+        blocks.sort(key=lambda b: (b.sequence_index or 0, b.scheduled_start or datetime.max))
         return blocks[:limit]
 
     async def list_for_user_date(
@@ -125,19 +115,13 @@ class InMemoryBlocksRepository:
         blocks = [
             b
             for b in self._blocks.values()
-            if b.user_id == user_id
-            and b.scheduled_start is not None
-            and b.scheduled_start.date() == target_date
+            if b.user_id == user_id and b.scheduled_start is not None and b.scheduled_start.date() == target_date
         ]
         blocks.sort(key=lambda b: b.scheduled_start or datetime.max)
         return blocks
 
     async def get_current_block(self, user_id: str) -> Block | None:
-        in_progress = [
-            b
-            for b in self._blocks.values()
-            if b.user_id == user_id and b.status == BlockStatus.IN_PROGRESS
-        ]
+        in_progress = [b for b in self._blocks.values() if b.user_id == user_id and b.status == BlockStatus.IN_PROGRESS]
         if not in_progress:
             return None
         # Return the one that started most recently
@@ -234,9 +218,7 @@ class InMemorySemanticMemory:
     def __init__(self) -> None:
         self._episodes: dict[str, Episode] = {}
         self._missions: dict[str, Mission] = {}
-        self._patterns: dict[str, dict[str, str]] = (
-            {}
-        )  # user_id -> {pattern_type: summary}
+        self._patterns: dict[str, dict[str, str]] = {}  # user_id -> {pattern_type: summary}
 
     async def add_episode(self, episode: Episode) -> None:
         self._episodes[episode.id] = episode
@@ -319,9 +301,7 @@ class InMemoryGraphRepository:
     def __init__(self) -> None:
         self._nodes: dict[str, GraphNode] = {}  # keyed by f"{graph_id}:{node_id}"
         self._edges: dict[str, GraphEdge] = {}
-        self._progress: dict[str, NodeProgress] = (
-            {}
-        )  # keyed by f"{user_id}:{graph_id}:{node_id}"
+        self._progress: dict[str, NodeProgress] = {}  # keyed by f"{user_id}:{graph_id}:{node_id}"
 
     def _node_key(self, graph_id: str, node_id: str) -> str:
         return f"{graph_id}:{node_id}"
@@ -383,10 +363,7 @@ class InMemoryGraphRepository:
                 continue
             if query.parent_id and node.parent_id != query.parent_id:
                 continue
-            if (
-                query.title_contains
-                and query.title_contains.lower() not in node.title.lower()
-            ):
+            if query.title_contains and query.title_contains.lower() not in node.title.lower():
                 continue
 
             nodes.append(node)

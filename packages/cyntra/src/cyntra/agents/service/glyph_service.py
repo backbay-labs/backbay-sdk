@@ -5,8 +5,6 @@ This is what apps/backend imports and uses.
 
 from typing import Any
 
-from cyntra.commons import SurfaceType, get_logger, new_id
-
 from cyntra.agents.config import AgentSettings
 from cyntra.agents.graphs import GraphRouter
 from cyntra.agents.memory.interfaces import RepositoryBundle, SemanticMemory
@@ -37,6 +35,7 @@ from cyntra.agents.tools import (
     UITools,
     WorkflowTools,
 )
+from cyntra.commons import SurfaceType, get_logger, new_id
 
 logger = get_logger(__name__)
 
@@ -87,9 +86,7 @@ class GlyphAgentService:
         self._telemetry = telemetry or Telemetry()
 
         if openai_client is not None:
-            logger.warning(
-                "openai_client parameter is deprecated; the Agents SDK manages its own client"
-            )
+            logger.warning("openai_client parameter is deprecated; the Agents SDK manages its own client")
 
         # Initialize graph router
         self._router = GraphRouter(repos)
@@ -97,9 +94,7 @@ class GlyphAgentService:
         # Initialize tools with semantic memory
         self._mission_tools = MissionTools(repos.missions, self._semantic_memory)
         self._timeline_tools = TimelineTools(repos.blocks, repos.missions)
-        self._memory_tools = MemoryTools(
-            repos.episodes, repos.profiles, self._semantic_memory
-        )
+        self._memory_tools = MemoryTools(repos.episodes, repos.profiles, self._semantic_memory)
         self._graph_tools = GraphTools(repos.graph)
         self._ui_tools = UITools()
         self._external_tools = ExternalSignalTools()
@@ -192,9 +187,7 @@ class GlyphAgentService:
             # Handle API errors gracefully (e.g., no API key, rate limits)
             # This allows the service to work in test mode without a valid API key
             logger.warning("chat_error error=%s", str(e))
-            response_content = (
-                "I'm here to help! (Note: LLM service temporarily unavailable)"
-            )
+            response_content = "I'm here to help! (Note: LLM service temporarily unavailable)"
 
         logger.debug(
             "chat_response session_id=%s user_id=%s message_length=%d response_length=%d",

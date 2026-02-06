@@ -40,9 +40,7 @@ class PlannerGraph:
         self._repos = repos
         self._mission_tools = MissionTools(repos.missions, repos.semantic_memory)
         self._timeline_tools = TimelineTools(repos.blocks, repos.missions)
-        self._memory_tools = MemoryTools(
-            repos.episodes, repos.profiles, repos.semantic_memory
-        )
+        self._memory_tools = MemoryTools(repos.episodes, repos.profiles, repos.semantic_memory)
 
     def _parse_input(self, state: GlyphStateDict) -> GlyphStateDict:
         """Parse the raw input to extract mission details.
@@ -64,9 +62,7 @@ class PlannerGraph:
         }
 
         state["outputs"]["parsed_input"] = parsed
-        state["scratchpad"] = (
-            f"{state.get('scratchpad', '')}\nParsed input: {parsed['title']}"
-        )
+        state["scratchpad"] = f"{state.get('scratchpad', '')}\nParsed input: {parsed['title']}"
         return state
 
     async def _check_history(self, state: GlyphStateDict) -> GlyphStateDict:
@@ -77,9 +73,7 @@ class PlannerGraph:
 
         # Search for similar missions
         query = f"{parsed.get('title', '')} {parsed.get('description', '')}"
-        similar = await self._mission_tools.find_similar_missions(
-            user_id, query, limit=3
-        )
+        similar = await self._mission_tools.find_similar_missions(user_id, query, limit=3)
 
         history_note = None
         if similar:
@@ -231,12 +225,8 @@ async def run_planner(
                 "kind": request.kind.value if request.kind else None,
                 "deadline": request.deadline.isoformat() if request.deadline else None,
                 "estimated_hours": request.estimated_hours,
-                "constraints": (
-                    request.constraints.model_dump() if request.constraints else None
-                ),
-                "preferences": (
-                    request.preferences.model_dump() if request.preferences else None
-                ),
+                "constraints": (request.constraints.model_dump() if request.constraints else None),
+                "preferences": (request.preferences.model_dump() if request.preferences else None),
             }
         },
         "errors": [],
@@ -268,9 +258,7 @@ async def run_planner(
         proposed_blocks=proposed_blocks,
         summary=final_state.get("outputs", {}).get("summary", ""),
         rationale=final_state.get("outputs", {}).get("rationale"),
-        similar_missions_note=final_state.get("outputs", {}).get(
-            "similar_missions_note"
-        ),
+        similar_missions_note=final_state.get("outputs", {}).get("similar_missions_note"),
         warnings=final_state.get("errors", []),
         suggestions=[],
     )

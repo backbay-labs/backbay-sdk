@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Any
 
 from pydantic import Field
+
 from cyntra.commons import BaseSchema, SurfaceType
 
 from .core import (

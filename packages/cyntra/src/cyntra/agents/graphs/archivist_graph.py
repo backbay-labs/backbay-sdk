@@ -39,9 +39,7 @@ class ArchivistGraph:
         repos: RepositoryBundle,
     ) -> None:
         self._repos = repos
-        self._memory_tools = MemoryTools(
-            repos.episodes, repos.profiles, repos.semantic_memory
-        )
+        self._memory_tools = MemoryTools(repos.episodes, repos.profiles, repos.semantic_memory)
         self._mission_tools = MissionTools(repos.missions, repos.semantic_memory)
         self._timeline_tools = TimelineTools(repos.blocks, repos.missions)
 
@@ -85,9 +83,7 @@ class ArchivistGraph:
                 mission_data = mission.model_dump()
 
         # Load episodes for the period
-        episodes = await self._memory_tools.get_episodes_for_period(
-            user_id, start_date, end_date
-        )
+        episodes = await self._memory_tools.get_episodes_for_period(user_id, start_date, end_date)
 
         # Load user profile
         profile = await self._memory_tools.get_user_profile(user_id)
@@ -115,9 +111,7 @@ class ArchivistGraph:
         end_date = date.fromisoformat(period["end_date"])
 
         # Compute stats
-        stats = await self._memory_tools.compute_period_stats(
-            user_id, start_date, end_date
-        )
+        stats = await self._memory_tools.compute_period_stats(user_id, start_date, end_date)
 
         # Add completion rate
         if stats["blocks_completed"] > 0:
@@ -153,26 +147,32 @@ class ArchivistGraph:
         # Simple pattern detection
         avg_focus = stats.get("avg_focus_score", 0)
         if avg_focus >= 4:
-            patterns.append({
-                "description": "Your focus has been strong this period",
-                "confidence": 0.7,
-                "supporting_data": f"Average focus score: {avg_focus:.1f}/5",
-            })
+            patterns.append(
+                {
+                    "description": "Your focus has been strong this period",
+                    "confidence": 0.7,
+                    "supporting_data": f"Average focus score: {avg_focus:.1f}/5",
+                }
+            )
         elif avg_focus > 0 and avg_focus < 3:
-            patterns.append({
-                "description": "Focus has been challenging - consider shorter blocks",
-                "confidence": 0.6,
-                "suggested_action": "Try 25-minute blocks instead of longer ones",
-            })
+            patterns.append(
+                {
+                    "description": "Focus has been challenging - consider shorter blocks",
+                    "confidence": 0.6,
+                    "suggested_action": "Try 25-minute blocks instead of longer ones",
+                }
+            )
 
         # Energy patterns
         avg_energy = stats.get("avg_energy_score", 0)
         if avg_energy > 0 and avg_energy < 3:
-            patterns.append({
-                "description": "Energy levels have been lower than usual",
-                "confidence": 0.5,
-                "suggested_action": "Consider rest or lighter sessions",
-            })
+            patterns.append(
+                {
+                    "description": "Energy levels have been lower than usual",
+                    "confidence": 0.5,
+                    "suggested_action": "Consider rest or lighter sessions",
+                }
+            )
 
         state["outputs"]["patterns"] = patterns
         state["outputs"]["highlights"] = highlights
@@ -336,12 +336,16 @@ async def run_archivist(
     stats = outputs.get("stats", {})
     profile_data = outputs.get("updated_profile")
 
-    episode = Episode(**episode_data) if episode_data else Episode(
-        id="",
-        user_id=user_id,
-        kind=request.kind,
-        created_at=datetime.now(),
-        summary="Reflection recorded",
+    episode = (
+        Episode(**episode_data)
+        if episode_data
+        else Episode(
+            id="",
+            user_id=user_id,
+            kind=request.kind,
+            created_at=datetime.now(),
+            summary="Reflection recorded",
+        )
     )
 
     patterns = [PatternInsight(**p) for p in patterns_data]
@@ -360,4 +364,3 @@ async def run_archivist(
         updated_profile=updated_profile,
         suggestions=outputs.get("suggestions", []),
     )
-

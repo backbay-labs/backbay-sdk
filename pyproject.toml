@@ -10,6 +10,9 @@ members = [
     "packages/cyntra",
 ]
 
+[dependency-groups]
+dev = ["ruff>=0.7", "mypy>=1.11"]
+
 [tool.ruff]
 line-length = 120
 target-version = "py313"

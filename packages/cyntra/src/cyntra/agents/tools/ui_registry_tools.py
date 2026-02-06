@@ -16,11 +16,10 @@ as native agent tools for the LangGraph/Agents SDK.
 
 from __future__ import annotations
 
-import json
 import logging
+from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Callable, Coroutine
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +27,13 @@ logger = logging.getLogger(__name__)
 _HAS_KERNEL = False
 try:
     from cyntra.mcp.ui_tools import (
-        ui_registry_list,
+        ui_can_compose,
         ui_registry_get,
+        ui_registry_list,
         ui_workspace_compose,
         ui_workspace_preview,
-        ui_can_compose,
     )
+
     _HAS_KERNEL = True
 except ImportError:
     logger.debug("Kernel UI tools not available - using stub implementations")
@@ -42,6 +42,7 @@ except ImportError:
 @dataclass
 class ComponentInfo:
     """Summary information about a UI component."""
+
     id: str
     name: str
     category: str
@@ -53,6 +54,7 @@ class ComponentInfo:
 @dataclass
 class ComponentManifest:
     """Full component manifest with props schema."""
+
     id: str
     name: str
     category: str
@@ -133,12 +135,49 @@ class UIRegistryTools:
 
         # Stub implementation with common components
         stub_components = [
-            ComponentInfo("glass-panel", "Glass Panel", "organism", "Container with glassmorphism effect", ["cards", "modals", "sections"], ["tiny elements"]),
-            ComponentInfo("glow-button", "Glow Button", "atom", "CTA button with glowing border", ["primary actions", "CTAs"], ["secondary actions"]),
-            ComponentInfo("bento-grid", "Bento Grid", "organism", "Responsive grid layout", ["dashboards", "galleries"], ["linear content"]),
-            ComponentInfo("typing-animation", "Typing Animation", "atom", "Typewriter text effect", ["loading states", "reveals"], ["static content"]),
-            ComponentInfo("command-palette", "Command Palette", "organism", "Cmd+K style navigation", ["app navigation", "search"], ["simple UIs"]),
-            ComponentInfo("kpi-stat", "KPI Stat", "molecule", "Metric display with label", ["dashboards", "stats"], ["actions"]),
+            ComponentInfo(
+                "glass-panel",
+                "Glass Panel",
+                "organism",
+                "Container with glassmorphism effect",
+                ["cards", "modals", "sections"],
+                ["tiny elements"],
+            ),
+            ComponentInfo(
+                "glow-button",
+                "Glow Button",
+                "atom",
+                "CTA button with glowing border",
+                ["primary actions", "CTAs"],
+                ["secondary actions"],
+            ),
+            ComponentInfo(
+                "bento-grid",
+                "Bento Grid",
+                "organism",
+                "Responsive grid layout",
+                ["dashboards", "galleries"],
+                ["linear content"],
+            ),
+            ComponentInfo(
+                "typing-animation",
+                "Typing Animation",
+                "atom",
+                "Typewriter text effect",
+                ["loading states", "reveals"],
+                ["static content"],
+            ),
+            ComponentInfo(
+                "command-palette",
+                "Command Palette",
+                "organism",
+                "Cmd+K style navigation",
+                ["app navigation", "search"],
+                ["simple UIs"],
+            ),
+            ComponentInfo(
+                "kpi-stat", "KPI Stat", "molecule", "Metric display with label", ["dashboards", "stats"], ["actions"]
+            ),
         ]
 
         filtered = stub_components

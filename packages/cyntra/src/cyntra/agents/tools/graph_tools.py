@@ -47,9 +47,7 @@ class GraphTools:
             return []
 
         edge_type_strs = [e.value for e in edge_types] if edge_types else None
-        return await self._graph.get_neighbors(
-            graph_id, node_id, edge_types=edge_type_strs, direction=direction
-        )
+        return await self._graph.get_neighbors(graph_id, node_id, edge_types=edge_type_strs, direction=direction)
 
     async def get_prerequisites(
         self,
@@ -57,9 +55,7 @@ class GraphTools:
         node_id: str,
     ) -> list[GraphNode]:
         """Get prerequisite nodes for a concept."""
-        return await self.get_neighbors(
-            graph_id, node_id, edge_types=[EdgeType.PREREQUISITE], direction="incoming"
-        )
+        return await self.get_neighbors(graph_id, node_id, edge_types=[EdgeType.PREREQUISITE], direction="incoming")
 
     async def get_children(
         self,
@@ -67,9 +63,7 @@ class GraphTools:
         node_id: str,
     ) -> list[GraphNode]:
         """Get child nodes (contained within this node)."""
-        return await self.get_neighbors(
-            graph_id, node_id, edge_types=[EdgeType.CONTAINS], direction="outgoing"
-        )
+        return await self.get_neighbors(graph_id, node_id, edge_types=[EdgeType.CONTAINS], direction="outgoing")
 
     async def query_graph(self, query: GraphQuery) -> GraphQueryResult:
         """Execute a graph query."""
@@ -175,9 +169,7 @@ class GraphTools:
         for node_id in from_node_ids:
             # Get children and related nodes
             children = await self.get_children(graph_id, node_id)
-            related = await self.get_neighbors(
-                graph_id, node_id, edge_types=[EdgeType.RELATED]
-            )
+            related = await self.get_neighbors(graph_id, node_id, edge_types=[EdgeType.RELATED])
             candidates.extend(children)
             candidates.extend(related)
 
@@ -215,20 +207,14 @@ class GraphTools:
             prereqs = await self.get_prerequisites(graph_id, node_id)
             prerequisite_nodes.extend(prereqs)
 
-            related = await self.get_neighbors(
-                graph_id, node_id, edge_types=[EdgeType.RELATED]
-            )
+            related = await self.get_neighbors(graph_id, node_id, edge_types=[EdgeType.RELATED])
             related_nodes.extend(related)
 
-        suggested_next = await self.rank_next_nodes(
-            user_id, graph_id, focus_node_ids, limit=5
-        )
+        suggested_next = await self.rank_next_nodes(user_id, graph_id, focus_node_ids, limit=5)
 
         # Build summary
         focus_titles = [n.title for n in focus_nodes]
-        summary = (
-            f"Focus: {', '.join(focus_titles)}" if focus_titles else "No specific focus"
-        )
+        summary = f"Focus: {', '.join(focus_titles)}" if focus_titles else "No specific focus"
 
         if prerequisite_nodes:
             prereq_titles = [n.title for n in prerequisite_nodes[:3]]

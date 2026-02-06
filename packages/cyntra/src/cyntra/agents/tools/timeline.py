@@ -2,10 +2,9 @@
 
 from datetime import date, datetime, timedelta
 
-from cyntra.commons import new_id, now_utc
-
 from cyntra.agents.memory.interfaces import BlocksRepository, MissionsRepository
 from cyntra.agents.schemas import Block, BlockStatus
+from cyntra.commons import new_id, now_utc
 
 
 class TimelineTools:
@@ -61,9 +60,7 @@ class TimelineTools:
                 user_id=mission.user_id,
                 mission_id=mission_id,
                 sequence_index=len(blocks),
-                scheduled_start=datetime.combine(
-                    block_date, datetime.min.time().replace(hour=9)
-                ),
+                scheduled_start=datetime.combine(block_date, datetime.min.time().replace(hour=9)),
                 planned_duration_minutes=duration,
                 status=BlockStatus.PLANNED,
                 title=f"{mission.title} - Session {len(blocks) + 1}",
@@ -194,9 +191,7 @@ class TimelineTools:
         If mission_id is provided, only looks at blocks for that mission.
         """
         if mission_id:
-            blocks = await self._blocks.list_for_mission(
-                mission_id, status=BlockStatus.PLANNED
-            )
+            blocks = await self._blocks.list_for_mission(mission_id, status=BlockStatus.PLANNED)
         else:
             # Get today's blocks that are still planned
             today_blocks = await self.get_today_blocks(user_id)
@@ -208,9 +203,7 @@ class TimelineTools:
         # Return the one scheduled earliest
         blocks_with_schedule = [b for b in blocks if b.scheduled_start]
         if blocks_with_schedule:
-            return min(
-                blocks_with_schedule, key=lambda b: b.scheduled_start or datetime.max
-            )
+            return min(blocks_with_schedule, key=lambda b: b.scheduled_start or datetime.max)
 
         return blocks[0]  # Return first by sequence if no scheduled times
 

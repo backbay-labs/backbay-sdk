@@ -2,8 +2,6 @@
 
 from datetime import datetime
 
-from cyntra.commons import new_id, now_utc
-
 from cyntra.agents.memory.interfaces import MissionsRepository, SemanticMemory
 from cyntra.agents.schemas import (
     Mission,
@@ -13,6 +11,7 @@ from cyntra.agents.schemas import (
     MissionPriority,
     MissionStatus,
 )
+from cyntra.commons import new_id, now_utc
 
 
 class MissionTools:

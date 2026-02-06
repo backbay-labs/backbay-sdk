@@ -104,9 +104,7 @@ def configure_logging(config: TelemetryConfig) -> None:
 
     # Choose formatter based on config
     if config.structured_logging:
-        formatter: logging.Formatter = StructuredFormatter(
-            service_name=config.service_name
-        )
+        formatter: logging.Formatter = StructuredFormatter(service_name=config.service_name)
     else:
         formatter = HumanReadableFormatter(service_name=config.service_name)
 

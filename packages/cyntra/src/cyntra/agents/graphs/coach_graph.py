@@ -79,10 +79,7 @@ class CoachGraph:
         mission_data = outputs.get("mission")
 
         # If there's already an in-progress block, use it
-        if (
-            current_block
-            and current_block.get("status") == BlockStatus.IN_PROGRESS.value
-        ):
+        if current_block and current_block.get("status") == BlockStatus.IN_PROGRESS.value:
             state["outputs"]["selected_block"] = current_block
             state["outputs"]["is_continuation"] = True
             return state
@@ -97,9 +94,7 @@ class CoachGraph:
 
         # Get next planned block
         mission_id = mission_data.get("id") if mission_data else None
-        next_block = await self._timeline_tools.get_next_planned_block(
-            user_id, mission_id
-        )
+        next_block = await self._timeline_tools.get_next_planned_block(user_id, mission_id)
 
         if next_block:
             state["outputs"]["selected_block"] = next_block.model_dump()
@@ -116,9 +111,7 @@ class CoachGraph:
                 state["outputs"]["selected_block"] = new_block.model_dump()
                 state["outputs"]["is_continuation"] = False
             else:
-                state["errors"] = state.get("errors", []) + [
-                    "No mission or block available"
-                ]
+                state["errors"] = state.get("errors", []) + ["No mission or block available"]
 
         return state
 
@@ -129,16 +122,12 @@ class CoachGraph:
         mission_data = outputs.get("mission")
 
         if not block_data:
-            state["outputs"][
-                "brief"
-            ] = "Let's get you started. What would you like to work on?"
+            state["outputs"]["brief"] = "Let's get you started. What would you like to work on?"
             state["outputs"]["actions"] = []
             return state
 
         # Build brief message
-        mission_title = (
-            mission_data.get("title", "your work") if mission_data else "your work"
-        )
+        mission_title = mission_data.get("title", "your work") if mission_data else "your work"
         block_title = block_data.get("title", "Focus session")
         duration = block_data.get("planned_duration_minutes", 25)
 
@@ -260,9 +249,7 @@ async def run_coach(
                 "mission_id": request.mission_id,
                 "block_id": request.block_id,
                 "available_minutes": request.available_minutes,
-                "energy_level": (
-                    request.energy_level.value if request.energy_level else None
-                ),
+                "energy_level": (request.energy_level.value if request.energy_level else None),
                 "mood_note": request.mood_note,
                 "is_continuation": request.is_continuation,
             }

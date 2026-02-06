@@ -37,4 +37,3 @@ __all__ = [
     "InMemoryUserProfileRepository",
     "create_in_memory_repos",
 ]
-

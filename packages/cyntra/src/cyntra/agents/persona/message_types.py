@@ -75,9 +75,7 @@ class Message:
         )
 
     @classmethod
-    def tool(
-        cls, tool_call_id: str, content: str, name: str | None = None
-    ) -> "Message":
+    def tool(cls, tool_call_id: str, content: str, name: str | None = None) -> "Message":
         """Create a tool result message."""
         return cls(
             role=MessageRole.TOOL,
@@ -194,9 +192,7 @@ class Conversation:
                 return msg
         return None
 
-    def truncate_to_tokens(
-        self, max_tokens: int, model: str = "gpt-4"
-    ) -> "Conversation":
+    def truncate_to_tokens(self, max_tokens: int, model: str = "gpt-4") -> "Conversation":
         """Truncate conversation to fit within token limit.
 
         Simple implementation - keeps system message and recent messages.

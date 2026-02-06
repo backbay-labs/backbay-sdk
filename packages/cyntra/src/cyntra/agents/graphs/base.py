@@ -188,4 +188,3 @@ def get_state_schema() -> dict[str, Any]:
         "started_at": str,
         "updated_at": str,
     }
-

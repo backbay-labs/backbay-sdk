@@ -170,6 +170,12 @@ export default [js.configs.recommended, {
     "@typescript-eslint/no-non-null-asserted-optional-chain": "warn",
     "react/no-children-prop": "warn",
     "react-hooks/rules-of-hooks": "warn",
+    "react-hooks/refs": "warn",
+    "react-hooks/purity": "warn",
+    "react-hooks/set-state-in-effect": "warn",
+    "react-hooks/immutability": "warn",
+    "react-hooks/preserve-manual-memoization": "warn",
+    "react-hooks/static-components": "warn",
     "react/no-unknown-property": [
       "error",
       {

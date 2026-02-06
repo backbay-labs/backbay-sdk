@@ -82,4 +82,3 @@ class IDEAdapter:
         """Get total lines written in the period."""
         # Stub
         return 0
-

@@ -3,6 +3,7 @@
 from enum import Enum
 
 from pydantic_settings import SettingsConfigDict
+
 from cyntra.commons import BaseSchema, BaseSettings
 from cyntra.commons.config.openai import LLMDeployment, OpenAIConfig
 
