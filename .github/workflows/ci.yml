@@ -67,17 +67,20 @@ jobs:
   cairo:
     name: Cairo
     runs-on: ubuntu-latest
+    env:
+      DOJO_DIR: /home/runner/.dojo
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dojoup
+        env:
+          XDG_CONFIG_HOME: /home/runner
         run: curl -L https://raw.githubusercontent.com/dojoengine/dojo/main/dojoup/dojoup-install | bash
 
       - name: Install Dojo v1.0.0 toolchain
         run: |
-          source $HOME/.dojo/env 2>/dev/null || true
-          $HOME/.dojo/bin/dojoup install 1.0.0
-          echo "$HOME/.dojo/bin" >> $GITHUB_PATH
+          ${{ env.DOJO_DIR }}/dojoup/dojoup install 1.0.0
+          echo "${{ env.DOJO_DIR }}/bin" >> $GITHUB_PATH
 
       - name: Build Cairo contracts
         working-directory: packages/gameworld
