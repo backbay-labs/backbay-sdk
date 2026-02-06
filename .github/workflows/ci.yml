@@ -67,20 +67,20 @@ jobs:
   cairo:
     name: Cairo
     runs-on: ubuntu-latest
-    env:
-      DOJO_DIR: /home/runner/.dojo
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dojoup
-        env:
-          XDG_CONFIG_HOME: /home/runner
-        run: curl -L https://raw.githubusercontent.com/dojoengine/dojo/main/dojoup/dojoup-install | bash
+      - name: Install Scarb
+        uses: software-mansion/setup-scarb@v1
+        with:
+          scarb-version: "2.8.4"
 
-      - name: Install Dojo v1.0.0 toolchain
+      - name: Install Dojo v1.0.0
         run: |
-          ${{ env.DOJO_DIR }}/dojoup/dojoup install 1.0.0
-          echo "${{ env.DOJO_DIR }}/bin" >> $GITHUB_PATH
+          mkdir -p $HOME/.dojo/bin
+          curl -L "https://github.com/dojoengine/dojo/releases/download/v1.0.0/dojo_v1.0.0_linux_amd64.tar.gz" \
+            | tar -xzC $HOME/.dojo/bin
+          echo "$HOME/.dojo/bin" >> $GITHUB_PATH
 
       - name: Build Cairo contracts
         working-directory: packages/gameworld
