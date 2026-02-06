@@ -50,3 +50,16 @@ export {
   useUiTheme,
 } from "./UiThemeProvider";
 export type { UiThemeProviderProps } from "./UiThemeProvider";
+
+// Bridge
+export { desktopThemeFromUiTheme, type ThemeBridgeOptions } from "./bridge";
+
+// Materials
+export {
+  GLASS_MATERIALS,
+  getGlassMaterial,
+  buildBackdropFilter,
+  getReducedTransparencyStyles,
+  type GlassMaterial,
+  type GlassMaterialId,
+} from "./materials";

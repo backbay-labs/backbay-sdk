@@ -4,7 +4,15 @@ import { cn } from "../../../lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { motion, type HTMLMotionProps } from "framer-motion";
 import * as React from "react";
+import { usePrefersReducedTransparency } from "../../../lib/accessibility";
 import { useElevationTokens, useGlassTokens, useMotionTokens } from "../../../theme";
+import {
+  getGlassMaterial,
+  buildBackdropFilter,
+  getReducedTransparencyStyles,
+  type GlassMaterialId,
+} from "../../../theme/materials";
+import { NoiseOverlay } from "./NoiseOverlay";
 
 // ============================================================================
 // GLASS PANEL VARIANTS
@@ -63,6 +71,14 @@ export interface GlassPanelProps
   border?: string;
   /** As container element */
   as?: "div" | "section" | "article" | "aside" | "nav";
+  /** Glass material preset. Controls blur, opacity, noise, saturate, brightness. */
+  material?: GlassMaterialId;
+  /** Show noise texture overlay. Defaults to material's setting. */
+  showNoise?: boolean;
+  /** Noise opacity override (0-1) */
+  noiseOpacity?: number;
+  /** Force reduced transparency mode (overrides system preference) */
+  forceReducedTransparency?: boolean;
 }
 
 // ============================================================================
@@ -116,6 +132,10 @@ export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(func
     border,
     style,
     as: Component = "div",
+    material,
+    showNoise,
+    noiseOpacity,
+    forceReducedTransparency,
     onMouseEnter,
     onMouseLeave,
     ...props
@@ -126,6 +146,30 @@ export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(func
   const elevationTokens = useElevationTokens();
   const motionTokens = useMotionTokens();
   const [isHovered, setIsHovered] = React.useState(false);
+
+  const reducedTransparency = usePrefersReducedTransparency();
+  const isReducedTransparency = forceReducedTransparency ?? reducedTransparency;
+
+  // Material system: only active when `material` prop is explicitly set
+  const mat = material != null ? getGlassMaterial(material) : null;
+  const rtOverrides = mat && isReducedTransparency ? getReducedTransparencyStyles(mat) : null;
+
+  // Compute backdrop filter
+  const defaultBlur = `blur(${glassTokens.panelBlur ?? "24px"})`;
+  const effectiveBackdropFilter = mat
+    ? rtOverrides
+      ? rtOverrides.backdropFilter
+      : buildBackdropFilter(mat)
+    : isReducedTransparency
+      ? "none"
+      : defaultBlur;
+
+  // Compute background (when material is set and no explicit background override)
+  const effectiveBackground = background ?? glassTokens.panelBg;
+
+  // Compute noise visibility
+  const effectiveShowNoise = showNoise ?? (rtOverrides ? rtOverrides.showNoise : mat?.showNoise ?? false);
+  const effectiveNoiseOpacity = noiseOpacity ?? mat?.noiseOpacity ?? 0.03;
 
   // Map elevation to shadow
   const shadowMap = {
@@ -152,9 +196,9 @@ export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(func
       ref={ref}
       className={cn(glassPanelVariants({ variant, elevation, interactive }), className)}
       style={{
-          backdropFilter: `blur(${glassTokens.panelBlur ?? "24px"})`,
-          WebkitBackdropFilter: `blur(${glassTokens.panelBlur ?? "24px"})`,
-          background: background ?? glassTokens.panelBg,
+          backdropFilter: effectiveBackdropFilter,
+          WebkitBackdropFilter: effectiveBackdropFilter,
+          background: effectiveBackground,
           borderWidth: 1,
           borderStyle: "solid",
           borderColor: isActive ? glassTokens.activeBorder : (border ?? glassTokens.panelBorder),
@@ -173,6 +217,12 @@ export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(func
       }
       {...props}
     >
+      {effectiveShowNoise && (
+        <NoiseOverlay
+          preset={mat?.noisePreset ?? "glass"}
+          opacity={effectiveNoiseOpacity}
+        />
+      )}
       {showHoverGlow && <HoverGlow isHovered={isHovered} />}
       {children}
     </MotionComponent>

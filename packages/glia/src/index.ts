@@ -52,6 +52,8 @@ export * from './theme/index.js';
 // =============================================================================
 
 export * from './lib/utils.js';
+export { generateNoiseDataUrl, NOISE_PRESETS } from './lib/noise.js';
+export type { NoiseConfig, NoisePreset } from './lib/noise.js';
 
 // =============================================================================
 // Emotion System

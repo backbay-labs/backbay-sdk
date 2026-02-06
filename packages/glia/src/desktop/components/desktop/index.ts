@@ -12,3 +12,4 @@ export {
   type SnapZoneOverlayProps,
   type SnapZonePreviewProps,
 } from './SnapZoneOverlay';
+export { FileBrowser } from './FileBrowser';

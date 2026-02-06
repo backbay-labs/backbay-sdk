@@ -2,6 +2,16 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { GlassPanel, GlassHeader, GlassCard, GlassSection } from "./GlassPanel";
 import { Settings, Bell, User, ChevronRight, Zap, Shield, Sparkles } from "lucide-react";
 import { GlowButton } from "../../atoms/GlowButton/GlowButton";
+import { UiThemeProvider } from "../../../theme";
+import { GLASS_MATERIALS, type GlassMaterialId } from "../../../theme/materials";
+
+const WithTheme = ({ children }: { children: React.ReactNode }) => (
+  <UiThemeProvider>
+    <div style={{ background: "#02040a", padding: 40, minHeight: 400 }}>
+      {children}
+    </div>
+  </UiThemeProvider>
+);
 
 const meta: Meta<typeof GlassPanel> = {
   title: "Primitives/Organisms/GlassPanel",
@@ -27,6 +37,19 @@ const meta: Meta<typeof GlassPanel> = {
       control: "boolean",
     },
     isActive: {
+      control: "boolean",
+    },
+    material: {
+      control: "select",
+      options: [undefined, "frosted", "thin", "thick", "clear", "holographic"],
+    },
+    showNoise: {
+      control: "boolean",
+    },
+    noiseOpacity: {
+      control: { type: "range", min: 0, max: 0.2, step: 0.01 },
+    },
+    forceReducedTransparency: {
       control: "boolean",
     },
   },
@@ -356,4 +379,125 @@ export const AsNavigation: Story = {
       </div>
     ),
   },
+};
+
+// ============================================================================
+// MATERIAL STORIES
+// ============================================================================
+
+export const MaterialComparison: Story = {
+  render: () => (
+    <WithTheme>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, maxWidth: 900 }}>
+        {(Object.keys(GLASS_MATERIALS) as GlassMaterialId[]).map((id) => {
+          const mat = GLASS_MATERIALS[id];
+          return (
+            <GlassPanel key={id} material={id} className="p-5" style={{ minHeight: 140 }}>
+              <h4 style={{ fontWeight: 600, marginBottom: 4, color: "#E5E7EB" }}>{mat.name}</h4>
+              <p style={{ fontSize: 12, color: "#94A3B8", lineHeight: 1.5 }}>
+                {mat.backdropFilter} / saturate {mat.saturate}% / brightness {mat.brightness}%
+              </p>
+              <p style={{ fontSize: 11, color: "#64748B", marginTop: 8 }}>
+                noise: {mat.showNoise ? `${mat.noisePreset} @ ${mat.noiseOpacity}` : "off"}
+              </p>
+            </GlassPanel>
+          );
+        })}
+      </div>
+    </WithTheme>
+  ),
+};
+
+export const MaterialFrosted: Story = {
+  render: () => (
+    <WithTheme>
+      <GlassPanel material="frosted" className="p-6" style={{ width: 320 }}>
+        <h3 style={{ fontWeight: 600, marginBottom: 8, color: "#E5E7EB" }}>Frosted Glass</h3>
+        <p style={{ fontSize: 13, color: "#94A3B8" }}>
+          The default material with medium blur, noise grain, and enhanced saturation.
+        </p>
+      </GlassPanel>
+    </WithTheme>
+  ),
+};
+
+export const MaterialThin: Story = {
+  render: () => (
+    <WithTheme>
+      <GlassPanel material="thin" className="p-6" style={{ width: 320 }}>
+        <h3 style={{ fontWeight: 600, marginBottom: 8, color: "#E5E7EB" }}>Thin Glass</h3>
+        <p style={{ fontSize: 13, color: "#94A3B8" }}>
+          Minimal blur and low opacity for subtle layering.
+        </p>
+      </GlassPanel>
+    </WithTheme>
+  ),
+};
+
+export const MaterialThick: Story = {
+  render: () => (
+    <WithTheme>
+      <GlassPanel material="thick" elevation="modal" className="p-6" style={{ width: 320 }}>
+        <h3 style={{ fontWeight: 600, marginBottom: 8, color: "#E5E7EB" }}>Thick Glass</h3>
+        <p style={{ fontSize: 13, color: "#94A3B8" }}>
+          Heavy blur and opaque background for modals and dialogs.
+        </p>
+      </GlassPanel>
+    </WithTheme>
+  ),
+};
+
+export const MaterialHolographic: Story = {
+  render: () => (
+    <WithTheme>
+      <GlassPanel material="holographic" className="p-6" style={{ width: 320 }}>
+        <h3 style={{ fontWeight: 600, marginBottom: 8, color: "#E5E7EB" }}>Holographic Glass</h3>
+        <p style={{ fontSize: 13, color: "#94A3B8" }}>
+          Vibrant saturation with heavy noise for a sci-fi aesthetic.
+        </p>
+      </GlassPanel>
+    </WithTheme>
+  ),
+};
+
+export const WithNoiseOverlay: Story = {
+  render: () => (
+    <WithTheme>
+      <div style={{ display: "flex", gap: 24 }}>
+        <GlassPanel showNoise noiseOpacity={0.02} className="p-5" style={{ width: 200 }}>
+          <h4 style={{ fontWeight: 600, color: "#E5E7EB", marginBottom: 4 }}>Subtle</h4>
+          <p style={{ fontSize: 12, color: "#94A3B8" }}>opacity: 0.02</p>
+        </GlassPanel>
+        <GlassPanel showNoise noiseOpacity={0.06} className="p-5" style={{ width: 200 }}>
+          <h4 style={{ fontWeight: 600, color: "#E5E7EB", marginBottom: 4 }}>Medium</h4>
+          <p style={{ fontSize: 12, color: "#94A3B8" }}>opacity: 0.06</p>
+        </GlassPanel>
+        <GlassPanel showNoise noiseOpacity={0.12} className="p-5" style={{ width: 200 }}>
+          <h4 style={{ fontWeight: 600, color: "#E5E7EB", marginBottom: 4 }}>Heavy</h4>
+          <p style={{ fontSize: 12, color: "#94A3B8" }}>opacity: 0.12</p>
+        </GlassPanel>
+      </div>
+    </WithTheme>
+  ),
+};
+
+export const ReducedTransparency: Story = {
+  render: () => (
+    <WithTheme>
+      <div style={{ display: "flex", gap: 24 }}>
+        <GlassPanel material="frosted" className="p-5" style={{ width: 240 }}>
+          <h4 style={{ fontWeight: 600, color: "#E5E7EB", marginBottom: 4 }}>Normal</h4>
+          <p style={{ fontSize: 12, color: "#94A3B8" }}>
+            Full glassmorphism with blur, noise, and transparency.
+          </p>
+        </GlassPanel>
+        <GlassPanel material="frosted" forceReducedTransparency className="p-5" style={{ width: 240 }}>
+          <h4 style={{ fontWeight: 600, color: "#E5E7EB", marginBottom: 4 }}>Reduced Transparency</h4>
+          <p style={{ fontSize: 12, color: "#94A3B8" }}>
+            Solid background, no blur, no noise. Accessible fallback.
+          </p>
+        </GlassPanel>
+      </div>
+    </WithTheme>
+  ),
 };

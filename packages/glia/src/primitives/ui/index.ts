@@ -23,3 +23,7 @@ export * from "./switch";
 export * from "./tabs";
 export * from "./toggle";
 export * from "./tooltip";
+export * from "./checkbox";
+export * from "./radio-group";
+export * from "./slider";
+export * from "./accordion";

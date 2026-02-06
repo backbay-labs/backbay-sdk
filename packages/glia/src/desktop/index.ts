@@ -67,6 +67,23 @@ export {
   // Shell hooks
   useTaskbar,
   useTaskbarStore,
+  useStartMenu,
+  useStartMenuStore,
+  useSystemTray,
+  useSystemTrayStore,
+  type SystemTrayItem as SystemTrayItemDef,
+  type UseSystemTrayReturn,
+  // Notification types
+  type NotificationType,
+  type NotificationPriority,
+  type NotificationAction,
+  type Notification,
+  type NotificationGroup,
+  type NotificationInput,
+  type UseNotificationsReturn,
+  // Notification hooks
+  useNotifications,
+  useNotificationStore,
   // Desktop types
   type ProcessDefinition,
   type ProcessInstance,
@@ -82,6 +99,18 @@ export {
   getSnapZoneDimensions,
   EDGE_THRESHOLD,
   CORNER_SIZE,
+  // FileBrowser types
+  type FileItem,
+  type FileType,
+  type FileBrowserViewMode,
+  type FileBrowserSortField,
+  type FileBrowserSortOrder,
+  type FileBrowserSort,
+  type FileBrowserProps,
+  type UseFileBrowserReturn,
+  // FileBrowser hooks
+  useFileBrowser,
+  useFileBrowserStore,
 } from './core';
 
 // Themes
