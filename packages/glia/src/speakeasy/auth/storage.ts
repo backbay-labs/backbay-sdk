@@ -265,7 +265,7 @@ async function decryptVerifier(
  * Create encrypted localStorage storage.
  *
  * The verifier is encrypted with AES-256-GCM using a key derived from the
- * device secret via PBKDF2 (100k iterations).
+ * device secret via PBKDF2 (600,000 iterations).
  *
  * @param options.deviceSecret - The device secret to derive the encryption key from
  * @param options.key - localStorage key for the encrypted payload
@@ -316,7 +316,7 @@ export function createEncryptedLocalStorageSpeakeasyStorage(options: {
  * Create encrypted IndexedDB storage.
  *
  * The verifier is encrypted with AES-256-GCM using a key derived from the
- * device secret via PBKDF2 (100k iterations).
+ * device secret via PBKDF2 (600,000 iterations).
  *
  * @param options.deviceSecret - The device secret to derive the encryption key from
  * @param options.dbName - IndexedDB database name
@@ -423,6 +423,10 @@ export function createEncryptedSpeakeasyStorage(
     // ignore
   }
   // Fall back to in-memory (no encryption needed since it's ephemeral)
+  console.warn(
+    '[Speakeasy] Encrypted persistent storage is unavailable (IndexedDB and localStorage not found). ' +
+      'Falling back to in-memory storage — data will NOT persist across sessions.'
+  );
   return createInMemorySpeakeasyStorage();
 }
 

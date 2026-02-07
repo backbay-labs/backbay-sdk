@@ -163,6 +163,9 @@ export class SpeakeasyAuth {
     if (!verifier) {
       throw new Error('[Speakeasy] Not registered');
     }
+    if (verifier.domain !== this.domain) {
+      throw new Error('[Speakeasy] Domain mismatch');
+    }
     const keyBytes = await deriveVerifierKeyBytes({
       sequence,
       domain: verifier.domain,

@@ -112,6 +112,16 @@ export function SystemTrayStoreProvider({ children }: { children: ReactNode }) {
 export const useSystemTrayStore = create<SystemTrayStore>((set) => createSystemTrayStoreImpl(set));
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Context-aware store resolver
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Returns the context-provided store if available, otherwise the singleton. */
+function useResolvedSystemTrayStore(): import('zustand').StoreApi<SystemTrayStore> {
+  const contextStore = useContext(SystemTrayStoreContext);
+  return contextStore ?? useSystemTrayStore;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Public Hook
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -136,7 +146,9 @@ export interface UseSystemTrayReturn {
  * Provides registration/unregistration of tray items and overflow control.
  */
 export function useSystemTray(): UseSystemTrayReturn {
-  const store = useSystemTrayStore(
+  const resolvedStore = useResolvedSystemTrayStore();
+  const store = useStore(
+    resolvedStore,
     useShallow((state) => ({
       items: state.items,
       isExpanded: state.isExpanded,
@@ -144,7 +156,7 @@ export function useSystemTray(): UseSystemTrayReturn {
       unregisterItem: state.unregisterItem,
       updateItem: state.updateItem,
       toggleExpanded: state.toggleExpanded,
-    }))
+    })),
   );
 
   // Convert map to sorted array

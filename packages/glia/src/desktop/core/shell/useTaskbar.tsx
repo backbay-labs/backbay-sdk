@@ -202,6 +202,16 @@ export function TaskbarStoreProvider({ children }: { children: ReactNode }) {
 export const useTaskbarStore = create<TaskbarStore>((set, get) => createTaskbarStoreImpl(set, get));
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Context-aware store resolver
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Returns the context-provided store if available, otherwise the singleton. */
+function useResolvedTaskbarStore(): import('zustand').StoreApi<TaskbarStore> {
+  const contextStore = useContext(TaskbarStoreContext);
+  return contextStore ?? useTaskbarStore;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Public Hook
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -237,7 +247,9 @@ export function useTaskbar(
   windows: Array<{ id: string; appId: string; title: string; icon?: string }> = [],
   activeWindowId: WindowId | null = null
 ): UseTaskbarReturn {
-  const store = useTaskbarStore(
+  const resolvedStore = useResolvedTaskbarStore();
+  const store = useStore(
+    resolvedStore,
     useShallow((state) => ({
       buttonPositions: state.buttonPositions,
       previewState: state.previewState,
@@ -251,7 +263,7 @@ export function useTaskbar(
       hidePreview: state.hidePreview,
       pinApp: state.pinApp,
       unpinApp: state.unpinApp,
-    }))
+    })),
   );
 
   // Build taskbar items from windows and pinned apps (memoized to prevent unnecessary re-renders)

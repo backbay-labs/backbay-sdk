@@ -131,6 +131,16 @@ export function NotificationStoreProvider({ children }: { children: ReactNode })
 export const useNotificationStore = create<NotificationStore>((set, get) => createNotificationStoreImpl(set, get));
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Context-aware store resolver
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Returns the context-provided store if available, otherwise the singleton. */
+function useResolvedNotificationStore(): import('zustand').StoreApi<NotificationStore> {
+  const contextStore = useContext(NotificationStoreContext);
+  return contextStore ?? useNotificationStore;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Helpers
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -197,7 +207,9 @@ function groupNotifications(notifications: Notification[]): NotificationGroup[] 
  * Provides notifications, unread count, grouped notifications, and actions.
  */
 export function useNotifications(): UseNotificationsReturn {
-  const store = useNotificationStore(
+  const resolvedStore = useResolvedNotificationStore();
+  const store = useStore(
+    resolvedStore,
     useShallow((state) => ({
       notifications: state.notifications,
       isPanelOpen: state.isPanelOpen,
@@ -210,7 +222,7 @@ export function useNotifications(): UseNotificationsReturn {
       openPanel: state.openPanel,
       closePanel: state.closePanel,
       togglePanel: state.togglePanel,
-    }))
+    })),
   );
 
   // Filter to only non-dismissed notifications

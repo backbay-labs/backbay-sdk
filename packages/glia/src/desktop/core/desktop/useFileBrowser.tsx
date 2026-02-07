@@ -203,6 +203,16 @@ export function FileBrowserStoreProvider({ children }: { children: ReactNode }) 
 export const useFileBrowserStore = create<FileBrowserStore>((set, get) => createFileBrowserStoreImpl(set, get));
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Context-aware store resolver
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Returns the context-provided store if available, otherwise the singleton. */
+function useResolvedFileBrowserStore(): import('zustand').StoreApi<FileBrowserStore> {
+  const contextStore = useContext(FileBrowserStoreContext);
+  return contextStore ?? useFileBrowserStore;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Helpers
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -289,7 +299,9 @@ export function useFileBrowser(
   files: FileItem[],
   initialFolderId: string | null = null
 ): UseFileBrowserReturn {
-  const store = useFileBrowserStore(
+  const resolvedStore = useResolvedFileBrowserStore();
+  const store = useStore(
+    resolvedStore,
     useShallow((state) => ({
       currentFolderId: state.currentFolderId,
       historyIndex: state.historyIndex,
@@ -309,7 +321,7 @@ export function useFileBrowser(
       setSort: state.setSort,
       toggleSortField: state.toggleSortField,
       setSearchQuery: state.setSearchQuery,
-    }))
+    })),
   );
 
   // Filter files to current folder

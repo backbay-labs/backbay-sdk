@@ -105,6 +105,16 @@ export function SnapZoneStoreProvider({ children }: { children: ReactNode }) {
 export const useSnapZoneStore = create<SnapZoneStore>((set, get) => createSnapZoneStoreImpl(set, get));
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Context-aware store resolver
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Returns the context-provided store if available, otherwise the singleton. */
+function useResolvedSnapZoneStore(): import('zustand').StoreApi<SnapZoneStore> {
+  const contextStore = useContext(SnapZoneStoreContext);
+  return contextStore ?? useSnapZoneStore;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Helper Functions
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -170,14 +180,16 @@ export function getSnapZoneDimensions(zone: SnapZone): {
  * ```
  */
 export function useSnapZones(): UseSnapZonesReturn {
-  const store = useSnapZoneStore(
+  const resolvedStore = useResolvedSnapZoneStore();
+  const store = useStore(
+    resolvedStore,
     useShallow((state) => ({
       activeZone: state.activeZone,
       draggingWindowId: state.draggingWindowId,
       setActiveZone: state.setActiveZone,
       setDraggingWindow: state.setDraggingWindow,
       detectSnapZone: state.detectSnapZone,
-    }))
+    })),
   );
 
   return {

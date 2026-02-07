@@ -10,7 +10,6 @@ import {
   useIsWindowFullscreen,
   useWindowGroup,
   useWindowActions,
-  useWindowManagerStore,
 } from '../../core/window/useWindowManager';
 import { WindowTitlebar } from './WindowTitlebar';
 import { GliaErrorBoundary } from '../../../primitives/atoms/GliaErrorBoundary';
@@ -437,11 +436,9 @@ function WindowInner({
 
   const [showGroupDropZone, setShowGroupDropZone] = useState(false);
 
-  // Get dragging window ID from store for group drop detection
-  const draggingWindowId = useWindowManagerStore((state) => {
-    // This would need to be added to the store - for now we'll skip this feature
-    return null;
-  });
+  // Get dragging window ID for group drop detection
+  // TODO: wire this up when drag state is added to the store
+  const draggingWindowId: string | null = null;
 
   // ─────────────────────────────────────────────────────────────────────────
   // Handle minimize/restore animation state

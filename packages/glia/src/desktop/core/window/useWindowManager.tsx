@@ -154,26 +154,26 @@ function createWindowManagerStoreImpl(
   nextZIndex: 1,
 
   _open: (config) => {
-    const { windows, nextZIndex } = get();
     const id = generateWindowId();
-    const position = calculateInitialPosition(config, windows.size);
-
-    const newWindow: WindowState = {
-      id,
-      title: config.title,
-      icon: config.icon,
-      position,
-      size: config.size ?? { width: 640, height: 480 },
-      minSize: config.minSize ?? { width: 320, height: 240 },
-      maxSize: config.maxSize,
-      isMinimized: config.isMinimized ?? false,
-      isMaximized: config.isMaximized ?? false,
-      isFullscreen: false,
-      isFocused: true,
-      zIndex: nextZIndex,
-    };
 
     set((state) => {
+      const position = calculateInitialPosition(config, state.windows.size);
+
+      const newWindow: WindowState = {
+        id,
+        title: config.title,
+        icon: config.icon,
+        position,
+        size: config.size ?? { width: 640, height: 480 },
+        minSize: config.minSize ?? { width: 320, height: 240 },
+        maxSize: config.maxSize,
+        isMinimized: config.isMinimized ?? false,
+        isMaximized: config.isMaximized ?? false,
+        isFullscreen: false,
+        isFocused: true,
+        zIndex: state.nextZIndex,
+      };
+
       const newWindows = new Map(state.windows);
       newWindows.set(id, newWindow);
       return {
@@ -237,7 +237,7 @@ function createWindowManagerStoreImpl(
   },
 
   _focus: (id) => {
-    const { windows, nextZIndex, focusedId, groups } = get();
+    const { windows, focusedId, groups } = get();
     const window = windows.get(id);
 
     if (!window || id === focusedId) return;
@@ -261,7 +261,7 @@ function createWindowManagerStoreImpl(
       const newWindows = new Map(state.windows);
       const w = newWindows.get(id);
       if (w) {
-        newWindows.set(id, { ...w, zIndex: nextZIndex, isFocused: true });
+        newWindows.set(id, { ...w, zIndex: state.nextZIndex, isFocused: true });
       }
       // Unfocus previous window
       if (state.focusedId && state.focusedId !== id) {
@@ -344,7 +344,7 @@ function createWindowManagerStoreImpl(
   },
 
   _restore: (id) => {
-    const { windows, groups, nextZIndex } = get();
+    const { windows, groups } = get();
     const window = windows.get(id);
     if (!window) return;
 
@@ -365,13 +365,13 @@ function createWindowManagerStoreImpl(
               position: { x: w.preMaximize.x, y: w.preMaximize.y },
               size: { width: w.preMaximize.width, height: w.preMaximize.height },
               preMaximize: undefined,
-              zIndex: nextZIndex,
+              zIndex: state.nextZIndex,
             });
           } else {
             newWindows.set(windowId, {
               ...w,
               isMinimized: false,
-              zIndex: nextZIndex,
+              zIndex: state.nextZIndex,
             });
           }
         }
@@ -441,11 +441,8 @@ function createWindowManagerStoreImpl(
   },
 
   _exitFullscreen: () => {
-    const { windows, fullscreenId, nextZIndex } = get();
+    const { fullscreenId } = get();
     if (!fullscreenId) return;
-
-    const window = windows.get(fullscreenId);
-    if (!window) return;
 
     // Exit browser fullscreen
     if (typeof document !== 'undefined' && document.fullscreenElement) {
@@ -463,7 +460,7 @@ function createWindowManagerStoreImpl(
           position: { x: pre?.x ?? 100, y: pre?.y ?? 100 },
           size: { width: pre?.width ?? 800, height: pre?.height ?? 600 },
           preFullscreen: undefined,
-          zIndex: nextZIndex,
+          zIndex: state.nextZIndex,
         });
       }
       return {
@@ -755,7 +752,7 @@ function createWindowManagerStoreImpl(
   },
 
   _setActiveTab: (groupId, windowId) => {
-    const { windows, groups, nextZIndex } = get();
+    const { windows, groups } = get();
     const group = groups.get(groupId);
     const window = windows.get(windowId);
 
@@ -775,7 +772,7 @@ function createWindowManagerStoreImpl(
           newWindows.set(wId, {
             ...w,
             isGroupActive: wId === windowId,
-            zIndex: wId === windowId ? nextZIndex : w.zIndex,
+            zIndex: wId === windowId ? state.nextZIndex : w.zIndex,
           });
         }
       }
@@ -816,14 +813,13 @@ function createWindowManagerStoreImpl(
   },
 
   _cascade: () => {
-    const { windows, nextZIndex } = get();
-    const windowList = Array.from(windows.values())
-      .filter((w) => !w.isMinimized)
-      .sort((a, b) => a.zIndex - b.zIndex);
-
     set((state) => {
+      const windowList = Array.from(state.windows.values())
+        .filter((w) => !w.isMinimized)
+        .sort((a, b) => a.zIndex - b.zIndex);
+
       const newWindows = new Map(state.windows);
-      let z = nextZIndex;
+      let z = state.nextZIndex;
       windowList.forEach((w, i) => {
         const offset = i * CASCADE_OFFSET;
         newWindows.set(w.id, {
@@ -923,6 +919,16 @@ export function WindowManagerStoreProvider({ children }: { children: ReactNode }
 export const useWindowManagerStore = create<WindowManagerStore>((set, get) => createWindowManagerStoreImpl(set, get));
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Context-aware store resolver
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Returns the context-provided store if available, otherwise the singleton. */
+function useResolvedWindowManagerStore(): StoreApi<WindowManagerStore> {
+  const contextStore = useContext(WindowManagerStoreContext);
+  return contextStore ?? useWindowManagerStore;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Public Hook
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -942,7 +948,9 @@ export const useWindowManagerStore = create<WindowManagerStore>((set, get) => cr
  * ```
  */
 export function useWindowManager(): UseWindowManagerReturn {
-  const store = useWindowManagerStore(
+  const resolvedStore = useResolvedWindowManagerStore();
+  const store = useStore(
+    resolvedStore,
     useShallow((state) => ({
       windows: state.windows,
       groups: state.groups,
@@ -969,7 +977,7 @@ export function useWindowManager(): UseWindowManagerReturn {
       closeAll: state._closeAll,
       cascade: state._cascade,
       tileAll: state._tileAll,
-    }))
+    })),
   );
 
   return {
@@ -1022,8 +1030,10 @@ export function useWindowManager(): UseWindowManagerReturn {
  * ```
  */
 export function useWindowIds(): WindowId[] {
-  return useWindowManagerStore(
-    useShallow((state) => Array.from(state.windows.keys()))
+  const resolvedStore = useResolvedWindowManagerStore();
+  return useStore(
+    resolvedStore,
+    useShallow((state) => Array.from(state.windows.keys())),
   );
 }
 
@@ -1041,7 +1051,8 @@ export function useWindowIds(): WindowId[] {
  * ```
  */
 export function useWindow(id: WindowId): WindowState | undefined {
-  return useWindowManagerStore((state) => state.windows.get(id));
+  const resolvedStore = useResolvedWindowManagerStore();
+  return useStore(resolvedStore, (state) => state.windows.get(id));
 }
 
 /**
@@ -1057,7 +1068,8 @@ export function useWindow(id: WindowId): WindowState | undefined {
  * ```
  */
 export function useIsWindowFocused(id: WindowId): boolean {
-  return useWindowManagerStore((state) => state.focusedId === id);
+  const resolvedStore = useResolvedWindowManagerStore();
+  return useStore(resolvedStore, (state) => state.focusedId === id);
 }
 
 /**
@@ -1067,7 +1079,8 @@ export function useIsWindowFocused(id: WindowId): boolean {
  * @returns True if the window is in fullscreen mode
  */
 export function useIsWindowFullscreen(id: WindowId): boolean {
-  return useWindowManagerStore((state) => state.fullscreenId === id);
+  const resolvedStore = useResolvedWindowManagerStore();
+  return useStore(resolvedStore, (state) => state.fullscreenId === id);
 }
 
 /**
@@ -1082,7 +1095,8 @@ export function useIsWindowFullscreen(id: WindowId): boolean {
  * ```
  */
 export function useIsFullscreenActive(): boolean {
-  return useWindowManagerStore((state) => state.fullscreenId !== null);
+  const resolvedStore = useResolvedWindowManagerStore();
+  return useStore(resolvedStore, (state) => state.fullscreenId !== null);
 }
 
 /**
@@ -1098,7 +1112,9 @@ export function useIsFullscreenActive(): boolean {
  * ```
  */
 export function useWindowActions() {
-  return useWindowManagerStore(
+  const resolvedStore = useResolvedWindowManagerStore();
+  return useStore(
+    resolvedStore,
     useShallow((state) => ({
       open: state._open,
       close: state._close,
@@ -1112,7 +1128,7 @@ export function useWindowActions() {
       untile: state._untile,
       fullscreen: state._fullscreen,
       exitFullscreen: state._exitFullscreen,
-    }))
+    })),
   );
 }
 
@@ -1131,7 +1147,8 @@ export function useWindowActions() {
  * ```
  */
 export function useWindowGroup(groupId: string | undefined): WindowGroup | undefined {
-  return useWindowManagerStore((state) =>
-    groupId ? state.groups.get(groupId) : undefined
+  const resolvedStore = useResolvedWindowManagerStore();
+  return useStore(resolvedStore, (state) =>
+    groupId ? state.groups.get(groupId) : undefined,
   );
 }

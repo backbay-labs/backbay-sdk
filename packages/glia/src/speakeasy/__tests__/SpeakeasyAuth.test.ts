@@ -151,6 +151,23 @@ describe('SpeakeasyAuth', () => {
       );
     });
 
+    it('throws on domain mismatch', async () => {
+      const gesture = createGesture();
+
+      // Register on a different domain using shared storage
+      const otherAuth = new SpeakeasyAuth({
+        storage,
+        domain: 'https://other.local',
+        deviceSecret: 'test-device-secret',
+      });
+      await otherAuth.registerGesture(gesture);
+
+      // computeResponse from original domain should reject
+      await expect(auth.computeResponse(gesture, createChallenge())).rejects.toThrow(
+        '[Speakeasy] Domain mismatch'
+      );
+    });
+
     it('produces deterministic response for same inputs', async () => {
       const gesture = createGesture();
       const challenge = createChallenge();

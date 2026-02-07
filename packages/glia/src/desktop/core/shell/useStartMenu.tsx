@@ -128,6 +128,16 @@ export function StartMenuStoreProvider({ children }: { children: ReactNode }) {
 export const useStartMenuStore = create<StartMenuStore>((set) => createStartMenuStoreImpl(set));
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Context-aware store resolver
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Returns the context-provided store if available, otherwise the singleton. */
+function useResolvedStartMenuStore(): import('zustand').StoreApi<StartMenuStore> {
+  const contextStore = useContext(StartMenuStoreContext);
+  return contextStore ?? useStartMenuStore;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Public Hook
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -150,7 +160,9 @@ export const useStartMenuStore = create<StartMenuStore>((set) => createStartMenu
  * ```
  */
 export function useStartMenu(): UseStartMenuReturn {
-  const store = useStartMenuStore(
+  const resolvedStore = useResolvedStartMenuStore();
+  const store = useStore(
+    resolvedStore,
     useShallow((state) => ({
       isOpen: state.isOpen,
       categories: state.categories,
@@ -166,7 +178,7 @@ export function useStartMenu(): UseStartMenuReturn {
       registerCategories: state.registerCategories,
       pinApp: state.pinApp,
       unpinApp: state.unpinApp,
-    }))
+    })),
   );
 
   const pinnedApps = useMemo(
