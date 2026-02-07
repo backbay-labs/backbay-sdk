@@ -39,7 +39,7 @@
  */
 
 import { type CSSProperties, type ReactNode } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Clock, type ClockProps } from './Clock';
 
 // ═══════════════════════════════════════════════════════════════════════════

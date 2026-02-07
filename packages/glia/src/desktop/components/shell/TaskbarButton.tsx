@@ -27,7 +27,7 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from 'react';
-import { motion, type HTMLMotionProps } from 'motion/react';
+import { motion, type HTMLMotionProps } from 'framer-motion';
 import type { TaskbarButtonPosition } from '../../core/shell/types';
 
 // ═══════════════════════════════════════════════════════════════════════════

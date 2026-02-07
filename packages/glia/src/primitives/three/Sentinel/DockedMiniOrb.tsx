@@ -9,7 +9,7 @@
 
 import { Center } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 

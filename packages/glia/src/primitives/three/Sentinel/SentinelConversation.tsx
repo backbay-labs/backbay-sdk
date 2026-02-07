@@ -9,7 +9,7 @@
  * - Mic/text toggle sigils
  */
 
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 
@@ -168,17 +168,17 @@ const MicSvgContainer = styled(motion.svg)<{
 }>`
   display: block;
   flex-shrink: 0;
-  cursor: ${({ $isClickable }) => ($isClickable ? 'pointer' : 'default')};
+  cursor: ${({ $isClickable }: { $isClickable: boolean }) => ($isClickable ? 'pointer' : 'default')};
   transition: filter 0.3s ease, opacity 0.3s ease;
 
-  ${({ $isMuted }) =>
+  ${({ $isMuted }: { $isMuted: boolean }) =>
     $isMuted &&
     css`
       opacity: 0.35;
       filter: grayscale(0.5);
     `}
 
-  ${({ $isListening, $isMuted }) =>
+  ${({ $isListening, $isMuted }: { $isListening: boolean; $isMuted: boolean }) =>
     $isListening &&
     !$isMuted &&
     css`
@@ -195,7 +195,7 @@ const CenterDot = styled.circle<{ $isListening: boolean; $isMuted: boolean }>`
   fill: #d4a84b;
   transition: fill 0.3s ease;
 
-  ${({ $isListening, $isMuted }) =>
+  ${({ $isListening, $isMuted }: { $isListening: boolean; $isMuted: boolean }) =>
     $isListening &&
     !$isMuted &&
     css`
@@ -217,7 +217,7 @@ const ResonanceArc = styled.path<{
   stroke-linecap: round;
   transition: opacity 0.3s ease;
 
-  ${({ $isListening, $isMuted, $delay }) =>
+  ${({ $isListening, $isMuted, $delay }: { $isListening: boolean; $isMuted: boolean; $delay: number }) =>
     $isListening &&
     !$isMuted &&
     css`
@@ -230,7 +230,7 @@ const ResonanceArc = styled.path<{
       }
     `}
 
-  ${({ $isMuted }) =>
+  ${({ $isMuted }: { $isMuted: boolean }) =>
     $isMuted &&
     css`
       opacity: 0.25;
@@ -253,10 +253,10 @@ const TextSvgContainer = styled(motion.svg)<{
 }>`
   display: block;
   flex-shrink: 0;
-  cursor: ${({ $isClickable }) => ($isClickable ? 'pointer' : 'default')};
+  cursor: ${({ $isClickable }: { $isClickable: boolean }) => ($isClickable ? 'pointer' : 'default')};
   transition: filter 0.3s ease, opacity 0.3s ease;
 
-  ${({ $isActive }) =>
+  ${({ $isActive }: { $isActive: boolean }) =>
     $isActive &&
     css`
       animation: ${activeGlow} 2.5s ease-in-out infinite;
@@ -267,7 +267,7 @@ const TextSvgContainer = styled(motion.svg)<{
       }
     `}
 
-  ${({ $isActive }) =>
+  ${({ $isActive }: { $isActive: boolean }) =>
     !$isActive &&
     css`
       opacity: 0.6;
@@ -283,7 +283,7 @@ const BorderRing = styled.circle<{ $isActive: boolean }>`
   stroke: #d4a84b;
   stroke-width: 1;
   transition: stroke-opacity 0.3s ease;
-  stroke-opacity: ${({ $isActive }) => ($isActive ? 0.8 : 0.3)};
+  stroke-opacity: ${({ $isActive }: { $isActive: boolean }) => ($isActive ? 0.8 : 0.3)};
 `;
 
 const QuillBody = styled.path<{ $isActive: boolean }>`
@@ -293,13 +293,13 @@ const QuillBody = styled.path<{ $isActive: boolean }>`
   stroke-linecap: round;
   stroke-linejoin: round;
   transition: stroke-opacity 0.3s ease;
-  stroke-opacity: ${({ $isActive }) => ($isActive ? 1 : 0.6)};
+  stroke-opacity: ${({ $isActive }: { $isActive: boolean }) => ($isActive ? 1 : 0.6)};
 `;
 
 const QuillTip = styled.path<{ $isActive: boolean }>`
   fill: #d4a84b;
   transition: fill-opacity 0.3s ease;
-  fill-opacity: ${({ $isActive }) => ($isActive ? 1 : 0.6)};
+  fill-opacity: ${({ $isActive }: { $isActive: boolean }) => ($isActive ? 1 : 0.6)};
 `;
 
 const InscriptionLine = styled(motion.path)<{ $isActive: boolean }>`
@@ -309,9 +309,9 @@ const InscriptionLine = styled(motion.path)<{ $isActive: boolean }>`
   stroke-linecap: round;
   stroke-dasharray: 3 2;
   transition: stroke-opacity 0.3s ease;
-  stroke-opacity: ${({ $isActive }) => ($isActive ? 0.9 : 0.3)};
+  stroke-opacity: ${({ $isActive }: { $isActive: boolean }) => ($isActive ? 0.9 : 0.3)};
 
-  ${({ $isActive }) =>
+  ${({ $isActive }: { $isActive: boolean }) =>
     $isActive &&
     css`
       animation: ${inscriptionShimmer} 1.5s linear infinite;
@@ -328,7 +328,7 @@ const RunicMark = styled.path<{ $isActive: boolean }>`
   stroke-width: 1;
   stroke-linecap: round;
   transition: stroke-opacity 0.3s ease;
-  stroke-opacity: ${({ $isActive }) => ($isActive ? 0.7 : 0.25)};
+  stroke-opacity: ${({ $isActive }: { $isActive: boolean }) => ($isActive ? 0.7 : 0.25)};
 `;
 
 const ActiveDot = styled(motion.circle)`
@@ -770,7 +770,7 @@ export const SentinelConversation: React.FC = () => {
                 ref={inputRef}
                 type="text"
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder=""
                 autoComplete="off"

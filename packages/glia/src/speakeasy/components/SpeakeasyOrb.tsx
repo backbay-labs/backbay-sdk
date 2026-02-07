@@ -6,7 +6,7 @@
  * - captures a short gesture sequence while challenged
  */
 
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useSpeakeasy } from '../SpeakeasyProvider.js';
@@ -117,7 +117,7 @@ export function SpeakeasyOrb({ config: partialConfig }: SpeakeasyOrbProps) {
       title={ariaLabel}
       onPointerDown={handlers.onPointerDown}
       onPointerMove={handlers.onPointerMove}
-      onPointerUp={(e) => {
+      onPointerUp={(e: React.PointerEvent) => {
         handlers.onPointerUp(e);
         if (state === 'IDLE') {
           handleKnockTap();

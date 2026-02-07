@@ -7,7 +7,7 @@
  * when it is expanded. Items are distributed along an arc.
  */
 
-import { AnimatePresence, motion, Variants } from 'motion/react';
+import { AnimatePresence, motion, Variants } from 'framer-motion';
 import React from 'react';
 import styled from 'styled-components';
 

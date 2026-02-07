@@ -8,7 +8,7 @@
  * Includes ambient greeting and conversation zone.
  */
 
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useCallback, useState } from 'react';
 import styled from 'styled-components';
 

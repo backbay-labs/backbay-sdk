@@ -7,7 +7,7 @@
  * Visible during summoning phase, fades out during open phase.
  */
 
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import React from 'react';
 
 import { useSentinelStore } from './sentinelStore';

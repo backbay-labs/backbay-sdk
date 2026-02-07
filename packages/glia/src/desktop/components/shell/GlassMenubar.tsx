@@ -33,7 +33,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
@@ -588,7 +588,7 @@ export function GlassMenubar({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.12 }}
-                    onMouseDown={(e) => e.stopPropagation()}
+                    onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
                   >
                     <Submenu
                       items={menu.items}

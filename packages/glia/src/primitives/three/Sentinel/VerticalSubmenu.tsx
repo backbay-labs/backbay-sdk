@@ -7,7 +7,7 @@
  * that has children. Supports scrolling for many items.
  */
 
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -29,7 +29,7 @@ const Container = styled(motion.div)<{ $openUpward: boolean }>`
   border: 1px solid rgba(212, 168, 75, 0.25);
   border-radius: 8px;
   padding: ${PADDING_Y}px 0;
-  transform-origin: ${({ $openUpward }) => ($openUpward ? 'bottom center' : 'top center')};
+  transform-origin: ${({ $openUpward }: { $openUpward: boolean }) => ($openUpward ? 'bottom center' : 'top center')};
   z-index: 10000;
 
   /* Custom scrollbar */

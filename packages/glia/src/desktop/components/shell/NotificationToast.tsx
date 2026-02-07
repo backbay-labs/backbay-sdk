@@ -17,7 +17,7 @@
  */
 
 import { useCallback, useEffect, useState, type CSSProperties } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import type { Notification, NotificationAction } from '../../core/shell/notificationTypes';
 
 // ═══════════════════════════════════════════════════════════════════════════

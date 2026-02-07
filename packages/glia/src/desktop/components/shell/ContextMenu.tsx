@@ -23,7 +23,7 @@
  */
 
 import { useCallback, useEffect, useRef, type CSSProperties } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import type { ContextMenuItem } from '../../core/shell/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -204,7 +204,7 @@ export function ContextMenu({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: -4 }}
         transition={{ duration: 0.12 }}
-        onMouseDown={(e) => e.stopPropagation()}
+        onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
       >
         {items.map((item, idx) => {
           // Separator

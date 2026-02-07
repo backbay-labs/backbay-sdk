@@ -2,7 +2,7 @@
 
 import React, { useCallback, useRef, useMemo, useState, useEffect, memo } from 'react';
 import { Rnd, type DraggableData } from 'react-rnd';
-import { motion, type Transition, type Variants, AnimatePresence } from 'motion/react';
+import { motion, type Transition, type Variants, AnimatePresence } from 'framer-motion';
 import type { WindowId, TilePosition, WindowState } from '../../core/window/types';
 import {
   useWindow,
