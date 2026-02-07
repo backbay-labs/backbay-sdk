@@ -1,6 +1,2 @@
-/**
- * @backbay/glia Desktop OS - Themes
- */
-
-export * from './types';
-export * from './default';
+// Re-export everything from @backbay/glia-desktop/themes for backward compatibility
+export * from '@backbay/glia-desktop/themes';

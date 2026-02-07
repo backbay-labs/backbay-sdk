@@ -14,6 +14,14 @@ const preview: Preview = {
       storySort: {
         order: [
           "Introduction",
+          "Docs",
+          [
+            "Getting Started",
+            "Theme System",
+            "Desktop OS",
+            "Architecture",
+            "Speakeasy Auth",
+          ],
           "Components",
           "Workspace",
           "Primitives",

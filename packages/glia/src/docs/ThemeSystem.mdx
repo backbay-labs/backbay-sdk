@@ -1,0 +1,275 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Theme System" />
+
+# Theme System
+
+Glia uses a two-tier styling architecture that separates low-level Radix/Tailwind
+primitives from the higher-level glass-themed design language. Both tiers are driven
+by a single `UiTheme` object that emits CSS custom properties.
+
+---
+
+## Two-tier styling
+
+### Tier 1: Radix + Tailwind primitives
+
+Found in `src/primitives/ui/`. These are thin wrappers around Radix UI components
+styled with `cn()` (clsx + tailwind-merge). They consume Tailwind utility classes
+and the standard `--background`, `--foreground`, `--primary`, etc. CSS variables.
+
+```tsx
+import { Button } from "@backbay/glia/primitives";
+
+<Button variant="default" size="sm">Click me</Button>
+```
+
+### Tier 2: Glass-themed components
+
+Found in `src/primitives/atoms/`, `molecules/`, `organisms/`, and `ambient/`.
+These use `cva` (class-variance-authority), Framer Motion, and inline theme tokens
+to produce the distinctive frosted-glass look.
+
+```tsx
+import { GlassPanel } from "@backbay/glia/primitives";
+
+<GlassPanel variant="hud" blur="md" className="p-4">
+  <h3>System Monitor</h3>
+</GlassPanel>
+```
+
+Both tiers read from the same CSS variables, so switching themes updates everything.
+
+---
+
+## GliaThemeProvider
+
+The top-level provider that injects all CSS variables onto the document root:
+
+```tsx
+import { GliaThemeProvider } from "@backbay/glia/theme";
+
+<GliaThemeProvider themeId="nebula">
+  <App />
+</GliaThemeProvider>
+```
+
+### Props
+
+| Prop          | Type                    | Default     | Description                                  |
+|---------------|-------------------------|-------------|----------------------------------------------|
+| `themeId`     | `"nebula" \| "solarpunk"` | `"nebula"`  | Controlled theme selection                   |
+| `overrides`   | `Partial<UiTheme>`      | --          | Deep partial overrides merged on top          |
+| `storageKey`  | `string`                | `"glia-theme"` | localStorage key for uncontrolled persistence |
+
+In **uncontrolled mode** (no `themeId` prop), the provider reads/writes the user's
+preference to localStorage automatically.
+
+---
+
+## Available themes
+
+### Nebula (default)
+
+Clinical cyberpunk. Deep space backgrounds (`#0a0a0f`), cyan/magenta neon accents,
+frosted glass panels, and subtle particle fields.
+
+### Solarpunk
+
+Botanical observatory. Warm earth tones, gold/amber accents, leaf-green secondary,
+and organic dust-mote ambient effects.
+
+---
+
+## CSS variable namespaces
+
+Glia emits three namespaces of CSS variables for backward compatibility:
+
+| Prefix       | Purpose                                           | Example                        |
+|--------------|---------------------------------------------------|--------------------------------|
+| `--glia-*`   | Canonical namespace (use this for new code)       | `--glia-color-accent`          |
+| `--theme-*`  | Legacy aliases, resolve to `var(--glia-*)`        | `--theme-accent-primary`       |
+| `--bb-*`     | Desktop OS aliases, resolve to `var(--glia-*)`    | `--bb-color-accent`            |
+
+Additionally, bare Tailwind-compatible variables are set for `shadcn/ui`-style usage:
+
+```css
+--background: 230 15% 4%;    /* HSL components, no hsl() wrapper */
+--foreground: 220 10% 90%;
+--primary: 185 80% 55%;
+```
+
+### Full variable reference
+
+**Colors:**
+`--glia-color-bg-body`, `--glia-color-bg-panel`, `--glia-color-bg-elevated`,
+`--glia-color-bg-horizon`, `--glia-color-text-primary`, `--glia-color-text-muted`,
+`--glia-color-text-soft`, `--glia-color-accent`, `--glia-color-accent-secondary`,
+`--glia-color-accent-positive`, `--glia-color-accent-warning`,
+`--glia-color-accent-destructive`, `--glia-color-border`, `--glia-color-ring`
+
+**Glass:**
+`--glia-glass-panel-bg`, `--glia-glass-panel-border`, `--glia-glass-panel-blur`,
+`--glia-glass-header-gradient`, `--glia-glass-card-bg`, `--glia-glass-card-border`,
+`--glia-glass-hover-bg`, `--glia-glass-active-border`, `--glia-glass-active-shadow`
+
+**Elevation:**
+`--glia-shadow-soft`, `--glia-shadow-hud-panel`, `--glia-shadow-hud-rail`,
+`--glia-shadow-modal`, `--glia-shadow-glow`
+
+**Motion:**
+`--glia-duration-fast`, `--glia-duration-normal`, `--glia-duration-slow`,
+`--glia-easing-default`, `--glia-easing-spring`, `--glia-easing-bounce`
+
+**Spacing:**
+`--glia-spacing-taskbar-height`, `--glia-spacing-titlebar-height`,
+`--glia-spacing-window-padding`, `--glia-spacing-icon-size`, `--glia-spacing-icon-gap`,
+`--glia-spacing-window-border-width`
+
+**Fonts:**
+`--glia-font-display`, `--glia-font-body`, `--glia-font-mono`
+
+**Radii:**
+`--glia-radius-sm`, `--glia-radius-md`, `--glia-radius-lg`
+
+---
+
+## Token hooks
+
+Glia provides React hooks that return typed token objects from the active theme.
+All hooks require a `GliaThemeProvider` or `UiThemeProvider` ancestor.
+
+```tsx
+import {
+  useGliaTheme,
+  useColorTokens,
+  useGlassTokens,
+  useElevationTokens,
+  useMotionTokens,
+  useControlTokens,
+  useAmbientTokens,
+  useFontTokens,
+  useRadiiTokens,
+  useSpacingTokens,
+} from "@backbay/glia/theme";
+```
+
+### useGliaTheme()
+
+Returns the full theme context:
+
+```tsx
+const { theme, themeId, setThemeId } = useGliaTheme();
+// theme: UiTheme -- full token object
+// themeId: "nebula" | "solarpunk"
+// setThemeId: (id) => void -- switch themes
+```
+
+### useColorTokens()
+
+```tsx
+const colors = useColorTokens();
+// colors.bg.body     -> "#0a0a0f"
+// colors.accent.primary -> "#22d3ee"
+// colors.text.muted  -> "#6b7280"
+```
+
+### useGlassTokens()
+
+```tsx
+const glass = useGlassTokens();
+// glass.panelBg    -> "rgba(15, 15, 25, 0.7)"
+// glass.panelBlur  -> "12px"
+// glass.hoverBg    -> "rgba(34, 211, 238, 0.08)"
+```
+
+### useMotionTokens()
+
+```tsx
+const motion = useMotionTokens();
+// motion.fast     -> { duration: 0.15, ease: "easeOut" }
+// motion.spring   -> { type: "spring", damping: 20, stiffness: 300 }
+```
+
+### useControlTokens()
+
+```tsx
+const controls = useControlTokens();
+// controls.switch.track.bg.on  -> "#22d3ee"
+// controls.slider.fill         -> "#22d3ee"
+```
+
+### useElevationTokens(), useAmbientTokens(), useFontTokens(), useRadiiTokens(), useSpacingTokens()
+
+Each returns the corresponding section of the `UiTheme` object.
+
+---
+
+## Creating a custom theme
+
+A custom theme is a full `UiTheme` object. The easiest approach is to spread an
+existing theme and override specific tokens:
+
+```tsx
+import { nebulaTheme } from "@backbay/glia/theme";
+import type { UiTheme } from "@backbay/glia/theme";
+
+const myTheme: UiTheme = {
+  ...nebulaTheme,
+  id: "nebula", // Must be "nebula" | "solarpunk" for now
+  name: "Custom Nebula",
+  color: {
+    ...nebulaTheme.color,
+    accent: {
+      ...nebulaTheme.color.accent,
+      primary: "#ff6b6b",    // Red accent instead of cyan
+      secondary: "#ffd93d",  // Gold instead of magenta
+    },
+  },
+};
+```
+
+Pass overrides directly to the provider:
+
+```tsx
+<GliaThemeProvider themeId="nebula" overrides={myTheme}>
+  <App />
+</GliaThemeProvider>
+```
+
+---
+
+## Glass materials
+
+Glia defines named glass material presets that combine blur, background opacity,
+and border values into reusable configurations:
+
+```tsx
+import { getGlassMaterial, GLASS_MATERIALS } from "@backbay/glia/theme";
+
+const frosted = getGlassMaterial("frosted");
+// { bg: "rgba(15,15,25,0.6)", blur: "16px", border: "..." }
+```
+
+Available materials: `clear`, `frosted`, `dense`, `void`.
+
+---
+
+## Theme bridge: UiTheme to DesktopOSTheme
+
+The desktop OS shell has its own `DesktopOSTheme` type. The theme bridge maps
+`UiTheme` tokens into `DesktopOSTheme` shape:
+
+```tsx
+import { desktopThemeFromUiTheme } from "@backbay/glia/theme";
+import { nebulaTheme } from "@backbay/glia/theme";
+
+const desktopTheme = desktopThemeFromUiTheme(nebulaTheme, {
+  overrides: {
+    colors: { accent: "#ff00ff" },
+  },
+});
+```
+
+This means you can use a single `GliaThemeProvider` for both primitives and the
+desktop shell, with the bridge producing the correct token format automatically.

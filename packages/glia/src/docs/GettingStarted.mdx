@@ -1,0 +1,135 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Getting Started" />
+
+# Getting Started with @backbay/glia
+
+`@backbay/glia` is the agent-native UI toolkit for Backbay Industries. It provides
+glass-themed components, a desktop OS shell, gesture-based authentication, emotion
+visualization, and the building blocks for agent-driven interfaces.
+
+---
+
+## Installation
+
+```bash
+bun add @backbay/glia
+```
+
+Peer dependencies:
+
+```bash
+bun add react react-dom
+```
+
+Optional dependencies are pulled in as needed. For the full desktop shell experience:
+
+```bash
+bun add framer-motion lucide-react react-rnd react-resizable-panels
+```
+
+For Radix-powered primitives:
+
+```bash
+bun add @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-tabs \
+  @radix-ui/react-switch @radix-ui/react-slider @radix-ui/react-checkbox \
+  @radix-ui/react-accordion @radix-ui/react-radio-group @radix-ui/react-tooltip
+```
+
+---
+
+## Import the stylesheet
+
+Glia ships a prebuilt CSS file that contains Tailwind utilities and all base styles.
+Import it once at your app entrypoint:
+
+```tsx
+import "@backbay/glia/styles.css";
+```
+
+---
+
+## Wrap your app with providers
+
+At minimum, wrap your application with `GliaThemeProvider` to enable the theme system,
+and `BBProvider` to enable the agent protocol context:
+
+```tsx
+import { GliaThemeProvider } from "@backbay/glia/theme";
+import { BBProvider } from "@backbay/glia/components";
+
+function App() {
+  return (
+    <GliaThemeProvider themeId="nebula">
+      <BBProvider config={{ appName: "MyApp", version: "1.0.0" }}>
+        <MyApplication />
+      </BBProvider>
+    </GliaThemeProvider>
+  );
+}
+```
+
+Or use the convenience wrapper that nests all providers:
+
+```tsx
+import { GliaProviders } from "@backbay/glia";
+
+function App() {
+  return (
+    <GliaProviders
+      theme="nebula"
+      config={{ appName: "MyApp", version: "1.0.0" }}
+      desktop={{ processes: myApps }}
+    >
+      <MyApplication />
+    </GliaProviders>
+  );
+}
+```
+
+---
+
+## Quick example: Glass Panel
+
+```tsx
+import { GlassPanel } from "@backbay/glia/primitives";
+
+function Dashboard() {
+  return (
+    <GlassPanel variant="elevated" className="p-6">
+      <h2>Agent Status</h2>
+      <p>All systems nominal.</p>
+    </GlassPanel>
+  );
+}
+```
+
+---
+
+## Subpath imports
+
+Glia exposes multiple subpath exports for tree-shaking and API discoverability.
+Prefer these over the barrel `@backbay/glia` import:
+
+| Import path                  | Contents                                      |
+|------------------------------|-----------------------------------------------|
+| `@backbay/glia/theme`       | Theme provider, registry, token hooks, bridge |
+| `@backbay/glia/primitives`  | Atoms, molecules, organisms, UI primitives    |
+| `@backbay/glia/components`  | BBProvider, AgentPanel, higher-level components |
+| `@backbay/glia/hooks`       | React hooks (useAgent, useStream, etc.)       |
+| `@backbay/glia/protocol`    | Agent protocol types (BBConfig, Agent, AgentRun) |
+| `@backbay/glia/desktop`     | Desktop OS shell (windows, taskbar, start menu) |
+| `@backbay/glia/desktop/core`| Window manager, snap zones, process registry  |
+| `@backbay/glia/speakeasy`   | Gesture-based authentication system           |
+| `@backbay/glia/emotion`     | Emotion engine for agent affect visualization |
+| `@backbay/glia/workspace`   | Workspace layout and session management       |
+| `@backbay/glia/styles.css`  | Prebuilt stylesheet                           |
+
+---
+
+## Next steps
+
+- **[Theme System](?path=/docs/docs-theme-system--docs)** -- Understand the two-tier styling architecture and CSS variable system
+- **[Desktop OS](?path=/docs/docs-desktop-os--docs)** -- Build desktop-style apps with window management
+- **[Architecture](?path=/docs/docs-architecture--docs)** -- Package structure and state management patterns
+- **[Speakeasy Auth](?path=/docs/docs-speakeasy-auth--docs)** -- Gesture-based authentication for privileged UI

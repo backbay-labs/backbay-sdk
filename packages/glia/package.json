@@ -92,8 +92,7 @@
   ],
   "style": "./dist/styles.css",
   "scripts": {
-    "build": "bunx tsc && bunx tailwindcss -c tailwind.config.js -i src/styles/globals.css -o dist/styles.css --minify",
-    "build:tsup": "tsup && bunx tailwindcss -c tailwind.config.js -i src/styles/globals.css -o dist/styles.css --minify",
+    "build": "bunx tsc && tsup && bunx tailwindcss -c tailwind.config.js -i src/styles/globals.css -o dist/styles.css --minify",
     "test": "node scripts/vitest.mjs run",
     "test:watch": "node scripts/vitest.mjs",
     "typecheck": "bunx tsc --noEmit",
@@ -103,6 +102,8 @@
   "dependencies": {
     "@backbay/contract": "0.1.0-alpha.1",
     "@backbay/glia-agent": "workspace:*",
+    "@backbay/glia-desktop": "workspace:*",
+    "@backbay/glia-three": "workspace:*",
     "@backbay/raymond": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

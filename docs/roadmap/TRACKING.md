@@ -56,8 +56,8 @@
   - [x] CapabilityIssuer token creation + signature + expiry
   - [x] Encrypted storage roundtrip
   - [x] SpeakeasyNotReadyError
-  - [ ] Standalone speakeasy signing (signMessage, verifyMessage) — deferred (requires @backbay/speakeasy test infra)
-  - [ ] Standalone identity generation + recovery — deferred (requires @backbay/speakeasy test infra)
+  - [x] Standalone speakeasy signing (signMessage, verifyMessage) — 31 tests in speakeasy/src/__tests__/signing.test.ts
+  - [x] Standalone identity generation + recovery — 42 tests in speakeasy/src/__tests__/identity.test.ts
 - [x] **Tier B tests (state machines):**
   - [x] DoormanStateMachine transitions (pre-existing, migrated + timing fix)
   - [x] WindowManager store — 20 new tests
@@ -66,7 +66,7 @@
 - [x] Add `bun run test` to CI workflow
 - [x] Configure coverage reporting (v8 provider, text + lcov)
 
-**Result:** 44 test files passing, 695 tests, 0 failures
+**Result:** 46 test files passing, 776 tests, 0 failures
 
 ---
 

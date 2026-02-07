@@ -1,0 +1,246 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Architecture" />
+
+# Architecture Overview
+
+This page describes the internal architecture of `@backbay/glia`: how the package
+is structured, how state flows, and how the provider hierarchy fits together.
+
+---
+
+## Package structure
+
+```
+@backbay/glia
+  src/
+    theme/              # Theme system (UiTheme, GliaThemeProvider, token hooks, bridge)
+    primitives/
+      ui/               # Tier 1: Radix + Tailwind wrappers (Button, Input, Select, etc.)
+      atoms/            # Tier 2: Glass-themed atoms (GlassPanel, GlassProgressBar, etc.)
+      molecules/        # Tier 2: Composed molecules (FormField, GlassAccordion, etc.)
+      organisms/        # Tier 2: Complex organisms (GlassTable, ChatThread, etc.)
+      ambient/          # Ambient effects (NoiseOverlay, etc.)
+      environment/      # Environment components
+      three/            # R3F / Three.js 3D components
+    components/         # High-level components (BBProvider, AgentPanel)
+    desktop/
+      core/             # Window manager, snap zones, process types
+        window/         # useWindowManager, WindowState types
+        shell/          # useTaskbar, StartMenu/SystemTray state
+        desktop/        # useSnapZones, desktop-level types
+      components/       # Desktop shell UI (Taskbar, Window, StartMenu, etc.)
+      providers/        # DesktopOSProvider, ThemeProvider
+      themes/           # DesktopOSTheme type and defaults
+    speakeasy/
+      auth/             # SpeakeasyAuth, crypto, storage, capability issuer
+      doorman/          # DoormanStateMachine (Zustand)
+      components/       # SpeakeasyOrb, RitualPad, dialogs
+      hooks/            # Speakeasy React hooks
+    emotion/            # Emotion engine (affect states, transitions, visual mapping)
+    hooks/              # Shared React hooks
+    protocol/           # Agent protocol types (BBConfig, Agent, AgentRun, etc.)
+    workspace/          # Workspace session management
+    audio/              # Audio subsystem
+    vision/             # Vision subsystem
+    cognition/          # Cognition subsystem
+    lib/                # Utilities (cn, accessibility, etc.)
+    styles/             # globals.css, Tailwind config source
+```
+
+---
+
+## Sibling packages
+
+Glia depends on two workspace packages:
+
+| Package              | Role                                                       |
+|----------------------|------------------------------------------------------------|
+| `@backbay/glia-agent`| Agent runtime, tool execution, streaming protocol          |
+| `@backbay/raymond`   | AI/ML utilities, embeddings, inference helpers             |
+| `@backbay/contract`  | Shared type contracts (published separately)               |
+
+---
+
+## State management patterns
+
+Glia uses three state management strategies, chosen by scope:
+
+### 1. Zustand stores (global / cross-component)
+
+Module-level Zustand stores manage state that must be accessible outside the React
+tree or shared across unrelated component subtrees.
+
+Examples:
+- **DoormanStateMachine** (`speakeasy/doorman/`) -- doorman state, challenge timers
+- **WindowManager store** (`desktop/core/window/`) -- open windows, focus order
+- **Taskbar store** (`desktop/core/shell/`) -- pinned apps, taskbar state
+- **Notification store** (`desktop/components/`) -- toast queue
+
+These stores use `subscribeWithSelector` middleware for efficient re-renders and
+expose both a singleton hook (`useDoormanStore`) and a factory
+(`createDoormanStore()`) for isolated testing.
+
+### 2. React Context (scoped / provider-tree)
+
+Contexts provide scoped state that follows React's component hierarchy. Each
+provider defines its own context and hook pair:
+
+```
+GliaThemeProvider  -> useGliaTheme()
+BBProvider         -> useBBContext()
+DesktopOSProvider  -> useDesktopOS()
+SpeakeasyProvider  -> useSpeakeasyPublic() / useSpeakeasyPrivate()
+```
+
+Contexts are always paired with an error-throwing hook that validates the provider
+exists:
+
+```tsx
+export function useDesktopOS(): DesktopOSContextValue {
+  const context = useContext(DesktopOSContext);
+  if (!context) {
+    throw new Error("useDesktopOS must be used within a DesktopOSProvider");
+  }
+  return context;
+}
+```
+
+### 3. Class instances (non-React)
+
+For logic that runs outside React (crypto, storage, state machines as pure logic),
+Glia uses class instances:
+
+- `SpeakeasyAuth` -- crypto operations, verifier storage, challenge-response
+- Capability issuer -- token creation and signing
+
+---
+
+## Provider hierarchy
+
+The recommended nesting order:
+
+```
+GliaThemeProvider          -- CSS variables, theme context
+  BBProvider               -- Agent protocol, error boundary
+    DesktopOSProvider      -- Window manager, process registry, taskbar
+      SpeakeasyProvider    -- Gesture auth, doorman state machine
+        <App />
+```
+
+The `GliaProviders` convenience component handles this nesting with optional
+`desktop` and `speakeasy` props.
+
+### Why this order matters
+
+1. **GliaThemeProvider** must be outermost because all components read CSS variables
+2. **BBProvider** wraps a `GliaErrorBoundary` that catches rendering errors
+3. **DesktopOSProvider** uses its own `ThemeProvider` internally (bridges from UiTheme)
+4. **SpeakeasyProvider** uses a `GliaErrorBoundary` with reset-on-error behavior
+
+---
+
+## Error boundaries
+
+Glia includes `GliaErrorBoundary`, a reusable error boundary with two variants:
+
+| Variant      | Use case                                       |
+|--------------|-------------------------------------------------|
+| `fullscreen` | Root-level boundary in BBProvider               |
+| `card`       | Component-level boundary in SpeakeasyProvider   |
+
+The Speakeasy error boundary resets the `DoormanStateMachine` to IDLE on error,
+preventing authentication state from becoming stuck.
+
+Currently there are no error boundaries wrapping individual primitives or desktop
+components -- this is a known gap.
+
+---
+
+## Styling architecture
+
+### Tier 1 components (primitives/ui/)
+
+- Styled with `cn()` helper (clsx + tailwind-merge)
+- Consume Tailwind utility classes directly
+- Read bare CSS variables (`--background`, `--primary`, etc.)
+- Compatible with shadcn/ui patterns
+
+### Tier 2 components (atoms/molecules/organisms/)
+
+- Styled with `cva` (class-variance-authority) for variant management
+- Use Framer Motion for animations
+- Read `--glia-*` CSS variables via inline styles or token hooks
+- Glass effects via `backdrop-filter: blur()` and RGBA backgrounds
+
+### CSS variable flow
+
+```
+UiTheme object
+  |
+  v
+GliaThemeProvider.applyGliaCssVariables()
+  |
+  +--> --glia-*  (canonical)
+  +--> --theme-* (legacy alias -> var(--glia-*))
+  +--> --bb-*    (desktop alias -> var(--glia-*))
+  +--> bare vars (--background, --primary, etc. in HSL)
+```
+
+---
+
+## Build system
+
+The package builds with two steps:
+
+```bash
+# 1. TypeScript compilation (declarations + JS)
+bunx tsc
+
+# 2. Tailwind CSS extraction
+bunx tailwindcss -c tailwind.config.js -i src/styles/globals.css -o dist/styles.css --minify
+```
+
+The `dist/` directory contains:
+- `.js` and `.d.ts` files mirroring the `src/` structure
+- `styles.css` -- the compiled Tailwind stylesheet
+- Subpath exports in `package.json` map to `dist/` paths
+
+---
+
+## Testing
+
+```bash
+# Run all tests
+bun run test
+
+# Watch mode
+bun run test:watch
+
+# Type checking only
+bun run typecheck
+```
+
+Tests use Vitest with `happy-dom` for DOM simulation. The Speakeasy crypto layer
+has property-based tests using `fast-check`.
+
+---
+
+## Storybook
+
+```bash
+# Development
+bun run storybook     # Starts at port 6006
+
+# Build static site
+bun run build-storybook
+```
+
+Stories are organized by the hierarchy visible in the sidebar:
+- **Introduction** -- Getting started
+- **Docs** -- These documentation pages
+- **Components** -- High-level components
+- **Primitives** -- Atoms, molecules, organisms
+- **Systems** -- Emotion engine
+- **Accessibility** -- Reduced transparency, keyboard nav
+- **Theme** -- Theme bridge demo
