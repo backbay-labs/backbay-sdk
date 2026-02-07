@@ -20,7 +20,6 @@ const desktopVars: Record<string, string> = {
   '--glia-blur-backdrop': 'blur(12px)',
   '--glia-radius-md': '3px',
   '--glia-radius-sm': '2px',
-  '--glia-radius-sm': '2px',
   '--glia-shadow-hud-panel': '0 4px 16px rgba(0, 0, 0, 0.5)',
   '--glia-font-display': "'Cinzel', serif",
   '--glia-font-mono': "'JetBrains Mono', monospace",
