@@ -2,8 +2,6 @@
 
 from datetime import date
 
-from cyntra.commons import new_id, now_utc
-
 from cyntra.agents.memory.interfaces import (
     EpisodesRepository,
     SemanticMemory,
@@ -17,6 +15,7 @@ from cyntra.agents.schemas import (
     UserProfile,
     UserStats,
 )
+from cyntra.commons import new_id, now_utc
 
 
 class MemoryTools:
@@ -95,9 +94,7 @@ class MemoryTools:
         Uses semantic memory if available, otherwise returns empty.
         """
         if self._semantic:
-            return await self._semantic.search_similar_episodes(
-                user_id, query, limit=limit
-            )
+            return await self._semantic.search_similar_episodes(user_id, query, limit=limit)
         return []
 
     async def get_recent_episodes(
@@ -174,12 +171,9 @@ class MemoryTools:
         profile = await self._profiles.get_or_create(user_id)
 
         new_stats = UserStats(
-            total_missions_created=profile.stats.total_missions_created
-            + missions_created_delta,
-            total_blocks_completed=profile.stats.total_blocks_completed
-            + blocks_completed_delta,
-            total_focused_minutes=profile.stats.total_focused_minutes
-            + focused_minutes_delta,
+            total_missions_created=profile.stats.total_missions_created + missions_created_delta,
+            total_blocks_completed=profile.stats.total_blocks_completed + blocks_completed_delta,
+            total_focused_minutes=profile.stats.total_focused_minutes + focused_minutes_delta,
             avg_block_length_successful=profile.stats.avg_block_length_successful,
             avg_start_hour_successful=profile.stats.avg_start_hour_successful,
             night_sessions_failure_rate=profile.stats.night_sessions_failure_rate,
@@ -233,10 +227,6 @@ class MemoryTools:
             "total_focused_minutes": total_focused,
             "total_leaked_minutes": total_leaked,
             "blocks_completed": blocks_completed,
-            "avg_focus_score": (
-                sum(focus_scores) / len(focus_scores) if focus_scores else 0.0
-            ),
-            "avg_energy_score": (
-                sum(energy_scores) / len(energy_scores) if energy_scores else 0.0
-            ),
+            "avg_focus_score": (sum(focus_scores) / len(focus_scores) if focus_scores else 0.0),
+            "avg_energy_score": (sum(energy_scores) / len(energy_scores) if energy_scores else 0.0),
         }

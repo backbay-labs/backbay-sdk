@@ -15,11 +15,12 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "declarationMap": true,
+    "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmitOnError": false
+    "noEmitOnError": true
   },
   "include": [
     "src/**/*"

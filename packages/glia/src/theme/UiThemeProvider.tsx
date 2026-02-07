@@ -1,8 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { MotionConfig } from "framer-motion";
 import { applyThemeCssVariables, DEFAULT_THEME_ID, getTheme } from "./registry";
 import type { UiTheme, UiThemeContextValue, UiThemeId } from "./types";
+import { usePrefersReducedMotion } from "../lib/accessibility";
 
 // ============================================================================
 // CONTEXT
@@ -38,6 +40,12 @@ export function UiThemeProvider({
   storageKey = STORAGE_KEY,
   disableCssVariables = false,
 }: UiThemeProviderProps) {
+  const deprecationWarned = React.useRef(false);
+  if (!deprecationWarned.current) {
+    deprecationWarned.current = true;
+    console.warn("[Glia] UiThemeProvider is deprecated. Use GliaThemeProvider instead.");
+  }
+
   const [isHydrating, setIsHydrating] = React.useState(true);
   const [internalThemeId, setInternalThemeId] = React.useState<UiThemeId>(defaultThemeId);
 
@@ -101,7 +109,15 @@ export function UiThemeProvider({
     [theme, activeThemeId, setThemeId, isHydrating]
   );
 
-  return <UiThemeContext.Provider value={contextValue}>{children}</UiThemeContext.Provider>;
+  const reduceMotion = usePrefersReducedMotion();
+
+  return (
+    <UiThemeContext.Provider value={contextValue}>
+      <MotionConfig reducedMotion={reduceMotion ? "always" : "never"}>
+        {children}
+      </MotionConfig>
+    </UiThemeContext.Provider>
+  );
 }
 
 // ============================================================================

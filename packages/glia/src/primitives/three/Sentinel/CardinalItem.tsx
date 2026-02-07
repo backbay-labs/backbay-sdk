@@ -6,7 +6,7 @@
  * A single item in the cardinal menu (N, E, S, W positions).
  */
 
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 

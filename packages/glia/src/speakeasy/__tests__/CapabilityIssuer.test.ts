@@ -2,7 +2,7 @@
  * Tests for CapabilityIssuer token creation and verification
  */
 
-import { describe, it, expect } from 'bun:test';
+import { describe, it, expect } from 'vitest';
 import { createCapabilityToken, verifyCapabilityToken } from '../auth/CapabilityIssuer.js';
 
 describe('CapabilityIssuer', () => {

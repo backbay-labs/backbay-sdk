@@ -2,7 +2,7 @@
  * @backbay/glia Desktop OS - Snap Zone Overlay Component
  *
  * Visual feedback overlay showing the target snap zone during window dragging.
- * Uses CSS variables for theming (--bb-color-*, etc.)
+ * Uses CSS variables for theming (--glia-color-*, etc.)
  */
 
 import React, { useMemo } from 'react';
@@ -44,14 +44,14 @@ const createPreviewStyles = (
   top: dimensions.y,
   width: dimensions.width,
   height: dimensions.height,
-  background: color ?? 'var(--bb-color-accent-glow, rgba(212, 168, 75, 0.15))',
-  border: `2px solid ${color ?? 'var(--bb-color-accent, #d4a84b)'}`,
-  borderRadius: 'var(--bb-radius-window, 3px)',
-  transition: 'all 150ms var(--bb-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1))',
+  background: color ?? 'var(--glia-glass-active-shadow, rgba(212, 168, 75, 0.15))',
+  border: `2px solid ${color ?? 'var(--glia-color-accent, #d4a84b)'}`,
+  borderRadius: 'var(--glia-radius-lg, 3px)',
+  transition: 'all 150ms var(--glia-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1))',
   // Add subtle inner glow
   boxShadow: `
-    inset 0 0 60px 10px ${color ?? 'var(--bb-color-accent-glow, rgba(212, 168, 75, 0.1))'},
-    0 0 40px 5px ${color ?? 'var(--bb-color-accent-glow, rgba(212, 168, 75, 0.1))'}
+    inset 0 0 60px 10px ${color ?? 'var(--glia-glass-active-shadow, rgba(212, 168, 75, 0.1))'},
+    0 0 40px 5px ${color ?? 'var(--glia-glass-active-shadow, rgba(212, 168, 75, 0.1))'}
   `,
 });
 
@@ -61,12 +61,12 @@ const labelStyles: React.CSSProperties = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  fontFamily: 'var(--bb-font-mono, "JetBrains Mono", monospace)',
+  fontFamily: 'var(--glia-font-mono, "JetBrains Mono", monospace)',
   fontSize: '12px',
   fontWeight: 600,
   letterSpacing: '0.1em',
   textTransform: 'uppercase',
-  color: 'var(--bb-color-accent, #d4a84b)',
+  color: 'var(--glia-color-accent, #d4a84b)',
   opacity: 0.6,
   userSelect: 'none',
   whiteSpace: 'nowrap',

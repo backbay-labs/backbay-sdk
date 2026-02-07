@@ -2,7 +2,7 @@
  * @backbay/glia Desktop OS - Desktop Component
  *
  * Main desktop surface that renders icons and provides window snap zone previews.
- * Uses CSS variables for theming (--bb-color-*, --bb-spacing-*, etc.)
+ * Uses CSS variables for theming (--glia-color-*, --glia-spacing-*, etc.)
  */
 
 import React, { useCallback, useState } from 'react';
@@ -20,7 +20,7 @@ const containerStyles: React.CSSProperties = {
   inset: 0,
   display: 'flex',
   flexDirection: 'column',
-  background: 'var(--bb-color-desktop-bg, #010100)',
+  background: 'var(--glia-color-bg-body, #010100)',
   overflow: 'hidden',
 };
 
@@ -28,14 +28,14 @@ const desktopAreaStyles: React.CSSProperties = {
   flex: 1,
   position: 'relative',
   padding: '16px',
-  paddingBottom: 'calc(16px + var(--bb-spacing-taskbar-height, 48px))',
+  paddingBottom: 'calc(16px + var(--glia-spacing-taskbar-height, 48px))',
 };
 
 const iconGridStyles: React.CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, var(--bb-spacing-icon-size, 80px))',
-  gridAutoRows: 'var(--bb-spacing-icon-size, 80px)',
-  gap: 'var(--bb-spacing-icon-gap, 16px)',
+  gridTemplateColumns: 'repeat(auto-fill, var(--glia-spacing-icon-size, 80px))',
+  gridAutoRows: 'var(--glia-spacing-icon-size, 80px)',
+  gap: 'var(--glia-spacing-icon-gap, 16px)',
   padding: '8px',
   alignContent: 'start',
   height: '100%',

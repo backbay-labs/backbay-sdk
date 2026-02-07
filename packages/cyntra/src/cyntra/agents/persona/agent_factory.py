@@ -10,11 +10,11 @@ from typing import Any
 
 from agents import Agent as SDKAgent
 from agents import FunctionTool, ModelSettings, RunContextWrapper, Runner, SQLiteSession
-from cyntra.commons import get_logger, new_id
 
 from cyntra.agents.config import AgentSettings
 from cyntra.agents.persona.message_types import Message
 from cyntra.agents.persona.prompts import build_system_prompt
+from cyntra.commons import get_logger, new_id
 
 logger = get_logger(__name__)
 
@@ -52,9 +52,7 @@ class ToolDefinition:
                     return "OK"
                 return str(result)
             except Exception as e:
-                logger.error(
-                    "tool_execution_error tool_name=%s error=%s", self.name, str(e)
-                )
+                logger.error("tool_execution_error tool_name=%s error=%s", self.name, str(e))
                 return f"Error: {e}"
 
         return FunctionTool(
@@ -180,9 +178,7 @@ class GlyphPersona:
         """
         new_session_id = new_id()
         # Create a new in-memory SQLite session
-        self._config.session = SQLiteSession(
-            db_path=":memory:", session_id=new_session_id
-        )
+        self._config.session = SQLiteSession(db_path=":memory:", session_id=new_session_id)
         logger.debug("conversation_reset session_id=%s", new_session_id)
 
     async def inject_context(self, context: str) -> None:
@@ -285,9 +281,7 @@ def create_glyph_persona(
         session_id: Optional session ID for conversation continuity
     """
     if openai_client is not None:
-        logger.debug(
-            "openai_client parameter is deprecated; SDK manages its own client"
-        )
+        logger.debug("openai_client parameter is deprecated; SDK manages its own client")
 
     config = create_glyph_agent_config(
         settings=settings,

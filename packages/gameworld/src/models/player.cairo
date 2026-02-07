@@ -4,7 +4,7 @@ use starknet::ContractAddress;
 use super::asset::{Vec3, Quat};
 
 /// Player state in a world
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct Player {
     /// World the player is in
@@ -38,7 +38,7 @@ pub struct Player {
 }
 
 /// Player inventory slot
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct InventorySlot {
     /// Player address
@@ -64,7 +64,7 @@ pub struct InventorySlot {
 }
 
 /// Player session - tracks Controller connection
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct PlayerSession {
     /// Player address
@@ -85,7 +85,7 @@ pub struct PlayerSession {
 }
 
 /// Player statistics
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct PlayerStats {
     /// Player address

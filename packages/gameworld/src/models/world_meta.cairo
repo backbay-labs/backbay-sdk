@@ -3,9 +3,10 @@
 use starknet::ContractAddress;
 
 /// World state enumeration
-#[derive(Drop, Serde, Copy, PartialEq, Introspect)]
+#[derive(Drop, Serde, Copy, PartialEq, Introspect, DojoStore, Default)]
 pub enum WorldState {
     /// World is being created
+    #[default]
     Creating,
     /// World is active and playable
     Active,
@@ -16,7 +17,7 @@ pub enum WorldState {
 }
 
 /// Game world metadata
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct WorldMeta {
     /// Unique world identifier
@@ -58,7 +59,7 @@ pub struct WorldMeta {
 }
 
 /// World configuration
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct WorldConfig {
     /// World ID
@@ -90,7 +91,7 @@ pub struct WorldConfig {
 }
 
 /// World access control
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct WorldAccess {
     /// World ID

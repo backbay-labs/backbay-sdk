@@ -73,4 +73,3 @@ class EventEnvelope(BaseSchema):
             correlation_id=correlation_id,
             version=version,
         )
-

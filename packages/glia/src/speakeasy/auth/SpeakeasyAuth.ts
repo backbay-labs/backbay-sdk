@@ -44,7 +44,9 @@ function defaultDomain(): string {
   if (typeof globalThis.location !== 'undefined' && globalThis.location?.origin) {
     return globalThis.location.origin;
   }
-  return 'unknown';
+  throw new Error(
+    'SpeakeasyAuth: domain must be explicitly provided in non-browser environments'
+  );
 }
 
 function normalizeDeviceSecret(secret: string | Uint8Array | undefined): Uint8Array {
@@ -160,6 +162,9 @@ export class SpeakeasyAuth {
     const verifier = await this.getVerifier();
     if (!verifier) {
       throw new Error('[Speakeasy] Not registered');
+    }
+    if (verifier.domain !== this.domain) {
+      throw new Error('[Speakeasy] Domain mismatch');
     }
     const keyBytes = await deriveVerifierKeyBytes({
       sequence,

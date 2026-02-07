@@ -6,17 +6,20 @@ import type {
   VisionTopologyNode,
   VisionChannel,
 } from "../types.js";
-import { Circle, Quad, type Shape } from "../raymond/shapes.js";
-import { Eye } from "../raymond/canvas/Eye.js";
-import { PointLight } from "../raymond/canvas/PointLight.js";
-import { PhongTracingModel } from "../raymond/canvas/models/phongTracingModel.js";
-import type {
-  LightingModel,
-  LightingModelParams,
-} from "../raymond/canvas/lightingModel.js";
-import { defaultMaterial, type Material } from "../raymond/shared/material.js";
-import { fromObjectTransform } from "../raymond/transform.js";
-import { newVector } from "../raymond/math.js";
+import {
+  Circle,
+  Quad,
+  Eye,
+  PointLight,
+  PhongTracingModel,
+  defaultMaterial,
+  fromObjectTransform,
+  newVector,
+  type Shape,
+  type LightingModel,
+  type LightingModelParams,
+  type Material,
+} from "@backbay/raymond";
 
 export interface RaymondEyeOptions {
   position?: [number, number];

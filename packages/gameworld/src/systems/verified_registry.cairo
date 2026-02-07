@@ -8,9 +8,6 @@ use starknet::ContractAddress;
 use starknet::get_caller_address;
 use starknet::get_block_timestamp;
 
-use dojo::world::IWorldDispatcher;
-use dojo::world::IWorldDispatcherTrait;
-
 use super::super::models::asset::{Asset, AssetCategory, QualityTier, AssetOwnership};
 use super::attestation_verifier::{
     IAttestationVerifierDispatcher, IAttestationVerifierDispatcherTrait,
@@ -55,7 +52,7 @@ pub trait IVerifiedRegistry<TContractState> {
 }
 
 /// Registry configuration
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct RegistryConfig {
     #[key]

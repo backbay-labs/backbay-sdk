@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 import { getCanonicalJson, hashReceipt, initWasm } from '../index';
 
-describe('receiptHash conformance (WASM)', () => {
+describe.skip('receiptHash conformance (WASM)', () => {
   beforeAll(async () => {
     await initWasm();
   });

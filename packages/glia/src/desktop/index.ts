@@ -45,6 +45,9 @@ export {
   // Window hooks
   useWindowManager,
   useWindowManagerStore,
+  createWindowManagerStore,
+  WindowManagerStoreProvider,
+  type WindowManagerStoreApi,
   useWindowIds,
   useWindow,
   useIsWindowFocused,
@@ -67,6 +70,35 @@ export {
   // Shell hooks
   useTaskbar,
   useTaskbarStore,
+  createTaskbarStore,
+  TaskbarStoreProvider,
+  type TaskbarStoreApi,
+  useStartMenu,
+  useStartMenuStore,
+  createStartMenuStore,
+  StartMenuStoreProvider,
+  type StartMenuStoreApi,
+  useSystemTray,
+  useSystemTrayStore,
+  createSystemTrayStore,
+  SystemTrayStoreProvider,
+  type SystemTrayStoreApi,
+  type SystemTrayItem as SystemTrayItemDef,
+  type UseSystemTrayReturn,
+  // Notification types
+  type NotificationType,
+  type NotificationPriority,
+  type NotificationAction,
+  type Notification,
+  type NotificationGroup,
+  type NotificationInput,
+  type UseNotificationsReturn,
+  // Notification hooks
+  useNotifications,
+  useNotificationStore,
+  createNotificationStore,
+  NotificationStoreProvider,
+  type NotificationStoreApi,
   // Desktop types
   type ProcessDefinition,
   type ProcessInstance,
@@ -79,9 +111,27 @@ export {
   // Desktop hooks
   useSnapZones,
   useSnapZoneStore,
+  createSnapZoneStore,
+  SnapZoneStoreProvider,
+  type SnapZoneStoreApi,
   getSnapZoneDimensions,
   EDGE_THRESHOLD,
   CORNER_SIZE,
+  // FileBrowser types
+  type FileItem,
+  type FileType,
+  type FileBrowserViewMode,
+  type FileBrowserSortField,
+  type FileBrowserSortOrder,
+  type FileBrowserSort,
+  type FileBrowserProps,
+  type UseFileBrowserReturn,
+  // FileBrowser hooks
+  useFileBrowser,
+  useFileBrowserStore,
+  createFileBrowserStore,
+  FileBrowserStoreProvider,
+  type FileBrowserStoreApi,
 } from './core';
 
 // Themes

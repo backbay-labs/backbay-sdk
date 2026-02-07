@@ -1,6 +1,6 @@
 //! Asset model and registry tests
 
-use glia_fab_world::models::asset::{Asset, AssetCategory, QualityTier, Vec3, Quat};
+use cyntra_world::models::asset::{AssetCategory, QualityTier, Vec3, Quat};
 
 #[test]
 fn test_vec3_default() {

@@ -140,3 +140,7 @@ export function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
+
+// Accessibility
+export { prefersReducedTransparency, usePrefersReducedTransparency, usePrefersReducedMotion, usePrefersColorScheme, usePrefersHighContrast } from './accessibility';
+export { useFocusTrap } from './useFocusTrap';

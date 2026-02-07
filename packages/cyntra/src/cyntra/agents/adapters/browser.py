@@ -80,4 +80,3 @@ class BrowserAdapter:
         """Check if current browsing is in-scope for the mission."""
         # Stub - assume in scope
         return True
-

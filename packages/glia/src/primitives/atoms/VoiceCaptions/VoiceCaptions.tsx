@@ -274,10 +274,8 @@ const CaptionLineComponent = ({
         textShadow: "0 0 0px transparent",
       }}
       transition={{
-        exit: {
-          duration: DISSOLVE_MS / 1000,
-          ease: "easeOut",
-        },
+        duration: DISSOLVE_MS / 1000,
+        ease: "easeOut",
       }}
       onAnimationComplete={(definition) => {
         if (definition === "exit") {

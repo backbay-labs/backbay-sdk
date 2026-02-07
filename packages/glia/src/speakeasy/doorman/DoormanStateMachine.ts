@@ -7,7 +7,7 @@
  * but implemented as a Zustand store for React integration.
  */
 
-import { create } from 'zustand';
+import { create, createStore } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import {
   DEFAULT_DOORMAN_CONFIG,
@@ -315,8 +315,8 @@ const INITIAL_CONTEXT: DoormanContext = {
   capability: null,
 };
 
-export const useDoormanStore = create<DoormanStore>()(
-  subscribeWithSelector((set, get) => ({
+function createDoormanStoreImpl(set: any, get: any): DoormanStore {
+  return {
     ...INITIAL_CONTEXT,
     config: DEFAULT_DOORMAN_CONFIG,
     transitions: createTransitions(DEFAULT_DOORMAN_CONFIG),
@@ -325,8 +325,7 @@ export const useDoormanStore = create<DoormanStore>()(
       const { state, transitions, ...context } = get();
       const currentContext: DoormanContext = { state, ...context };
 
-      // Find matching transition
-      const transition = transitions.find((t) => {
+      const transition = transitions.find((t: Transition) => {
         if (t.from !== state) return false;
         if (t.event !== event.type) return false;
         if (t.guard && !t.guard(currentContext, event)) return false;
@@ -340,7 +339,6 @@ export const useDoormanStore = create<DoormanStore>()(
         return;
       }
 
-      // Execute action and update state
       const updates = transition.action?.(currentContext, event) || {};
       set({
         state: transition.to,
@@ -381,26 +379,43 @@ export const useDoormanStore = create<DoormanStore>()(
           return null;
       }
     },
-  }))
+  };
+}
+
+/** Factory: creates an isolated Doorman store instance with subscribeWithSelector middleware. */
+export function createDoormanStore() {
+  return createStore<DoormanStore>()(
+    subscribeWithSelector((set, get) => createDoormanStoreImpl(set, get))
+  );
+}
+
+export type DoormanStoreApi = ReturnType<typeof createDoormanStore>;
+
+// Legacy singleton
+export const useDoormanStore = create<DoormanStore>()(
+  subscribeWithSelector((set, get) => createDoormanStoreImpl(set, get))
 );
 
 // ============================================================================
 // Timeout Management
 // ============================================================================
 
-let challengeTimeoutId: ReturnType<typeof setTimeout> | null = null;
-let cooldownTimeoutId: ReturnType<typeof setTimeout> | null = null;
-let lockTimeoutId: ReturnType<typeof setTimeout> | null = null;
-let admissionTimeoutId: ReturnType<typeof setTimeout> | null = null;
-
 /**
- * Start automatic timeout handling based on state changes
+ * Start automatic timeout handling based on state changes.
+ * Accepts an optional store instance; defaults to the legacy singleton.
  */
-export function startDoormanTimeouts(): () => void {
-  const unsubscribe = useDoormanStore.subscribe(
+export function startDoormanTimeouts(storeApi?: DoormanStoreApi): () => void {
+  const api = storeApi ?? useDoormanStore;
+
+  let challengeTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  let cooldownTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  let lockTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  let admissionTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  const unsubscribe = api.subscribe(
     (state) => state.state,
-    (doormanState, prevState) => {
-      const store = useDoormanStore.getState();
+    (doormanState, _prevState) => {
+      const store = api.getState();
 
       // Clear all timeouts on state change
       if (challengeTimeoutId) clearTimeout(challengeTimeoutId);

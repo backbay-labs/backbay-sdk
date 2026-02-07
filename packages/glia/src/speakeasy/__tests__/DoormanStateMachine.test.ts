@@ -2,7 +2,7 @@
  * Tests for DoormanStateMachine state transitions
  */
 
-import { describe, it, expect, beforeEach } from 'bun:test';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
   useDoormanStore,
 } from '../doorman/DoormanStateMachine.js';

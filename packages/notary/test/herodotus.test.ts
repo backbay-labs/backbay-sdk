@@ -2,7 +2,7 @@
  * Tests for Herodotus cross-chain verification
  */
 
-import { describe, it, expect } from "bun:test";
+import { describe, it, expect } from "vitest";
 import {
   computeAttestationSlot,
   formatProofForStarknet,

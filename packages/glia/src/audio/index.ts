@@ -1,64 +1,20 @@
-// =============================================================================
-// Types
-// =============================================================================
+/**
+ * Re-exports from @backbay/glia-agent/audio for backward compatibility.
+ * The core audio system has been extracted to its own package.
+ * New code should import directly from '@backbay/glia-agent/audio'.
+ *
+ * Hooks that depend on glia internals (useRunSpeechCues, useCognitionSpeech)
+ * remain in this package.
+ */
+export * from "@backbay/glia-agent/audio";
 
+// Hooks that depend on @backbay/glia internals remain here
+export { useRunSpeechCues, DEFAULT_RUN_SPEECH_CUES } from './hooks/useRunSpeechCues.js';
+export type { UseRunSpeechCuesOptions, RunSpeechCueMap } from './hooks/useRunSpeechCues.js';
+
+export { useCognitionSpeech } from './hooks/useCognitionSpeech.js';
 export type {
-  AudioFormat,
-  VoiceLicenseCategory,
-  VoiceCatalogEntry,
-  VoiceCatalog,
-  AudioPolicy,
-  AudioPlannerMode,
-  SpeechControls,
-  SpeechSynthesisRequest,
-  AudioArtifact,
-  SpeechSynthesisResult,
-  SpeechSynthesisProvider,
-  AudioVerifier,
-  AudioGateResult,
-  AudioGates,
-  EvidenceRef,
-  AudioProof,
-} from './types.js';
-
-export { clamp01, createTraceId, DEFAULT_TARGET_AVO } from './types.js';
-
-// =============================================================================
-// Schemas
-// =============================================================================
-
-export {
-  AudioProofSchema,
-  validateAudioProof,
-  AudioFormatSchema,
-  VoiceLicenseCategorySchema,
-} from './schema.js';
-
-export type { AudioProofInput, AudioProofOutput, AudioProofValidationResult } from './schema.js';
-
-// =============================================================================
-// Planning
-// =============================================================================
-
-export { planSpeech, planSpeechFromCognition } from './planner.js';
-export type { AudioPlannerInput, AudioPlannerSignals, AudioPlannerCognitionInput } from './planner.js';
-
-// =============================================================================
-// Overlay
-// =============================================================================
-
-export { DEFAULT_OVERLAY_PHRASES, pickOverlayPhrase } from './overlay.js';
-export type { OverlayToken, OverlayPhraseLibrary } from './overlay.js';
-
-// =============================================================================
-// Providers
-// =============================================================================
-
-export { HttpSpeechSynthesisProvider } from './providers/httpSpeechSynthesisProvider.js';
-export type { HttpSpeechSynthesisProviderOptions, HttpSynthesisResponse } from './providers/httpSpeechSynthesisProvider.js';
-
-// =============================================================================
-// Hooks
-// =============================================================================
-
-export * from './hooks/index.js';
+  UseCognitionSpeechOptions,
+  SpeakWithCognitionOptions,
+  UseCognitionSpeechReturn,
+} from './hooks/useCognitionSpeech.js';

@@ -179,6 +179,12 @@ export interface UseStartMenuReturn {
   toggle: () => void;
   /** Set search query */
   setSearchQuery: (query: string) => void;
+  /** Set selected category for filtering */
+  setSelectedCategory: (categoryId: string | null) => void;
+  /** Register apps into the menu */
+  registerApps: (apps: StartMenuApp[]) => void;
+  /** Register categories into the menu */
+  registerCategories: (categories: StartMenuCategory[]) => void;
   /** Launch an app */
   launchApp: (appId: string) => void;
   /** Pin an app */

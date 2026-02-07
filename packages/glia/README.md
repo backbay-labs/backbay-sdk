@@ -485,7 +485,7 @@ import type {
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup and guidelines.
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 

@@ -97,7 +97,7 @@ export { SentinelProvider, useSentinelDependencies } from './SentinelProvider';
 // Store
 // -----------------------------------------------------------------------------
 
-export { useSentinelStore } from './sentinelStore';
+export { useSentinelStore, createSentinelStore, type SentinelStoreApi } from './sentinelStore';
 
 // -----------------------------------------------------------------------------
 // Types

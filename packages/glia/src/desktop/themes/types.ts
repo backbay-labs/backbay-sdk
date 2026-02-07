@@ -4,8 +4,8 @@
  * The theme system uses CSS variables for styling. Themes define the values,
  * and the ThemeProvider injects them as CSS custom properties.
  *
- * CSS variable naming convention: --bb-{category}-{name}
- * Example: --bb-color-accent, --bb-font-display, --bb-radius-window
+ * CSS variable naming convention: --glia-{category}-{name}
+ * Example: --glia-color-accent, --glia-font-display, --glia-radius-lg
  */
 
 /**
@@ -160,41 +160,41 @@ export function themeToCssVariables(theme: DesktopOSTheme): Record<string, strin
 
   // Colors
   for (const [key, value] of Object.entries(theme.colors)) {
-    vars[`--bb-color-${kebabCase(key)}`] = value;
+    vars[`--glia-color-${kebabCase(key)}`] = value;
   }
 
   // Fonts
   for (const [key, value] of Object.entries(theme.fonts)) {
-    vars[`--bb-font-${key}`] = value;
+    vars[`--glia-font-${key}`] = value;
   }
 
   // Radii
   for (const [key, value] of Object.entries(theme.radii)) {
-    vars[`--bb-radius-${key}`] = value;
+    vars[`--glia-radius-${key}`] = value;
   }
 
   // Shadows
   for (const [key, value] of Object.entries(theme.shadows)) {
-    vars[`--bb-shadow-${kebabCase(key)}`] = value;
+    vars[`--glia-shadow-${kebabCase(key)}`] = value;
   }
 
   // Spacing
   for (const [key, value] of Object.entries(theme.spacing)) {
-    vars[`--bb-spacing-${kebabCase(key)}`] = value;
+    vars[`--glia-spacing-${kebabCase(key)}`] = value;
   }
 
   // Animation durations
   for (const [key, value] of Object.entries(theme.animation.duration)) {
-    vars[`--bb-duration-${key}`] = value;
+    vars[`--glia-duration-${key}`] = value;
   }
 
   // Animation easing
   for (const [key, value] of Object.entries(theme.animation.easing)) {
-    vars[`--bb-easing-${key}`] = value;
+    vars[`--glia-easing-${key}`] = value;
   }
 
   // Blur
-  vars['--bb-blur-backdrop'] = theme.blur.backdrop;
+  vars['--glia-blur-backdrop'] = theme.blur.backdrop;
 
   return vars;
 }

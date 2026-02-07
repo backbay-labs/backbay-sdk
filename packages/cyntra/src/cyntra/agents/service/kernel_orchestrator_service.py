@@ -5,8 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from cyntra.commons import get_logger, new_id
-
 from cyntra.agents.config import AgentSettings
 from cyntra.agents.persona.kernel_orchestrator import (
     KernelOrchestratorPersona,
@@ -16,6 +14,7 @@ from cyntra.agents.persona.kernel_orchestrator import (
 from cyntra.agents.schemas import AgentMessage, AgentMessageRole, AgentResponse
 from cyntra.agents.service.glyph_service import Telemetry
 from cyntra.agents.tools.kernel import KernelTools
+from cyntra.commons import get_logger, new_id
 
 logger = get_logger(__name__)
 

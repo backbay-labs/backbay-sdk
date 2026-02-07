@@ -13,11 +13,8 @@ use starknet::ContractAddress;
 use starknet::get_caller_address;
 use starknet::get_block_timestamp;
 
-use dojo::world::IWorldDispatcher;
-use dojo::world::IWorldDispatcherTrait;
-
 /// Verified attestation record stored onchain
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct VerifiedAttestation {
     /// EAS attestation UID from Base L2
@@ -44,7 +41,7 @@ pub struct VerifiedAttestation {
 }
 
 /// Pending attestation awaiting challenge period (for optimistic mode)
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct PendingAttestation {
     #[key]
@@ -71,7 +68,7 @@ pub struct PendingAttestation {
 }
 
 /// Verifier configuration
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct VerifierConfig {
     #[key]

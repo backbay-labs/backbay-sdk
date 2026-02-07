@@ -8,3 +8,4 @@
 export * from './window';
 export * from './shell';
 export * from './desktop';
+export { useKeyboardNavigation } from './useKeyboardNavigation';

@@ -7,7 +7,7 @@
  * positioned along a 180-degree arc (top half only, from left to right).
  */
 
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
@@ -342,7 +342,7 @@ export const CardinalMenu: React.FC<CardinalMenuProps> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ delay: 0.3, duration: 0.2 }}
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
                 onEdit();
               }}

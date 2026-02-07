@@ -2,14 +2,15 @@
  * Tests for speakeasy storage implementations
  */
 
-import { describe, it, expect, beforeEach } from 'bun:test';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   createInMemorySpeakeasyStorage,
   createEncryptedLocalStorageSpeakeasyStorage,
   createDefaultSpeakeasyStorage,
+  migrateV1ToV2,
 } from '../auth/storage.js';
 import type { Verifier } from '../types.js';
-import { hexToBytes, randomHex } from '../auth/crypto.js';
+import { bytesToHex, hexToBytes, randomHex, utf8ToBytes } from '../auth/crypto.js';
 
 function createMockVerifier(): Verifier {
   return {
@@ -235,5 +236,154 @@ describe('createDefaultSpeakeasyStorage', () => {
     expect(storage.getVerifier).toBeInstanceOf(Function);
     expect(storage.setVerifier).toBeInstanceOf(Function);
     expect(storage.clearVerifier).toBeInstanceOf(Function);
+  });
+});
+
+describe('migrateV1ToV2', () => {
+  /**
+   * Helper to create a v1 encrypted payload (fixed salt) for testing.
+   * This manually replicates the v1 encryption path.
+   */
+  async function createV1Payload(
+    verifier: Verifier,
+    deviceSecret: Uint8Array
+  ): Promise<string> {
+    const subtle = globalThis.crypto.subtle;
+
+    // v1 uses the fixed salt
+    const fixedSalt = utf8ToBytes('bb-ui:speakeasy:encrypted-storage:v1');
+
+    const keyMaterial = await subtle.importKey(
+      'raw',
+      deviceSecret as unknown as BufferSource,
+      'PBKDF2',
+      false,
+      ['deriveKey']
+    );
+
+    const key = await subtle.deriveKey(
+      {
+        name: 'PBKDF2',
+        salt: fixedSalt as unknown as BufferSource,
+        iterations: 600_000,
+        hash: 'SHA-256',
+      },
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['encrypt']
+    );
+
+    const iv = new Uint8Array(12);
+    globalThis.crypto.getRandomValues(iv);
+
+    const plaintext = new TextEncoder().encode(JSON.stringify(verifier));
+    const ciphertext = await subtle.encrypt(
+      { name: 'AES-GCM', iv: iv as unknown as BufferSource },
+      key,
+      plaintext as unknown as BufferSource
+    );
+
+    const payload = {
+      v: 1 as const,
+      iv: bytesToHex(iv),
+      ct: bytesToHex(new Uint8Array(ciphertext)),
+    };
+
+    return JSON.stringify(payload);
+  }
+
+  it('migrates v1 payload to v2 with random salt', async () => {
+    const deviceSecret = hexToBytes(randomHex(32));
+    const verifier = createMockVerifier();
+
+    const v1Payload = await createV1Payload(verifier, deviceSecret);
+    const v2PayloadStr = await migrateV1ToV2(v1Payload, deviceSecret);
+    const v2Payload = JSON.parse(v2PayloadStr);
+
+    expect(v2Payload.v).toBe(2);
+    expect(v2Payload.salt).toBeDefined();
+    expect(v2Payload.salt).toHaveLength(32); // 16 bytes = 32 hex chars
+    expect(v2Payload.iv).toBeDefined();
+    expect(v2Payload.ct).toBeDefined();
+  });
+
+  it('preserves verifier data through migration', async () => {
+    const deviceSecret = hexToBytes(randomHex(32));
+    const verifier = createMockVerifier();
+    const mockLocalStorage: Record<string, string> = {};
+    (globalThis as Record<string, unknown>).localStorage = {
+      getItem: (key: string) => mockLocalStorage[key] ?? null,
+      setItem: (key: string, value: string) => {
+        mockLocalStorage[key] = value;
+      },
+      removeItem: (key: string) => {
+        delete mockLocalStorage[key];
+      },
+    };
+
+    const v1Payload = await createV1Payload(verifier, deviceSecret);
+    const v2PayloadStr = await migrateV1ToV2(v1Payload, deviceSecret);
+
+    // Store the v2 payload and decrypt it through the normal storage path
+    const storageKey = 'test:migration';
+    mockLocalStorage[storageKey] = v2PayloadStr;
+
+    const storage = createEncryptedLocalStorageSpeakeasyStorage({
+      deviceSecret,
+      key: storageKey,
+    });
+    const retrieved = await storage.getVerifier();
+    expect(retrieved).toEqual(verifier);
+  });
+
+  it('returns v2 payload unchanged', async () => {
+    const deviceSecret = hexToBytes(randomHex(32));
+    const mockLocalStorage: Record<string, string> = {};
+    (globalThis as Record<string, unknown>).localStorage = {
+      getItem: (key: string) => mockLocalStorage[key] ?? null,
+      setItem: (key: string, value: string) => {
+        mockLocalStorage[key] = value;
+      },
+      removeItem: (key: string) => {
+        delete mockLocalStorage[key];
+      },
+    };
+
+    // Create a v2 payload through normal encryption
+    const storage = createEncryptedLocalStorageSpeakeasyStorage({ deviceSecret });
+    await storage.setVerifier(createMockVerifier());
+    const v2Original = mockLocalStorage['bb-ui:speakeasy:verifier:encrypted:v1'];
+
+    const result = await migrateV1ToV2(v2Original, deviceSecret);
+    expect(result).toBe(v2Original); // Should return as-is
+  });
+
+  it('emits console.warn when decrypting v1 payload', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const deviceSecret = hexToBytes(randomHex(32));
+    const verifier = createMockVerifier();
+    const v1Payload = await createV1Payload(verifier, deviceSecret);
+
+    // migrateV1ToV2 decrypts v1 which triggers the warning
+    await migrateV1ToV2(v1Payload, deviceSecret);
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Speakeasy: v1 encrypted payload detected. Call migrateV1ToV2() to upgrade to random-salt encryption.'
+    );
+
+    warnSpy.mockRestore();
+  });
+
+  it('fails with wrong device secret', async () => {
+    const secret1 = hexToBytes(randomHex(32));
+    const secret2 = hexToBytes(randomHex(32));
+    const verifier = createMockVerifier();
+
+    const v1Payload = await createV1Payload(verifier, secret1);
+
+    // Decryption with wrong secret should throw (AES-GCM auth tag failure)
+    await expect(migrateV1ToV2(v1Payload, secret2)).rejects.toThrow();
   });
 });

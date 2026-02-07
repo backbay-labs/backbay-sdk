@@ -9,8 +9,6 @@ from __future__ import annotations
 from datetime import date
 from typing import TYPE_CHECKING
 
-from cyntra.commons import SurfaceType, get_logger
-
 from cyntra.agents.schemas import (
     EnergyLevel,
     MissionKind,
@@ -22,6 +20,7 @@ from cyntra.agents.schemas import (
     RunSessionRequest,
     RunSessionResponse,
 )
+from cyntra.commons import SurfaceType, get_logger
 
 if TYPE_CHECKING:
     from cyntra.agents.graphs.router import GraphRouter
@@ -92,9 +91,7 @@ class WorkflowTools:
             surface=SurfaceType(surface) if surface else SurfaceType.OTHER,
         )
 
-        response: PlanMissionResponse = await self._router.plan_mission(
-            self._user_id, request
-        )
+        response: PlanMissionResponse = await self._router.plan_mission(self._user_id, request)
         return response.model_dump()
 
     async def run_session_via_graph(
@@ -143,9 +140,7 @@ class WorkflowTools:
             surface=SurfaceType(surface) if surface else SurfaceType.OTHER,
         )
 
-        response: RunSessionResponse = await self._router.run_session(
-            self._user_id, request
-        )
+        response: RunSessionResponse = await self._router.run_session(self._user_id, request)
         return response.model_dump()
 
     async def reflect_period_via_graph(
@@ -201,7 +196,5 @@ class WorkflowTools:
             surface=SurfaceType(surface) if surface else SurfaceType.OTHER,
         )
 
-        response: ReflectPeriodResponse = await self._router.reflect_period(
-            self._user_id, request
-        )
+        response: ReflectPeriodResponse = await self._router.reflect_period(self._user_id, request)
         return response.model_dump()

@@ -2,7 +2,7 @@
  * Tests for SpeakeasyAuth registration and verification
  */
 
-import { describe, it, expect, beforeEach } from 'bun:test';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
   SpeakeasyAuth,
   fingerprintGestureSequence,
@@ -151,6 +151,23 @@ describe('SpeakeasyAuth', () => {
       );
     });
 
+    it('throws on domain mismatch', async () => {
+      const gesture = createGesture();
+
+      // Register on a different domain using shared storage
+      const otherAuth = new SpeakeasyAuth({
+        storage,
+        domain: 'https://other.local',
+        deviceSecret: 'test-device-secret',
+      });
+      await otherAuth.registerGesture(gesture);
+
+      // computeResponse from original domain should reject
+      await expect(auth.computeResponse(gesture, createChallenge())).rejects.toThrow(
+        '[Speakeasy] Domain mismatch'
+      );
+    });
+
     it('produces deterministic response for same inputs', async () => {
       const gesture = createGesture();
       const challenge = createChallenge();
@@ -160,6 +177,38 @@ describe('SpeakeasyAuth', () => {
       const response2 = await auth.computeResponse(gesture, challenge);
 
       expect(response1).toBe(response2);
+    });
+  });
+
+  describe('domain binding', () => {
+    it('throws when no domain provided in non-browser environment', () => {
+      // Ensure globalThis.location is not set (non-browser)
+      const origLocation = globalThis.location;
+      delete (globalThis as Record<string, unknown>).location;
+
+      try {
+        expect(() => {
+          new SpeakeasyAuth({
+            storage: createInMemorySpeakeasyStorage(),
+            deviceSecret: 'test-device-secret',
+            // no domain provided
+          });
+        }).toThrow('SpeakeasyAuth: domain must be explicitly provided in non-browser environments');
+      } finally {
+        if (origLocation !== undefined) {
+          (globalThis as Record<string, unknown>).location = origLocation;
+        }
+      }
+    });
+
+    it('uses explicit domain when provided', () => {
+      const auth = new SpeakeasyAuth({
+        storage: createInMemorySpeakeasyStorage(),
+        domain: 'https://explicit.local',
+        deviceSecret: 'test-device-secret',
+      });
+      // Should not throw
+      expect(auth).toBeDefined();
     });
   });
 

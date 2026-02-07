@@ -131,4 +131,3 @@ class ExternalSignalTools:
             return "No external context available (signals not connected)"
 
         return ". ".join(parts)
-

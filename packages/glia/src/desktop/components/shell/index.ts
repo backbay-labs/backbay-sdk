@@ -30,3 +30,8 @@ export { Taskbar, type TaskbarProps, type TaskbarStartButtonProps, type TaskbarD
 export { TaskbarButton, type TaskbarButtonProps } from './TaskbarButton';
 export { ContextMenu, type ContextMenuProps } from './ContextMenu';
 export { Clock, type ClockProps } from './Clock';
+export { GlassMenubar, type GlassMenubarProps, type MenubarItem, type MenubarMenuItem } from './GlassMenubar';
+export { StartMenu, type StartMenuProps } from './StartMenu';
+export { SystemTray, type SystemTrayProps, type SystemTrayItem } from './SystemTray';
+export { NotificationCenter, type NotificationCenterProps } from './NotificationCenter';
+export { NotificationToast, type NotificationToastProps } from './NotificationToast';

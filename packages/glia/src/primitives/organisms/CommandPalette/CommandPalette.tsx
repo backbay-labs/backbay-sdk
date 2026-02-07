@@ -1,6 +1,7 @@
 "use client";
 
 import { cn, prefersReducedMotion } from "../../../lib/utils";
+import { useFocusTrap } from "../../../lib/useFocusTrap";
 import { cva, type VariantProps } from "class-variance-authority";
 import {
   Command,
@@ -106,8 +107,11 @@ export function CommandPalette({
   ...props
 }: CommandPaletteProps) {
   const [value, setValue] = React.useState("");
+  const paletteRef = React.useRef<HTMLDivElement>(null);
   const reducedMotion = prefersReducedMotion();
   const shouldAnimate = !disableAnimations && !reducedMotion;
+
+  useFocusTrap(paletteRef, open);
 
   // Group items by category
   const groupedItems = React.useMemo(() => {
@@ -163,10 +167,14 @@ export function CommandPalette({
 
           {/* Palette */}
           <motion.div
+            ref={paletteRef}
             className={cn(
               "relative w-full max-w-2xl mx-4 bg-card border border-border rounded-lg shadow-2xl overflow-hidden",
               className
             )}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Command palette"
             initial={shouldAnimate ? { opacity: 0, scale: 0.95, y: -20 } : {}}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={shouldAnimate ? { opacity: 0, scale: 0.95, y: -20 } : {}}

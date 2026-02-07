@@ -8,7 +8,7 @@
 
 import { Center } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { motion, useAnimation } from 'motion/react';
+import { motion, useAnimation } from 'framer-motion';
 import React, { Suspense, useEffect, useCallback, useRef } from 'react';
 
 import { useSentinelStore } from './sentinelStore';

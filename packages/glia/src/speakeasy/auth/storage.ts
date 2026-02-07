@@ -247,6 +247,9 @@ async function decryptVerifier(
     salt = hexToBytes(payload.salt);
   } else {
     // Legacy v1 fallback: use fixed salt
+    console.warn(
+      'Speakeasy: v1 encrypted payload detected. Call migrateV1ToV2() to upgrade to random-salt encryption.'
+    );
     salt = utf8ToBytes('bb-ui:speakeasy:encrypted-storage:v1');
   }
 
@@ -262,7 +265,7 @@ async function decryptVerifier(
  * Create encrypted localStorage storage.
  *
  * The verifier is encrypted with AES-256-GCM using a key derived from the
- * device secret via PBKDF2 (100k iterations).
+ * device secret via PBKDF2 (600,000 iterations).
  *
  * @param options.deviceSecret - The device secret to derive the encryption key from
  * @param options.key - localStorage key for the encrypted payload
@@ -313,7 +316,7 @@ export function createEncryptedLocalStorageSpeakeasyStorage(options: {
  * Create encrypted IndexedDB storage.
  *
  * The verifier is encrypted with AES-256-GCM using a key derived from the
- * device secret via PBKDF2 (100k iterations).
+ * device secret via PBKDF2 (600,000 iterations).
  *
  * @param options.deviceSecret - The device secret to derive the encryption key from
  * @param options.dbName - IndexedDB database name
@@ -420,5 +423,40 @@ export function createEncryptedSpeakeasyStorage(
     // ignore
   }
   // Fall back to in-memory (no encryption needed since it's ephemeral)
+  console.warn(
+    '[Speakeasy] Encrypted persistent storage is unavailable (IndexedDB and localStorage not found). ' +
+      'Falling back to in-memory storage — data will NOT persist across sessions.'
+  );
   return createInMemorySpeakeasyStorage();
+}
+
+/**
+ * Migrate a v1 encrypted payload (fixed PBKDF2 salt) to v2 (random salt).
+ *
+ * v1 used a fixed string as the PBKDF2 salt, meaning the same password always
+ * produced the same derived key (enabling precomputation attacks). v2 generates
+ * a random 16-byte salt per encryption.
+ *
+ * @param encryptedPayload - JSON string of the v1 EncryptedPayload
+ * @param deviceSecret - The device secret used for encryption
+ * @returns JSON string of the new v2 EncryptedPayload
+ */
+export async function migrateV1ToV2(
+  encryptedPayload: string,
+  deviceSecret: Uint8Array
+): Promise<string> {
+  const payload = JSON.parse(encryptedPayload) as EncryptedPayload;
+
+  if (payload.v === 2 && payload.salt) {
+    // Already v2, return as-is
+    return encryptedPayload;
+  }
+
+  // Decrypt using v1 format (fixed salt)
+  const verifier = await decryptVerifier(payload, deviceSecret);
+
+  // Re-encrypt using v2 format (random salt)
+  const v2Payload = await encryptVerifier(verifier, deviceSecret);
+
+  return JSON.stringify(v2Payload);
 }

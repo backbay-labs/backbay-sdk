@@ -2,7 +2,7 @@
  * Tests for unified identity system
  */
 
-import { describe, it, expect, beforeEach } from "bun:test";
+import { describe, it, expect, beforeEach } from "vitest";
 import { Hono } from "hono";
 
 // Note: Full integration tests would require mocking viem and siwe

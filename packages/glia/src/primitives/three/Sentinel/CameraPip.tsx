@@ -12,8 +12,8 @@ import styled from 'styled-components';
 import type { CameraPipProps } from './types';
 
 const Container = styled.div<{ $size: number }>`
-  width: ${(p) => p.$size}px;
-  height: ${(p) => p.$size}px;
+  width: ${(p: { $size: number }) => p.$size}px;
+  height: ${(p: { $size: number }) => p.$size}px;
   border-radius: 50%;
   overflow: hidden;
   background: #0a0a0f;

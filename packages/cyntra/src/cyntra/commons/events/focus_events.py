@@ -54,4 +54,3 @@ class SessionEndedEvent(BaseSchema):
     user_id: str
     ended_at: datetime
     duration_seconds: int | None = None
-

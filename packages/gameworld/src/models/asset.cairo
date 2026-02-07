@@ -5,9 +5,10 @@
 use starknet::ContractAddress;
 
 /// Asset category enumeration
-#[derive(Drop, Serde, Copy, PartialEq, Introspect)]
+#[derive(Drop, Serde, Copy, PartialEq, Introspect, DojoStore, Default)]
 pub enum AssetCategory {
     /// Player character model
+    #[default]
     Character,
     /// Environment/level geometry
     Environment,
@@ -24,19 +25,20 @@ pub enum AssetCategory {
 }
 
 /// Quality tier from Membrane gate verdicts
-#[derive(Drop, Serde, Copy, PartialEq, Introspect)]
+#[derive(Drop, Serde, Copy, PartialEq, Introspect, DojoStore, Default)]
 pub enum QualityTier {
     /// Passed all quality gates
     Verified,
     /// Passed minimum gates
     Standard,
     /// No attestation / failed gates
+    #[default]
     Unverified,
 }
 
 /// 3D position with fixed-point coordinates
 /// Using i128 for ~18 decimal precision
-#[derive(Drop, Serde, Copy, Introspect)]
+#[derive(Drop, Serde, Copy, Introspect, DojoStore)]
 pub struct Vec3 {
     /// X coordinate (fixed-point, scale 1e18)
     pub x: i128,
@@ -47,7 +49,7 @@ pub struct Vec3 {
 }
 
 /// Quaternion rotation
-#[derive(Drop, Serde, Copy, Introspect)]
+#[derive(Drop, Serde, Copy, Introspect, DojoStore)]
 pub struct Quat {
     pub x: i128,
     pub y: i128,
@@ -56,7 +58,7 @@ pub struct Quat {
 }
 
 /// Core Asset model - registered assets in the world
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct Asset {
     /// Unique asset identifier (keccak256 of IPFS CID)
@@ -95,7 +97,7 @@ pub struct Asset {
 
 /// Asset instance in a game world
 /// Represents a placed/spawned asset
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct AssetInstance {
     /// World this instance belongs to
@@ -129,7 +131,7 @@ pub struct AssetInstance {
 }
 
 /// Asset ownership tracking
-#[derive(Model, Drop, Serde)]
+#[derive(Drop, Serde)]
 #[dojo::model]
 pub struct AssetOwnership {
     /// Owner address

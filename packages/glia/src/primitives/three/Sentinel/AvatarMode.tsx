@@ -7,7 +7,7 @@
  * Supports real-time motion streaming via optional useAvatarSession dependency.
  */
 
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 
@@ -167,7 +167,7 @@ const PermissionButton = styled(motion.button)<{ $primary?: boolean }>`
   outline: none;
   transition: all 0.2s ease;
 
-  ${({ $primary }) =>
+  ${({ $primary }: { $primary?: boolean }) =>
     $primary
       ? `
     background: rgba(212, 168, 75, 0.15);

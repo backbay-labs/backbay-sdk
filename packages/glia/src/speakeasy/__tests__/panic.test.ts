@@ -2,7 +2,7 @@
  * Tests for panic gesture detection
  */
 
-import { describe, it, expect } from 'bun:test';
+import { describe, it, expect } from 'vitest';
 import {
   DEFAULT_PANIC_GESTURE_PATTERN,
   isPanicGesture,

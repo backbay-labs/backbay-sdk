@@ -2,7 +2,7 @@
 
 import React, { useCallback, useRef, useMemo, useState, useEffect, memo } from 'react';
 import { Rnd, type DraggableData } from 'react-rnd';
-import { motion, type Transition, type Variants, AnimatePresence } from 'motion/react';
+import { motion, type Transition, type Variants, AnimatePresence } from 'framer-motion';
 import type { WindowId, TilePosition, WindowState } from '../../core/window/types';
 import {
   useWindow,
@@ -10,9 +10,9 @@ import {
   useIsWindowFullscreen,
   useWindowGroup,
   useWindowActions,
-  useWindowManagerStore,
 } from '../../core/window/useWindowManager';
 import { WindowTitlebar } from './WindowTitlebar';
+import { GliaErrorBoundary } from '../../../primitives/atoms/GliaErrorBoundary';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Hyprland-style animation configurations
@@ -131,15 +131,15 @@ const windowFrameStyle = (
   position: 'absolute',
   display: 'flex',
   flexDirection: 'column',
-  background: 'var(--bb-color-window-bg, #0a0a0a)',
+  background: 'var(--glia-color-bg-panel, #0a0a0a)',
   border: isFullscreen
     ? 'none'
-    : `var(--bb-spacing-window-border-width, 2px) solid ${
+    : `var(--glia-spacing-window-border-width, 2px) solid ${
         variant === 'prominent' && focused
-          ? 'var(--bb-color-window-border-focused, rgba(212, 168, 75, 0.25))'
-          : 'var(--bb-color-window-border, #333333)'
+          ? 'var(--glia-glass-active-border, rgba(212, 168, 75, 0.25))'
+          : 'var(--glia-color-border, #333333)'
       }`,
-  borderRadius: isFullscreen ? 0 : 'var(--bb-radius-window, 3px)',
+  borderRadius: isFullscreen ? 0 : 'var(--glia-radius-lg, 3px)',
   overflow: 'visible',
   transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
   // GPU acceleration
@@ -151,9 +151,9 @@ const windowFrameStyle = (
   boxShadow:
     variant === 'prominent'
       ? focused
-        ? 'var(--bb-shadow-window-focused, 0 32px 80px -12px rgba(0, 0, 0, 0.6))'
-        : 'var(--bb-shadow-window, 0 8px 32px rgba(0, 0, 0, 0.6))'
-      : 'var(--bb-shadow-window, 0 8px 32px rgba(0, 0, 0, 0.6))',
+        ? 'var(--glia-shadow-modal, 0 32px 80px -12px rgba(0, 0, 0, 0.6))'
+        : 'var(--glia-shadow-hud-panel, 0 8px 32px rgba(0, 0, 0, 0.6))'
+      : 'var(--glia-shadow-hud-panel, 0 8px 32px rgba(0, 0, 0, 0.6))',
   // Dim unfocused prominent windows
   filter: variant === 'prominent' && !focused ? 'brightness(0.92)' : undefined,
   width: '100%',
@@ -177,20 +177,20 @@ const groupDropZoneStyle: React.CSSProperties = {
   justifyContent: 'center',
   background: 'rgba(212, 168, 75, 0.08)',
   border: '2px dashed rgba(212, 168, 75, 0.4)',
-  borderRadius: 'var(--bb-radius-window, 3px)',
+  borderRadius: 'var(--glia-radius-lg, 3px)',
 };
 
 const groupDropZoneLabelStyle: React.CSSProperties = {
   padding: '8px 16px',
-  background: 'var(--bb-color-window-bg, #0a0a0a)',
-  border: '1px solid var(--bb-color-accent, #d4a84b)',
-  borderRadius: 'var(--bb-radius-window, 3px)',
-  fontFamily: 'var(--bb-font-display, sans-serif)',
+  background: 'var(--glia-color-bg-panel, #0a0a0a)',
+  border: '1px solid var(--glia-color-accent, #d4a84b)',
+  borderRadius: 'var(--glia-radius-lg, 3px)',
+  fontFamily: 'var(--glia-font-display, sans-serif)',
   fontSize: '0.75rem',
   fontWeight: 600,
   letterSpacing: '0.1em',
   textTransform: 'uppercase',
-  color: 'var(--bb-color-accent, #d4a84b)',
+  color: 'var(--glia-color-accent, #d4a84b)',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -262,6 +262,89 @@ export interface WindowProps {
   disableDragging?: boolean;
   /** Disable resizing */
   disableResizing?: boolean;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Window Error Fallback
+// ═══════════════════════════════════════════════════════════════════════════
+
+function WindowErrorFallback({
+  error,
+  reset,
+  windowId,
+  title,
+}: {
+  error: Error;
+  reset: () => void;
+  windowId: string;
+  title: string;
+}) {
+  const { close } = useWindowActions();
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        padding: 24,
+        gap: 16,
+        background: 'rgba(20, 20, 30, 0.85)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        color: 'rgba(255, 255, 255, 0.9)',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+      }}
+    >
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255, 100, 100, 0.9)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>
+          {title || 'Window'} crashed
+        </div>
+        <div style={{ color: 'rgba(255, 255, 255, 0.45)', fontSize: 12, lineHeight: 1.4, maxWidth: 280, wordBreak: 'break-word' }}>
+          {error.message}
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button
+          onClick={reset}
+          style={{
+            background: 'rgba(255, 255, 255, 0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: 6,
+            padding: '6px 14px',
+            color: 'rgba(255, 255, 255, 0.9)',
+            cursor: 'pointer',
+            fontSize: 12,
+            fontWeight: 500,
+          }}
+        >
+          Retry
+        </button>
+        <button
+          onClick={() => close(windowId)}
+          style={{
+            background: 'rgba(255, 60, 60, 0.15)',
+            border: '1px solid rgba(255, 60, 60, 0.25)',
+            borderRadius: 6,
+            padding: '6px 14px',
+            color: 'rgba(255, 100, 100, 0.9)',
+            cursor: 'pointer',
+            fontSize: 12,
+            fontWeight: 500,
+          }}
+        >
+          Close Window
+        </button>
+      </div>
+    </div>
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -353,11 +436,9 @@ function WindowInner({
 
   const [showGroupDropZone, setShowGroupDropZone] = useState(false);
 
-  // Get dragging window ID from store for group drop detection
-  const draggingWindowId = useWindowManagerStore((state) => {
-    // This would need to be added to the store - for now we'll skip this feature
-    return null;
-  });
+  // Get dragging window ID for group drop detection
+  // TODO: wire this up when drag state is added to the store
+  const draggingWindowId: string | null = null;
 
   // ─────────────────────────────────────────────────────────────────────────
   // Handle minimize/restore animation state
@@ -574,6 +655,9 @@ function WindowInner({
         animate={useMinimizeAnimation ? minimizeAnimationState : animations.animate}
         onAnimationComplete={useMinimizeAnimation ? handleMinimizeAnimationComplete : undefined}
         style={windowFrameStyle(isFocused, variant, isFullscreen)}
+        role="dialog"
+        aria-label={title}
+        aria-hidden={resolvedWindow.isMinimized ? true : undefined}
         data-bb-window
         data-bb-window-id={id}
         data-bb-window-variant={variant}
@@ -598,7 +682,14 @@ function WindowInner({
 
         {/* Window content */}
         <div style={windowContentStyle} data-bb-window-content>
-          {children}
+          <GliaErrorBoundary
+            variant="card"
+            fallback={({ error, reset }) => (
+              <WindowErrorFallback error={error} reset={reset} windowId={id} title={title} />
+            )}
+          >
+            {children}
+          </GliaErrorBoundary>
         </div>
 
         {/* Group drop zone overlay */}

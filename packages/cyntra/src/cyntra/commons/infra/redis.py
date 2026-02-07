@@ -46,8 +46,7 @@ def create_redis_pool(config: RedisConfig) -> Any:
         from redis.asyncio import Redis
     except ImportError as e:
         raise ImportError(
-            "redis is required for Redis helpers. "
-            "Install with: pip install segrada-commons[redis]"
+            "redis is required for Redis helpers. Install with: pip install segrada-commons[redis]"
         ) from e
 
     return Redis.from_url(
