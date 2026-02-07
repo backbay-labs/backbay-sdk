@@ -15,7 +15,10 @@ import {
   useMemo,
   useState,
   type ReactNode,
+  type ErrorInfo,
 } from 'react';
+
+import { GliaErrorBoundary } from '../primitives/atoms/GliaErrorBoundary';
 
 import { startDoormanTimeouts, useDoormanStore } from './doorman/DoormanStateMachine.js';
 import type {
@@ -316,11 +319,26 @@ export function SpeakeasyProvider({
     [publicContextValue, privateContextValue]
   );
 
+  const handleSpeakeasyError = useCallback(
+    (error: Error, _errorInfo: ErrorInfo) => {
+      // Reset DoormanStateMachine to IDLE on error
+      useDoormanStore.getState().reset();
+      // Log without including key material
+      console.error('[Speakeasy] Error boundary caught:', error.message);
+    },
+    []
+  );
+
   return (
     <SpeakeasyPublicContext.Provider value={publicContextValue}>
       <SpeakeasyPrivateContext.Provider value={privateContextValue}>
         <SpeakeasyContext.Provider value={contextValue}>
-          {children}
+          <GliaErrorBoundary
+            variant="card"
+            onError={handleSpeakeasyError}
+          >
+            {children}
+          </GliaErrorBoundary>
         </SpeakeasyContext.Provider>
       </SpeakeasyPrivateContext.Provider>
     </SpeakeasyPublicContext.Provider>

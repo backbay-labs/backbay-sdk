@@ -123,6 +123,8 @@ export function GlassSlider({
   const min = props.min ?? 0;
   const max = props.max ?? 100;
 
+  const labelId = label ? `glass-slider-label-${React.useId()}` : undefined;
+
   return (
     <div className={cn("w-full", containerClassName)}>
       {/* Label + value row */}
@@ -130,6 +132,7 @@ export function GlassSlider({
         <div className="flex items-center justify-between mb-2">
           {label && (
             <span
+              id={labelId}
               className="text-sm font-medium"
               style={{ color: colors.text.muted }}
             >
@@ -150,6 +153,7 @@ export function GlassSlider({
       <SliderPrimitive.Root
         data-slot="glass-slider"
         defaultValue={defaultValue}
+        aria-labelledby={labelId}
         className={cn(
           "relative flex w-full touch-none select-none items-center",
           className

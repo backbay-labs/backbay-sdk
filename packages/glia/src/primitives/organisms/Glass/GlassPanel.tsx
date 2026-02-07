@@ -189,7 +189,14 @@ export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(func
     onMouseLeave?.(e);
   };
 
-  const MotionComponent = motion[Component];
+  const motionTags = {
+    div: motion.div,
+    section: motion.section,
+    article: motion.article,
+    aside: motion.aside,
+    nav: motion.nav,
+  } as const;
+  const MotionComponent = motionTags[Component];
 
   return (
     <MotionComponent
@@ -329,7 +336,7 @@ export function GlassSection({
   return (
     <div className={cn(compact ? "p-2" : "p-4", "space-y-2", className)} {...props}>
       {title && (
-        <h4 className="text-[10px] font-mono uppercase tracking-[0.12em] text-[var(--theme-text-soft,#64748B)] px-1">
+        <h4 className="text-[10px] font-mono uppercase tracking-[0.12em] text-[var(--glia-color-text-soft,#64748B)] px-1">
           {title}
         </h4>
       )}

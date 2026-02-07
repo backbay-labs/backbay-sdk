@@ -53,10 +53,10 @@ const TYPE_ICONS: Record<string, string> = {
 };
 
 const TYPE_COLORS: Record<string, string> = {
-  info: 'var(--bb-color-text-muted, #888888)',
-  warning: 'var(--bb-color-warning, #e6a817)',
-  error: 'var(--bb-color-destructive, #c44444)',
-  success: 'var(--bb-color-success, #44c444)',
+  info: 'var(--glia-color-text-soft, #888888)',
+  warning: 'var(--glia-color-accent-warning, #e6a817)',
+  error: 'var(--glia-color-accent-destructive, #c44444)',
+  success: 'var(--glia-color-accent-positive, #44c444)',
 };
 
 const TYPE_BAR_COLORS: Record<string, string> = {
@@ -74,16 +74,16 @@ const styles: Record<string, CSSProperties> = {
   container: {
     position: 'fixed',
     right: 16,
-    bottom: 'calc(var(--bb-spacing-taskbar-height, 48px) + 12px)',
+    bottom: 'calc(var(--glia-spacing-taskbar-height, 48px) + 12px)',
     width: '340px',
     maxWidth: 'calc(100vw - 32px)',
     zIndex: 9997,
   },
   toast: {
-    background: 'var(--bb-color-context-menu-bg, rgba(17, 17, 17, 0.95))',
-    backdropFilter: 'var(--bb-blur-backdrop, blur(12px))',
-    border: '1px solid var(--bb-color-window-border, #333333)',
-    borderRadius: 'var(--bb-radius-menu, 3px)',
+    background: 'var(--glia-color-bg-elevated, rgba(17, 17, 17, 0.95))',
+    backdropFilter: 'var(--glia-blur-backdrop, blur(12px))',
+    border: '1px solid var(--glia-color-border, #333333)',
+    borderRadius: 'var(--glia-radius-md, 3px)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 1px rgba(212, 168, 75, 0.15)',
     overflow: 'hidden',
     cursor: 'pointer',
@@ -106,17 +106,17 @@ const styles: Record<string, CSSProperties> = {
     minWidth: 0,
   },
   toastTitle: {
-    fontFamily: 'var(--bb-font-body, sans-serif)',
+    fontFamily: 'var(--glia-font-body, sans-serif)',
     fontSize: '13px',
     fontWeight: 500,
-    color: 'var(--bb-color-text-primary, #ffffff)',
+    color: 'var(--glia-color-text-primary, #ffffff)',
     margin: 0,
     lineHeight: 1.3,
   },
   toastMessage: {
-    fontFamily: 'var(--bb-font-body, sans-serif)',
+    fontFamily: 'var(--glia-font-body, sans-serif)',
     fontSize: '12px',
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
     margin: '3px 0 0',
     lineHeight: 1.4,
     overflow: 'hidden',
@@ -129,7 +129,7 @@ const styles: Record<string, CSSProperties> = {
     marginTop: '8px',
   },
   actionButton: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '10px',
     letterSpacing: '0.05em',
     textTransform: 'uppercase' as const,
@@ -140,17 +140,17 @@ const styles: Record<string, CSSProperties> = {
     transition: 'all 0.1s ease',
   },
   actionPrimary: {
-    background: 'var(--bb-color-accent-glow, rgba(212, 168, 75, 0.2))',
-    color: 'var(--bb-color-accent, #d4a84b)',
+    background: 'var(--glia-glass-active-shadow, rgba(212, 168, 75, 0.2))',
+    color: 'var(--glia-color-accent, #d4a84b)',
   },
   actionSecondary: {
     background: 'rgba(255, 255, 255, 0.06)',
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
   },
   dismissButton: {
     background: 'transparent',
     border: 'none',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     cursor: 'pointer',
     padding: '2px 4px',
     fontSize: '12px',

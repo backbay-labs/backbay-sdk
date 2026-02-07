@@ -14,22 +14,22 @@ const titlebarContainerStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  height: 'var(--bb-spacing-titlebar-height, 36px)',
+  height: 'var(--glia-spacing-titlebar-height, 36px)',
   padding: '0 12px',
-  background: 'var(--bb-color-titlebar-bg, #111111)',
-  borderBottom: '1px solid var(--bb-color-window-border, #333333)',
+  background: 'var(--glia-color-bg-panel, #111111)',
+  borderBottom: '1px solid var(--glia-color-border, #333333)',
   userSelect: 'none',
 };
 
 const titleTextStyle = (focused: boolean): React.CSSProperties => ({
-  fontFamily: 'var(--bb-font-display, sans-serif)',
+  fontFamily: 'var(--glia-font-display, sans-serif)',
   fontSize: '0.8125rem',
   fontWeight: 600,
   letterSpacing: '0.1em',
   textTransform: 'uppercase',
   color: focused
-    ? 'var(--bb-color-text-primary, #ffffff)'
-    : 'var(--bb-color-text-muted, #888888)',
+    ? 'var(--glia-color-text-primary, #ffffff)'
+    : 'var(--glia-color-text-soft, #888888)',
   flex: 1,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
@@ -47,7 +47,7 @@ const controlButtonBaseStyle: React.CSSProperties = {
   width: '12px',
   height: '12px',
   borderRadius: '2px',
-  background: 'var(--bb-color-window-border, #333333)',
+  background: 'var(--glia-color-border, #333333)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -122,15 +122,15 @@ function ControlButton({ onClick, title, variant, children }: ControlButtonProps
         ...controlButtonBaseStyle,
         background: isHovered
           ? variant === 'close'
-            ? 'var(--bb-color-destructive, #c44444)'
-            : 'var(--bb-color-text-muted, #888888)'
-          : 'var(--bb-color-window-border, #333333)',
+            ? 'var(--glia-color-accent-destructive, #c44444)'
+            : 'var(--glia-color-text-soft, #888888)'
+          : 'var(--glia-color-border, #333333)',
       }}
     >
       <svg
         viewBox="0 0 10 10"
         fill="none"
-        stroke="var(--bb-color-text-primary, #ffffff)"
+        stroke="var(--glia-color-text-primary, #ffffff)"
         style={{
           width: '8px',
           height: '8px',

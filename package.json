@@ -11,20 +11,23 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "bun run build:ts",
-    "build:ts": "for pkg in packages/contract packages/api-client packages/speakeasy packages/glia packages/notary packages/witness packages/witness-react; do echo \"Building $pkg\" && cd $pkg && bun run build && cd ../..; done",
-    "typecheck": "tsc --build packages/contract/tsconfig.json packages/api-client/tsconfig.json packages/speakeasy/tsconfig.json packages/witness/tsconfig.json packages/witness-react/tsconfig.json",
-    "typecheck:all": "tsc --build packages/*/tsconfig.json",
+    "build": "turbo run build",
+    "build:ts": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "typecheck:all": "turbo run typecheck",
     "lint": "bun run lint:ts",
     "lint:ts": "eslint packages/contract/src packages/api-client/src packages/speakeasy/src packages/glia/src packages/notary/src packages/witness/src packages/witness-react/src",
     "lint:fix": "eslint packages/*/src --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "echo \"No tests configured yet\"",
-    "clean": "rm -rf packages/*/dist packages/*/.turbo node_modules/.cache",
+    "test": "node scripts/vitest.mjs run --workspace vitest.workspace.ts",
+    "clean": "rm -rf packages/*/dist packages/*/.turbo node_modules/.cache .turbo",
+    "docs:api": "typedoc",
     "prepare": "husky || true"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.5.2",
+    "@changesets/cli": "^2.29.8",
     "@eslint/js": "^9.39.2",
     "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
@@ -37,7 +40,10 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.0",
     "prettier": "^3",
-    "typescript": "^5.9.3"
+    "turbo": "^2.8.3",
+    "typedoc": "^0.28.16",
+    "typescript": "^5.9.3",
+    "vitest": "^2.0.0"
   },
   "lint-staged": {
     "packages/*/src/**/*.{ts,tsx}": [

@@ -2,7 +2,7 @@
  * @backbay/glia Desktop OS - Desktop Icon Component
  *
  * A desktop icon with selection, hover, and activation states.
- * Uses CSS variables for theming (--bb-color-*, --bb-font-*, etc.)
+ * Uses CSS variables for theming (--glia-color-*, --glia-font-*, etc.)
  */
 
 import React, { useCallback, useMemo } from 'react';
@@ -45,8 +45,8 @@ const createWrapperStyles = (selected: boolean): React.CSSProperties => ({
   gap: '6px',
   padding: '8px 10px',
   minWidth: '88px',
-  borderRadius: 'var(--bb-radius-button, 3px)',
-  background: selected ? 'var(--bb-color-icon-selected, rgba(212, 168, 75, 0.08))' : 'transparent',
+  borderRadius: 'var(--glia-radius-sm, 3px)',
+  background: selected ? 'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.08))' : 'transparent',
   border: '1px solid transparent',
   cursor: 'pointer',
   transition: 'all 350ms ease-out',
@@ -64,7 +64,7 @@ const createIconSymbolStyles = (selected: boolean): React.CSSProperties => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: selected ? 'var(--bb-color-accent, #d4a84b)' : 'var(--bb-color-icon-text, #cccccc)',
+  color: selected ? 'var(--glia-color-accent, #d4a84b)' : 'var(--glia-color-text-muted, #cccccc)',
   fontSize: '26px',
   transition: 'all 350ms ease-out',
   // Text shadow for selected state
@@ -74,12 +74,12 @@ const createIconSymbolStyles = (selected: boolean): React.CSSProperties => ({
 });
 
 const createLabelStyles = (selected: boolean): React.CSSProperties => ({
-  fontFamily: 'var(--bb-font-display, "Cinzel", serif)',
+  fontFamily: 'var(--glia-font-display, "Cinzel", serif)',
   fontSize: '10px',
   fontWeight: 600,
   letterSpacing: '0.06em',
   textTransform: 'uppercase' as const,
-  color: selected ? 'var(--bb-color-accent, #d4a84b)' : 'var(--bb-color-icon-text, #cccccc)',
+  color: selected ? 'var(--glia-color-accent, #d4a84b)' : 'var(--glia-color-text-muted, #cccccc)',
   textAlign: 'center' as const,
   whiteSpace: 'nowrap' as const,
   lineHeight: 1.2,
@@ -95,7 +95,7 @@ const classificationTagStyles: React.CSSProperties = {
   bottom: '-18px',
   left: '50%',
   transform: 'translateX(-50%)',
-  fontFamily: 'var(--bb-font-mono, "JetBrains Mono", monospace)',
+  fontFamily: 'var(--glia-font-mono, "JetBrains Mono", monospace)',
   fontSize: '9px',
   letterSpacing: '0.1em',
   whiteSpace: 'nowrap',
@@ -107,15 +107,15 @@ const classificationTagStyles: React.CSSProperties = {
 const getStatusColor = (status: string): string => {
   switch (status) {
     case 'ACTIVE':
-      return 'var(--bb-color-accent, #d4a84b)';
+      return 'var(--glia-color-accent, #d4a84b)';
     case 'STANDBY':
       return '#4a6fa5';
     case 'PENDING':
-      return 'var(--bb-color-text-muted, #888888)';
+      return 'var(--glia-color-text-soft, #888888)';
     case 'LOCKED':
-      return 'var(--bb-color-text-muted, #666666)';
+      return 'var(--glia-color-text-soft, #666666)';
     default:
-      return 'var(--bb-color-text-muted, #888888)';
+      return 'var(--glia-color-text-soft, #888888)';
   }
 };
 
@@ -199,14 +199,14 @@ export function DesktopIcon({
     if (!isHovered || selected) return {};
     return {
       textShadow: '0 0 12px rgba(212, 168, 75, 0.25), 0 0 24px rgba(212, 168, 75, 0.15)',
-      color: 'var(--bb-color-text-primary, #ffffff)',
+      color: 'var(--glia-color-text-primary, #ffffff)',
     };
   }, [isHovered, selected]);
 
   const hoveredLabelStyles = useMemo((): React.CSSProperties => {
     if (!isHovered || selected) return {};
     return {
-      color: 'var(--bb-color-text-primary, #ffffff)',
+      color: 'var(--glia-color-text-primary, #ffffff)',
     };
   }, [isHovered, selected]);
 

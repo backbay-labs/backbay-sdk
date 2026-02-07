@@ -120,4 +120,25 @@ export const nebulaTheme: UiTheme = {
       hoverShadow: "0 0 10px rgba(34, 211, 238, 0.1)",
     },
   },
+
+  fonts: {
+    display: "'Inter', sans-serif",
+    body: "'Inter', sans-serif",
+    mono: "'JetBrains Mono', monospace",
+  },
+
+  radii: {
+    sm: "6px",
+    md: "8px",
+    lg: "8px",
+  },
+
+  spacing: {
+    taskbarHeight: "48px",
+    titlebarHeight: "36px",
+    windowPadding: "12px",
+    iconSize: "64px",
+    iconGap: "16px",
+    windowBorderWidth: "1px",
+  },
 };

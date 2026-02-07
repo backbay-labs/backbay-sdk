@@ -2,7 +2,7 @@
  * Tests for Cartridge Controller bridge routes
  */
 
-import { describe, it, expect, beforeEach } from "bun:test";
+import { describe, it, expect, beforeEach } from "vitest";
 
 describe("controller routes structure", () => {
   it("should export default app", async () => {

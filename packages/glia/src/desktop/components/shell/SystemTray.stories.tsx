@@ -12,36 +12,36 @@ function DesktopWrapper({ children }: { children: React.ReactNode }) {
     <div
       style={{
         // Colors
-        ['--bb-color-text-primary' as string]: '#ffffff',
-        ['--bb-color-text-secondary' as string]: '#cccccc',
-        ['--bb-color-text-muted' as string]: '#888888',
-        ['--bb-color-accent' as string]: '#d4a84b',
-        ['--bb-color-accent-glow' as string]: 'rgba(212, 168, 75, 0.2)',
-        ['--bb-color-window-bg' as string]: '#111111',
-        ['--bb-color-window-border' as string]: '#333333',
-        ['--bb-color-context-menu-bg' as string]: '#111111',
-        ['--bb-color-context-menu-hover' as string]:
+        ['--glia-color-text-primary' as string]: '#ffffff',
+        ['--glia-color-text-muted' as string]: '#cccccc',
+        ['--glia-color-text-soft' as string]: '#888888',
+        ['--glia-color-accent' as string]: '#d4a84b',
+        ['--glia-glass-active-shadow' as string]: 'rgba(212, 168, 75, 0.2)',
+        ['--glia-color-bg-panel' as string]: '#111111',
+        ['--glia-color-border' as string]: '#333333',
+        ['--glia-color-bg-elevated' as string]: '#111111',
+        ['--glia-glass-hover-bg' as string]:
           'rgba(212, 168, 75, 0.10)',
-        ['--bb-color-taskbar-bg' as string]: 'rgba(17, 17, 17, 0.8)',
-        ['--bb-color-destructive' as string]: '#c44444',
-        ['--bb-color-success' as string]: '#44c444',
-        ['--bb-color-warning' as string]: '#c4a844',
+        ['--glia-glass-panel-bg' as string]: 'rgba(17, 17, 17, 0.8)',
+        ['--glia-color-accent-destructive' as string]: '#c44444',
+        ['--glia-color-accent-positive' as string]: '#44c444',
+        ['--glia-color-accent-warning' as string]: '#c4a844',
         // Fonts
-        ['--bb-font-mono' as string]:
+        ['--glia-font-mono' as string]:
           "'SF Mono', 'Fira Code', 'Cascadia Code', monospace",
-        ['--bb-font-body' as string]:
+        ['--glia-font-body' as string]:
           "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
         // Radii
-        ['--bb-radius-button' as string]: '2px',
-        ['--bb-radius-menu' as string]: '3px',
+        ['--glia-radius-sm' as string]: '2px',
+        ['--glia-radius-md' as string]: '3px',
         // Shadows
-        ['--bb-shadow-tooltip' as string]: '0 4px 12px rgba(0,0,0,0.4)',
+        ['--glia-shadow-soft' as string]: '0 4px 12px rgba(0,0,0,0.4)',
         // Blur
-        ['--bb-blur-backdrop' as string]: 'blur(12px)',
+        ['--glia-blur-backdrop' as string]: 'blur(12px)',
         // Durations
-        ['--bb-duration-fast' as string]: '100ms',
+        ['--glia-duration-fast' as string]: '100ms',
         // Spacing
-        ['--bb-spacing-taskbar-height' as string]: '48px',
+        ['--glia-spacing-taskbar-height' as string]: '48px',
 
         background: '#0a0a0a',
         padding: '40px',
@@ -302,28 +302,28 @@ export const InTaskbar: Story = {
       <div
         style={{
           // Colors
-          ['--bb-color-text-primary' as string]: '#ffffff',
-          ['--bb-color-text-secondary' as string]: '#cccccc',
-          ['--bb-color-text-muted' as string]: '#888888',
-          ['--bb-color-accent' as string]: '#d4a84b',
-          ['--bb-color-accent-glow' as string]: 'rgba(212, 168, 75, 0.2)',
-          ['--bb-color-window-bg' as string]: '#111111',
-          ['--bb-color-window-border' as string]: '#333333',
-          ['--bb-color-context-menu-bg' as string]: '#111111',
-          ['--bb-color-context-menu-hover' as string]:
+          ['--glia-color-text-primary' as string]: '#ffffff',
+          ['--glia-color-text-muted' as string]: '#cccccc',
+          ['--glia-color-text-soft' as string]: '#888888',
+          ['--glia-color-accent' as string]: '#d4a84b',
+          ['--glia-glass-active-shadow' as string]: 'rgba(212, 168, 75, 0.2)',
+          ['--glia-color-bg-panel' as string]: '#111111',
+          ['--glia-color-border' as string]: '#333333',
+          ['--glia-color-bg-elevated' as string]: '#111111',
+          ['--glia-glass-hover-bg' as string]:
             'rgba(212, 168, 75, 0.10)',
-          ['--bb-color-taskbar-bg' as string]: 'rgba(17, 17, 17, 0.8)',
-          ['--bb-color-destructive' as string]: '#c44444',
-          ['--bb-font-mono' as string]:
+          ['--glia-glass-panel-bg' as string]: 'rgba(17, 17, 17, 0.8)',
+          ['--glia-color-accent-destructive' as string]: '#c44444',
+          ['--glia-font-mono' as string]:
             "'SF Mono', 'Fira Code', 'Cascadia Code', monospace",
-          ['--bb-font-body' as string]:
+          ['--glia-font-body' as string]:
             "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
-          ['--bb-radius-button' as string]: '2px',
-          ['--bb-radius-menu' as string]: '3px',
-          ['--bb-shadow-tooltip' as string]: '0 4px 12px rgba(0,0,0,0.4)',
-          ['--bb-blur-backdrop' as string]: 'blur(12px)',
-          ['--bb-duration-fast' as string]: '100ms',
-          ['--bb-spacing-taskbar-height' as string]: '48px',
+          ['--glia-radius-sm' as string]: '2px',
+          ['--glia-radius-md' as string]: '3px',
+          ['--glia-shadow-soft' as string]: '0 4px 12px rgba(0,0,0,0.4)',
+          ['--glia-blur-backdrop' as string]: 'blur(12px)',
+          ['--glia-duration-fast' as string]: '100ms',
+          ['--glia-spacing-taskbar-height' as string]: '48px',
 
           background: '#0a0a0a',
           width: '100%',
@@ -339,8 +339,8 @@ export const InTaskbar: Story = {
               style={{
                 padding: '4px 12px',
                 fontSize: '11px',
-                fontFamily: 'var(--bb-font-mono)',
-                color: 'var(--bb-color-text-muted)',
+                fontFamily: 'var(--glia-font-mono)',
+                color: 'var(--glia-color-text-soft)',
                 letterSpacing: '0.05em',
               }}
             >
@@ -412,12 +412,12 @@ export const Interactive: Story = {
             onClick={addBadge}
             style={{
               padding: '6px 12px',
-              background: 'var(--bb-color-accent)',
+              background: 'var(--glia-color-accent)',
               color: '#000',
               border: 'none',
               borderRadius: '3px',
               cursor: 'pointer',
-              fontFamily: 'var(--bb-font-mono)',
+              fontFamily: 'var(--glia-font-mono)',
               fontSize: '11px',
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
@@ -430,11 +430,11 @@ export const Interactive: Story = {
             style={{
               padding: '6px 12px',
               background: 'transparent',
-              color: 'var(--bb-color-text-secondary)',
-              border: '1px solid var(--bb-color-window-border)',
+              color: 'var(--glia-color-text-muted)',
+              border: '1px solid var(--glia-color-border)',
               borderRadius: '3px',
               cursor: 'pointer',
-              fontFamily: 'var(--bb-font-mono)',
+              fontFamily: 'var(--glia-font-mono)',
               fontSize: '11px',
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
@@ -447,11 +447,11 @@ export const Interactive: Story = {
             style={{
               padding: '6px 12px',
               background: 'transparent',
-              color: 'var(--bb-color-text-secondary)',
-              border: '1px solid var(--bb-color-window-border)',
+              color: 'var(--glia-color-text-muted)',
+              border: '1px solid var(--glia-color-border)',
               borderRadius: '3px',
               cursor: 'pointer',
-              fontFamily: 'var(--bb-font-mono)',
+              fontFamily: 'var(--glia-font-mono)',
               fontSize: '11px',
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
@@ -464,11 +464,11 @@ export const Interactive: Story = {
             style={{
               padding: '6px 12px',
               background: 'transparent',
-              color: 'var(--bb-color-text-secondary)',
-              border: '1px solid var(--bb-color-window-border)',
+              color: 'var(--glia-color-text-muted)',
+              border: '1px solid var(--glia-color-border)',
               borderRadius: '3px',
               cursor: 'pointer',
-              fontFamily: 'var(--bb-font-mono)',
+              fontFamily: 'var(--glia-font-mono)',
               fontSize: '11px',
               textTransform: 'uppercase',
               letterSpacing: '0.1em',

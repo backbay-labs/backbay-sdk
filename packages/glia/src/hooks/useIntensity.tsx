@@ -148,10 +148,10 @@ export function useIntensity(options: UseIntensityOptions = {}): UseIntensityRet
   // CSS custom properties
   const cssVars = useMemo(
     () => ({
-      '--bb-intensity': values.intensity.toFixed(3),
-      '--bb-intensity-presence': values.presence.toFixed(3),
-      '--bb-intensity-activity': values.activity.toFixed(3),
-      '--bb-intensity-breathing': values.breathing.toFixed(3),
+      '--glia-intensity': values.intensity.toFixed(3),
+      '--glia-intensity-presence': values.presence.toFixed(3),
+      '--glia-intensity-activity': values.activity.toFixed(3),
+      '--glia-intensity-breathing': values.breathing.toFixed(3),
     }),
     [values]
   );
@@ -191,10 +191,10 @@ export function IntensityProvider({ children, options }: IntensityProviderProps)
   // Apply CSS vars to document root
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty('--bb-intensity', intensity.intensity.toFixed(3));
-    root.style.setProperty('--bb-intensity-presence', intensity.presence.toFixed(3));
-    root.style.setProperty('--bb-intensity-activity', intensity.activity.toFixed(3));
-    root.style.setProperty('--bb-intensity-breathing', intensity.breathing.toFixed(3));
+    root.style.setProperty('--glia-intensity', intensity.intensity.toFixed(3));
+    root.style.setProperty('--glia-intensity-presence', intensity.presence.toFixed(3));
+    root.style.setProperty('--glia-intensity-activity', intensity.activity.toFixed(3));
+    root.style.setProperty('--glia-intensity-breathing', intensity.breathing.toFixed(3));
   }, [intensity]);
 
   return (

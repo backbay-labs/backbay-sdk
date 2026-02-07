@@ -142,4 +142,5 @@ export function prefersReducedMotion(): boolean {
 }
 
 // Accessibility
-export { prefersReducedTransparency, usePrefersReducedTransparency, usePrefersReducedMotion } from './accessibility';
+export { prefersReducedTransparency, usePrefersReducedTransparency, usePrefersReducedMotion, usePrefersColorScheme, usePrefersHighContrast } from './accessibility';
+export { useFocusTrap } from './useFocusTrap';

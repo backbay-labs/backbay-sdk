@@ -37,6 +37,9 @@ jobs:
       - name: Build packages
         run: bun run build
 
+      - name: Run tests
+        run: bun run test
+
   python:
     name: Python
     runs-on: ubuntu-latest

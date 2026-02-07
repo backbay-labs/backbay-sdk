@@ -41,7 +41,7 @@ const meta: Meta<typeof GlassSidebar> = {
   },
   decorators: [
     (Story) => (
-      <div className="flex h-[600px] bg-[var(--theme-bg-body,#0B1120)]">
+      <div className="flex h-[600px] bg-[var(--glia-color-bg-body,#0B1120)]">
         <Story />
       </div>
     ),
@@ -182,7 +182,7 @@ export const Interactive: Story = {
 export const RightSide: Story = {
   decorators: [
     (Story) => (
-      <div className="flex h-[600px] bg-[var(--theme-bg-body,#0B1120)] justify-end w-full">
+      <div className="flex h-[600px] bg-[var(--glia-color-bg-body,#0B1120)] justify-end w-full">
         <Story />
       </div>
     ),
@@ -229,7 +229,7 @@ export const WithBadges: Story = {
             icon={<MessageSquare className="h-4 w-4" />}
             tooltip="Messages"
             badge={
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--theme-accent-primary,#22D3EE)] px-1.5 text-[10px] font-bold text-black">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--glia-color-accent,#22D3EE)] px-1.5 text-[10px] font-bold text-black">
                 3
               </span>
             }
@@ -240,7 +240,7 @@ export const WithBadges: Story = {
             icon={<Bell className="h-4 w-4" />}
             tooltip="Notifications"
             badge={
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--theme-accent-destructive,#F43F5E)] px-1.5 text-[10px] font-bold text-white">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--glia-color-accent-destructive,#F43F5E)] px-1.5 text-[10px] font-bold text-white">
                 12
               </span>
             }
@@ -251,7 +251,7 @@ export const WithBadges: Story = {
             icon={<BarChart3 className="h-4 w-4" />}
             tooltip="Analytics"
             badge={
-              <span className="text-[10px] text-[var(--theme-text-soft,#64748B)]">New</span>
+              <span className="text-[10px] text-[var(--glia-color-text-soft,#64748B)]">New</span>
             }
           >
             Analytics
@@ -272,12 +272,12 @@ export const WithHeaderFooter: Story = {
       <>
         <GlassSidebarHeader>
           <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[var(--theme-accent-primary,#22D3EE)] to-[var(--theme-accent-secondary,#E879F9)] flex items-center justify-center text-[10px] font-bold text-black">
+            <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[var(--glia-color-accent,#22D3EE)] to-[var(--glia-color-accent-secondary,#E879F9)] flex items-center justify-center text-[10px] font-bold text-black">
               BB
             </div>
             <div className="flex flex-col">
               <span className="text-xs font-semibold leading-none">Backbay</span>
-              <span className="text-[10px] text-[var(--theme-text-soft,#64748B)] leading-none mt-0.5">
+              <span className="text-[10px] text-[var(--glia-color-text-soft,#64748B)] leading-none mt-0.5">
                 Industries
               </span>
             </div>
@@ -296,16 +296,16 @@ export const WithHeaderFooter: Story = {
         </GlassSidebarSection>
         <GlassSidebarFooter>
           <div className="flex items-center gap-2 w-full">
-            <div className="h-7 w-7 rounded-full bg-[var(--theme-glass-card-bg,rgba(255,255,255,0.06))] flex items-center justify-center">
-              <User className="h-3.5 w-3.5 text-[var(--theme-text-soft,#64748B)]" />
+            <div className="h-7 w-7 rounded-full bg-[var(--glia-glass-card-bg,rgba(255,255,255,0.06))] flex items-center justify-center">
+              <User className="h-3.5 w-3.5 text-[var(--glia-color-text-soft,#64748B)]" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-xs font-medium truncate">Jane Doe</div>
-              <div className="text-[10px] text-[var(--theme-text-soft,#64748B)] truncate">
+              <div className="text-[10px] text-[var(--glia-color-text-soft,#64748B)] truncate">
                 jane@backbay.io
               </div>
             </div>
-            <ChevronDown className="h-3.5 w-3.5 text-[var(--theme-text-soft,#64748B)] flex-shrink-0" />
+            <ChevronDown className="h-3.5 w-3.5 text-[var(--glia-color-text-soft,#64748B)] flex-shrink-0" />
           </div>
         </GlassSidebarFooter>
       </>
@@ -390,7 +390,7 @@ function DesktopLayoutExample() {
   const [collapsed, setCollapsed] = React.useState(false);
 
   return (
-    <div className="flex h-[600px] w-full bg-[var(--theme-bg-body,#0B1120)]">
+    <div className="flex h-[600px] w-full bg-[var(--glia-color-bg-body,#0B1120)]">
       <GlassSidebar collapsed={collapsed} onCollapsedChange={setCollapsed}>
         <GlassSidebarHeader>
           {!collapsed && <span className="text-sm font-semibold">Backbay OS</span>}
@@ -417,8 +417,8 @@ function DesktopLayoutExample() {
         </GlassSidebarSection>
         <GlassSidebarFooter>
           <div className="flex items-center gap-2 w-full">
-            <div className="h-7 w-7 rounded-full bg-[var(--theme-glass-card-bg,rgba(255,255,255,0.06))] flex items-center justify-center flex-shrink-0">
-              <User className="h-3.5 w-3.5 text-[var(--theme-text-soft,#64748B)]" />
+            <div className="h-7 w-7 rounded-full bg-[var(--glia-glass-card-bg,rgba(255,255,255,0.06))] flex items-center justify-center flex-shrink-0">
+              <User className="h-3.5 w-3.5 text-[var(--glia-color-text-soft,#64748B)]" />
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
@@ -429,8 +429,8 @@ function DesktopLayoutExample() {
         </GlassSidebarFooter>
       </GlassSidebar>
       <main className="flex-1 p-8">
-        <div className="rounded-xl border border-[var(--theme-border,rgba(255,255,255,0.08))] p-6 h-full flex items-center justify-center">
-          <p className="text-[var(--theme-text-soft,#64748B)] text-sm">
+        <div className="rounded-xl border border-[var(--glia-color-border,rgba(255,255,255,0.08))] p-6 h-full flex items-center justify-center">
+          <p className="text-[var(--glia-color-text-soft,#64748B)] text-sm">
             Main content area. Click the toggle button to collapse the sidebar.
           </p>
         </div>
@@ -442,7 +442,7 @@ function DesktopLayoutExample() {
 export const DesktopLayout: Story = {
   decorators: [
     (Story) => (
-      <div className="h-[600px] w-full bg-[var(--theme-bg-body,#0B1120)]">
+      <div className="h-[600px] w-full bg-[var(--glia-color-bg-body,#0B1120)]">
         <Story />
       </div>
     ),
@@ -461,7 +461,7 @@ export const HUDElevation: Story = {
       <>
         <GlassSidebarHeader>
           <div className="flex items-center gap-2">
-            <Shield className="h-4 w-4 text-[var(--theme-accent-primary,#22D3EE)]" />
+            <Shield className="h-4 w-4 text-[var(--glia-color-accent,#22D3EE)]" />
             <span className="text-sm font-semibold truncate">HUD Panel</span>
           </div>
         </GlassSidebarHeader>

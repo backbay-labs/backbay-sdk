@@ -145,7 +145,7 @@ export function GlassSidebar({
               transition={shouldAnimate ? SPRING : { duration: 0 }}
               className="flex items-center justify-center"
             >
-              <ChevronLeft className="h-3.5 w-3.5 text-[var(--theme-text-soft,#64748B)]" />
+              <ChevronLeft className="h-3.5 w-3.5 text-[var(--glia-color-text-soft,#64748B)]" />
             </motion.span>
           </button>
         )}
@@ -206,7 +206,7 @@ export function GlassSidebarSection({
   return (
     <div className={cn("px-2 py-2 space-y-0.5", className)} {...props}>
       {title && !collapsed && (
-        <h4 className="text-[10px] font-mono uppercase tracking-[0.12em] text-[var(--theme-text-soft,#64748B)] px-2 pb-1">
+        <h4 className="text-[10px] font-mono uppercase tracking-[0.12em] text-[var(--glia-color-text-soft,#64748B)] px-2 pb-1">
           {title}
         </h4>
       )}
@@ -261,7 +261,7 @@ export function GlassSidebarItem({
       onClick={onClick}
       className={cn(
         "flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-sm transition-colors",
-        "text-[var(--theme-text-primary,#E2E8F0)]",
+        "text-[var(--glia-color-text-primary,#E2E8F0)]",
         collapsed && "justify-center px-0",
         className,
       )}

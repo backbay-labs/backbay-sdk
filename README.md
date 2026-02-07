@@ -10,9 +10,11 @@
 <br />
 
 <p align="center">
+  <a href="#architecture"><kbd>Architecture</kbd></a>&nbsp;&nbsp;
   <a href="#packages"><kbd>Packages</kbd></a>&nbsp;&nbsp;
   <a href="#quick-start"><kbd>Quick Start</kbd></a>&nbsp;&nbsp;
-  <a href="#development"><kbd>Development</kbd></a>
+  <a href="#development"><kbd>Development</kbd></a>&nbsp;&nbsp;
+  <a href="#documentation"><kbd>Docs</kbd></a>
 </p>
 
 <br />
@@ -23,42 +25,93 @@
 
 ---
 
+## Architecture
+
+Backbay SDK is a multi-language monorepo (TypeScript, Python, Cairo) providing everything needed to build AI-agent-native applications: a component library with a desktop-OS shell, P2P encrypted messaging, attestation verification, an onchain world, and the orchestration layer that ties them together.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        Applications                             │
+│   (BackbayOS desktop shell, cluster apps, game clients)         │
+└────────┬──────────┬──────────┬──────────┬──────────┬────────────┘
+         │          │          │          │          │
+┌────────▼───┐ ┌────▼────┐ ┌──▼───┐ ┌────▼────┐ ┌──▼──────────┐
+│   glia     │ │speakeasy│ │notary│ │  cyntra  │ │ api-client  │
+│ UI + Shell │ │ P2P msg │ │ Web3 │ │ Agents   │ │ HTTP client │
+└────────┬───┘ └────┬────┘ └──┬───┘ └────┬────┘ └──┬──────────┘
+         │          │         │          │          │
+┌────────▼──────────▼─────────▼──────────▼──────────▼────────────┐
+│                        contract                                 │
+│              Shared TypeScript types & schemas                   │
+└─────────────────────────────────────────────────────────────────┘
+
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│   witness    │  │witness-react │  │  gameworld   │
+│ WASM verify  │  │ React hooks  │  │ Cairo/Dojo   │
+└──────────────┘  └──────────────┘  └──────────────┘
+```
+
+---
+
 ## Packages
 
 ### TypeScript
 
-| Package                                              | Description                                               |
-| ---------------------------------------------------- | --------------------------------------------------------- |
-| [`@backbay/contract`](./packages/contract)           | Shared types and contracts                                |
-| [`@backbay/api-client`](./packages/api-client)       | Typed API client for Backbay services                     |
-| [`@backbay/speakeasy`](./packages/speakeasy)         | P2P encrypted messaging with sigil-based agent handshakes |
-| [`@backbay/glia`](./packages/glia)                   | Reactive primitives for agent affect and thought          |
-| [`@backbay/notary`](./packages/notary)               | Web3 attestations, IPFS, and verification                 |
-| [`@backbay/witness`](./packages/witness)             | Browser-side verification of Backbay attestations         |
-| [`@backbay/witness-react`](./packages/witness-react) | React hooks for verification                              |
+| Package | Description |
+|---------|-------------|
+| [`@backbay/glia`](packages/glia/README.md) | UI primitives, desktop-OS shell, agent components, emotion system |
+| [`@backbay/contract`](packages/contract/README.md) | Shared types, enums, and API contracts for all packages |
+| [`@backbay/api-client`](packages/api-client/README.md) | Typed HTTP client for Backbay BFF services (Eden/Elysia) |
+| [`@backbay/speakeasy`](packages/speakeasy/README.md) | P2P encrypted messaging with Ed25519 identity and libp2p transport |
+| [`@backbay/notary`](packages/notary/README.md) | Web3 integration: IPFS uploads, EAS attestations, Starknet bridge |
+| [`@backbay/witness`](packages/witness/README.md) | Browser-side attestation verification via WebAssembly |
+| [`@backbay/witness-react`](packages/witness-react/README.md) | React hooks and components for witness verification |
 
 ### Python
 
-| Package                       | Description                                  |
-| ----------------------------- | -------------------------------------------- |
-| [`cyntra`](./packages/cyntra) | Everything your agent needs to industrialize |
+| Package | Description |
+|---------|-------------|
+| [`cyntra`](packages/cyntra/README.md) | Agent orchestration framework (DSPy, LangGraph, memory, tools) |
 
 ### Cairo
 
-| Package                                | Description                                     |
-| -------------------------------------- | ----------------------------------------------- |
-| [`cyntra_world`](./packages/gameworld) | On-chain game state and systems (Starknet/Dojo) |
+| Package | Description |
+|---------|-------------|
+| [`cyntra_world`](packages/gameworld/README.md) | Onchain world state and systems on Starknet (Dojo ECS) |
 
 ---
 
 ## Quick Start
 
-```bash
-# Install a package
-bun add @backbay/speakeasy
+### Prerequisites
 
-# Or with npm
-npm install @backbay/speakeasy
+- [Bun](https://bun.sh) >= 1.x
+- Node.js >= 20
+- [UV](https://docs.astral.sh/uv/) (Python packages)
+- [Dojo CLI](https://book.dojoengine.org/) (Cairo/Starknet work, optional)
+
+### Install & Build
+
+```bash
+# Clone and install
+git clone <repo-url>
+cd backbay-sdk
+bun install
+
+# Build all TypeScript packages
+bun run build
+
+# Type-check
+bun run typecheck
+
+# Run tests
+bun run test
+```
+
+### Use a package
+
+```bash
+bun add @backbay/speakeasy
 ```
 
 ```typescript
@@ -71,36 +124,43 @@ const identity = await generateIdentity();
 const { identity, create, recover } = useIdentity();
 ```
 
+### Python (cyntra)
+
+```bash
+uv sync --all-extras
+uv run pytest
+```
+
+### Storybook (glia)
+
+```bash
+cd packages/glia
+node scripts/storybook.mjs dev -p 6006
+```
+
+Opens at [http://localhost:6006](http://localhost:6006) with 85+ component stories.
+
 ---
 
 ## Development
 
 ```bash
-# Install dependencies
-bun install
-
-# Typecheck
-bun run typecheck
-
-# Lint
-bun run lint
-
-# Build all packages
-bun run build
+bun run build          # Build all TS packages (ordered)
+bun run typecheck      # Type-check all packages
+bun run test           # Run vitest across workspace
+bun run lint           # ESLint all packages
+bun run format         # Prettier format
+bun run clean          # Remove dist/ from all packages
 ```
 
-### Python (cyntra)
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor guide.
 
-```bash
-# Install uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
+---
 
-# Sync dependencies
-uv sync --all-extras
+## Documentation
 
-# Run tests
-uv run pytest
-```
+- [Architecture Decision Records](docs/adr/)
+- [Roadmap / RFCs](docs/roadmap/)
 
 ---
 

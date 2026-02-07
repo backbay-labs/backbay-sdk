@@ -172,50 +172,50 @@ function DesktopThemePanel({ theme }: { theme: DesktopOSTheme }) {
       </h2>
 
       <Section title="Colors">
-        <ColorSwatch label="--bb-color-window-bg" value={theme.colors.windowBg} />
-        <ColorSwatch label="--bb-color-window-border" value={theme.colors.windowBorder} />
-        <ColorSwatch label="--bb-color-window-border-focused" value={theme.colors.windowBorderFocused} />
-        <ColorSwatch label="--bb-color-titlebar-bg" value={theme.colors.titlebarBg} />
-        <ColorSwatch label="--bb-color-titlebar-text" value={theme.colors.titlebarText} />
-        <ColorSwatch label="--bb-color-accent" value={theme.colors.accent} />
-        <ColorSwatch label="--bb-color-accent-muted" value={theme.colors.accentMuted} />
-        <ColorSwatch label="--bb-color-accent-glow" value={theme.colors.accentGlow} />
-        <ColorSwatch label="--bb-color-taskbar-bg" value={theme.colors.taskbarBg} />
-        <ColorSwatch label="--bb-color-taskbar-text" value={theme.colors.taskbarText} />
-        <ColorSwatch label="--bb-color-start-menu-bg" value={theme.colors.startMenuBg} />
-        <ColorSwatch label="--bb-color-context-menu-bg" value={theme.colors.contextMenuBg} />
-        <ColorSwatch label="--bb-color-context-menu-hover" value={theme.colors.contextMenuHover} />
-        <ColorSwatch label="--bb-color-desktop-bg" value={theme.colors.desktopBg} />
-        <ColorSwatch label="--bb-color-icon-text" value={theme.colors.iconText} />
-        <ColorSwatch label="--bb-color-icon-selected" value={theme.colors.iconSelected} />
-        <ColorSwatch label="--bb-color-destructive" value={theme.colors.destructive} />
-        <ColorSwatch label="--bb-color-success" value={theme.colors.success} />
-        <ColorSwatch label="--bb-color-warning" value={theme.colors.warning} />
-        <ColorSwatch label="--bb-color-text-primary" value={theme.colors.textPrimary} />
-        <ColorSwatch label="--bb-color-text-secondary" value={theme.colors.textSecondary} />
-        <ColorSwatch label="--bb-color-text-muted" value={theme.colors.textMuted} />
+        <ColorSwatch label="--glia-color-bg-panel" value={theme.colors.windowBg} />
+        <ColorSwatch label="--glia-color-border" value={theme.colors.windowBorder} />
+        <ColorSwatch label="--glia-glass-active-border" value={theme.colors.windowBorderFocused} />
+        <ColorSwatch label="--glia-color-bg-panel" value={theme.colors.titlebarBg} />
+        <ColorSwatch label="--glia-color-text-primary" value={theme.colors.titlebarText} />
+        <ColorSwatch label="--glia-color-accent" value={theme.colors.accent} />
+        <ColorSwatch label="--glia-glass-hover-bg" value={theme.colors.accentMuted} />
+        <ColorSwatch label="--glia-glass-active-shadow" value={theme.colors.accentGlow} />
+        <ColorSwatch label="--glia-glass-panel-bg" value={theme.colors.taskbarBg} />
+        <ColorSwatch label="--glia-color-text-muted" value={theme.colors.taskbarText} />
+        <ColorSwatch label="--glia-color-bg-elevated" value={theme.colors.startMenuBg} />
+        <ColorSwatch label="--glia-color-bg-elevated" value={theme.colors.contextMenuBg} />
+        <ColorSwatch label="--glia-glass-hover-bg" value={theme.colors.contextMenuHover} />
+        <ColorSwatch label="--glia-color-bg-body" value={theme.colors.desktopBg} />
+        <ColorSwatch label="--glia-color-text-muted" value={theme.colors.iconText} />
+        <ColorSwatch label="--glia-glass-hover-bg" value={theme.colors.iconSelected} />
+        <ColorSwatch label="--glia-color-accent-destructive" value={theme.colors.destructive} />
+        <ColorSwatch label="--glia-color-accent-positive" value={theme.colors.success} />
+        <ColorSwatch label="--glia-color-accent-warning" value={theme.colors.warning} />
+        <ColorSwatch label="--glia-color-text-primary" value={theme.colors.textPrimary} />
+        <ColorSwatch label="--glia-color-text-muted" value={theme.colors.textSecondary} />
+        <ColorSwatch label="--glia-color-text-soft" value={theme.colors.textMuted} />
       </Section>
 
       <Section title="Shadows">
-        <ShadowSwatch label="--bb-shadow-window" value={theme.shadows.window} />
-        <ShadowSwatch label="--bb-shadow-window-focused" value={theme.shadows.windowFocused} />
-        <ShadowSwatch label="--bb-shadow-menu" value={theme.shadows.menu} />
-        <ShadowSwatch label="--bb-shadow-tooltip" value={theme.shadows.tooltip} />
+        <ShadowSwatch label="--glia-shadow-hud-panel" value={theme.shadows.window} />
+        <ShadowSwatch label="--glia-shadow-modal" value={theme.shadows.windowFocused} />
+        <ShadowSwatch label="--glia-shadow-hud-panel" value={theme.shadows.menu} />
+        <ShadowSwatch label="--glia-shadow-soft" value={theme.shadows.tooltip} />
       </Section>
 
       <Section title="Animation">
-        <TokenValue label="--bb-duration-fast" value={theme.animation.duration.fast} />
-        <TokenValue label="--bb-duration-normal" value={theme.animation.duration.normal} />
-        <TokenValue label="--bb-duration-slow" value={theme.animation.duration.slow} />
-        <TokenValue label="--bb-easing-default" value={theme.animation.easing.default} />
-        <TokenValue label="--bb-easing-spring" value={theme.animation.easing.spring} />
+        <TokenValue label="--glia-duration-fast" value={theme.animation.duration.fast} />
+        <TokenValue label="--glia-duration-normal" value={theme.animation.duration.normal} />
+        <TokenValue label="--glia-duration-slow" value={theme.animation.duration.slow} />
+        <TokenValue label="--glia-easing-default" value={theme.animation.easing.default} />
+        <TokenValue label="--glia-easing-spring" value={theme.animation.easing.spring} />
       </Section>
 
       <Section title="Other">
-        <TokenValue label="--bb-blur-backdrop" value={theme.blur.backdrop} />
-        <TokenValue label="--bb-font-display" value={theme.fonts.display} />
-        <TokenValue label="--bb-radius-window" value={theme.radii.window} />
-        <TokenValue label="--bb-spacing-taskbar-height" value={theme.spacing.taskbarHeight} />
+        <TokenValue label="--glia-blur-backdrop" value={theme.blur.backdrop} />
+        <TokenValue label="--glia-font-display" value={theme.fonts.display} />
+        <TokenValue label="--glia-radius-lg" value={theme.radii.window} />
+        <TokenValue label="--glia-spacing-taskbar-height" value={theme.spacing.taskbarHeight} />
       </Section>
     </div>
   );

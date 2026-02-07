@@ -49,10 +49,10 @@ const TYPE_ICONS: Record<string, string> = {
 };
 
 const TYPE_COLORS: Record<string, string> = {
-  info: 'var(--bb-color-text-muted, #888888)',
-  warning: 'var(--bb-color-warning, #e6a817)',
-  error: 'var(--bb-color-destructive, #c44444)',
-  success: 'var(--bb-color-success, #44c444)',
+  info: 'var(--glia-color-text-soft, #888888)',
+  warning: 'var(--glia-color-accent-warning, #e6a817)',
+  error: 'var(--glia-color-accent-destructive, #c44444)',
+  success: 'var(--glia-color-accent-positive, #44c444)',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -68,13 +68,13 @@ const styles: Record<string, CSSProperties> = {
   panel: {
     position: 'fixed',
     right: 0,
-    bottom: 'var(--bb-spacing-taskbar-height, 48px)',
+    bottom: 'var(--glia-spacing-taskbar-height, 48px)',
     top: 0,
     width: '380px',
     maxWidth: '100vw',
-    background: 'var(--bb-color-context-menu-bg, rgba(17, 17, 17, 0.95))',
-    backdropFilter: 'var(--bb-blur-backdrop, blur(12px))',
-    borderLeft: '1px solid var(--bb-color-window-border, #333333)',
+    background: 'var(--glia-color-bg-elevated, rgba(17, 17, 17, 0.95))',
+    backdropFilter: 'var(--glia-blur-backdrop, blur(12px))',
+    borderLeft: '1px solid var(--glia-color-border, #333333)',
     display: 'flex',
     flexDirection: 'column',
     zIndex: 9999,
@@ -85,7 +85,7 @@ const styles: Record<string, CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '16px 16px 12px',
-    borderBottom: '1px solid var(--bb-color-window-border, #333333)',
+    borderBottom: '1px solid var(--glia-color-border, #333333)',
     flexShrink: 0,
   },
   headerLeft: {
@@ -94,20 +94,20 @@ const styles: Record<string, CSSProperties> = {
     gap: '8px',
   },
   title: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '12px',
     fontWeight: 600,
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
-    color: 'var(--bb-color-text-primary, #ffffff)',
+    color: 'var(--glia-color-text-primary, #ffffff)',
     margin: 0,
   },
   badge: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '10px',
     fontWeight: 600,
-    color: 'var(--bb-color-accent, #d4a84b)',
-    background: 'var(--bb-color-accent-glow, rgba(212, 168, 75, 0.2))',
+    color: 'var(--glia-color-accent, #d4a84b)',
+    background: 'var(--glia-glass-active-shadow, rgba(212, 168, 75, 0.2))',
     borderRadius: '10px',
     padding: '2px 7px',
     minWidth: '18px',
@@ -121,11 +121,11 @@ const styles: Record<string, CSSProperties> = {
   headerButton: {
     background: 'transparent',
     border: 'none',
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '10px',
     letterSpacing: '0.05em',
     textTransform: 'uppercase' as const,
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     cursor: 'pointer',
     padding: '4px 8px',
     borderRadius: '3px',
@@ -134,7 +134,7 @@ const styles: Record<string, CSSProperties> = {
   closeButton: {
     background: 'transparent',
     border: 'none',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     cursor: 'pointer',
     padding: '4px 6px',
     borderRadius: '3px',
@@ -149,11 +149,11 @@ const styles: Record<string, CSSProperties> = {
     scrollbarWidth: 'thin' as const,
   },
   groupHeader: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '10px',
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     padding: '12px 16px 6px',
     margin: 0,
   },
@@ -172,7 +172,7 @@ const styles: Record<string, CSSProperties> = {
     top: 0,
     bottom: 0,
     width: '3px',
-    background: 'var(--bb-color-accent, #d4a84b)',
+    background: 'var(--glia-color-accent, #d4a84b)',
     borderRadius: '0 2px 2px 0',
   },
   typeIcon: {
@@ -187,24 +187,24 @@ const styles: Record<string, CSSProperties> = {
     minWidth: 0,
   },
   notifTitle: {
-    fontFamily: 'var(--bb-font-body, sans-serif)',
+    fontFamily: 'var(--glia-font-body, sans-serif)',
     fontSize: '13px',
     fontWeight: 500,
-    color: 'var(--bb-color-text-primary, #ffffff)',
+    color: 'var(--glia-color-text-primary, #ffffff)',
     margin: 0,
     lineHeight: 1.3,
   },
   notifMessage: {
-    fontFamily: 'var(--bb-font-body, sans-serif)',
+    fontFamily: 'var(--glia-font-body, sans-serif)',
     fontSize: '12px',
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
     margin: '3px 0 0',
     lineHeight: 1.4,
   },
   notifMeta: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '10px',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     marginTop: '5px',
   },
   notifActions: {
@@ -213,7 +213,7 @@ const styles: Record<string, CSSProperties> = {
     marginTop: '8px',
   },
   actionButton: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '10px',
     letterSpacing: '0.05em',
     textTransform: 'uppercase' as const,
@@ -224,17 +224,17 @@ const styles: Record<string, CSSProperties> = {
     transition: 'all 0.1s ease',
   },
   actionPrimary: {
-    background: 'var(--bb-color-accent-glow, rgba(212, 168, 75, 0.2))',
-    color: 'var(--bb-color-accent, #d4a84b)',
+    background: 'var(--glia-glass-active-shadow, rgba(212, 168, 75, 0.2))',
+    color: 'var(--glia-color-accent, #d4a84b)',
   },
   actionSecondary: {
     background: 'rgba(255, 255, 255, 0.06)',
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
   },
   dismissButton: {
     background: 'transparent',
     border: 'none',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     cursor: 'pointer',
     padding: '2px 4px',
     fontSize: '12px',
@@ -257,9 +257,9 @@ const styles: Record<string, CSSProperties> = {
     opacity: 0.3,
   },
   emptyText: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '12px',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     letterSpacing: '0.05em',
     textTransform: 'uppercase' as const,
   },
@@ -267,17 +267,17 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     justifyContent: 'center',
     padding: '10px 16px',
-    borderTop: '1px solid var(--bb-color-window-border, #333333)',
+    borderTop: '1px solid var(--glia-color-border, #333333)',
     flexShrink: 0,
   },
   clearAllButton: {
     background: 'transparent',
     border: 'none',
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '10px',
     letterSpacing: '0.05em',
     textTransform: 'uppercase' as const,
-    color: 'var(--bb-color-destructive, #c44444)',
+    color: 'var(--glia-color-accent-destructive, #c44444)',
     cursor: 'pointer',
     padding: '4px 12px',
     borderRadius: '3px',
@@ -466,10 +466,10 @@ export function NotificationCenter({
                     style={styles.headerButton}
                     onClick={markAllRead}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = 'var(--bb-color-text-primary, #ffffff)';
+                      e.currentTarget.style.color = 'var(--glia-color-text-primary, #ffffff)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = 'var(--bb-color-text-muted, #888888)';
+                      e.currentTarget.style.color = 'var(--glia-color-text-soft, #888888)';
                     }}
                   >
                     Mark All Read
@@ -480,10 +480,10 @@ export function NotificationCenter({
                   onClick={onClose}
                   title="Close"
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = 'var(--bb-color-text-primary, #ffffff)';
+                    e.currentTarget.style.color = 'var(--glia-color-text-primary, #ffffff)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'var(--bb-color-text-muted, #888888)';
+                    e.currentTarget.style.color = 'var(--glia-color-text-soft, #888888)';
                   }}
                 >
                   {'\u2715'}

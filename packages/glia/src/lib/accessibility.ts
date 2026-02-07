@@ -92,3 +92,46 @@ export function usePrefersReducedMotion(): boolean {
     reducedMotionStore.getServerSnapshot
   );
 }
+
+// ============================================================================
+// COLOR SCHEME
+// ============================================================================
+
+const colorSchemeStore = createMediaQueryStore(
+  "(prefers-color-scheme: dark)"
+);
+
+/**
+ * React hook that reactively tracks the user's preferred color scheme.
+ *
+ * @returns "dark" | "light" based on the OS/browser preference
+ */
+export function usePrefersColorScheme(): "dark" | "light" {
+  const isDark = useSyncExternalStore(
+    colorSchemeStore.subscribe,
+    colorSchemeStore.getSnapshot,
+    colorSchemeStore.getServerSnapshot
+  );
+  return isDark ? "dark" : "light";
+}
+
+// ============================================================================
+// HIGH CONTRAST
+// ============================================================================
+
+const highContrastStore = createMediaQueryStore(
+  "(prefers-contrast: more)"
+);
+
+/**
+ * React hook that reactively tracks the user's high-contrast preference.
+ *
+ * @returns boolean -- true when the user prefers higher contrast
+ */
+export function usePrefersHighContrast(): boolean {
+  return useSyncExternalStore(
+    highContrastStore.subscribe,
+    highContrastStore.getSnapshot,
+    highContrastStore.getServerSnapshot
+  );
+}

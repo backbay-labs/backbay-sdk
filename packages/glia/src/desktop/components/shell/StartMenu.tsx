@@ -67,16 +67,16 @@ const styles: Record<string, CSSProperties> = {
   },
   container: {
     position: 'fixed',
-    bottom: 'var(--bb-spacing-taskbar-height, 48px)',
+    bottom: 'var(--glia-spacing-taskbar-height, 48px)',
     left: '8px',
     width: '320px',
     maxHeight: '480px',
     display: 'flex',
     flexDirection: 'column',
-    background: 'var(--bb-color-start-menu-bg, #111111)',
-    border: '1px solid var(--bb-color-window-border, #333333)',
-    backdropFilter: 'var(--bb-blur-backdrop, blur(12px))',
-    borderRadius: 'var(--bb-radius-menu, 3px)',
+    background: 'var(--glia-color-bg-elevated, #111111)',
+    border: '1px solid var(--glia-color-border, #333333)',
+    backdropFilter: 'var(--glia-blur-backdrop, blur(12px))',
+    borderRadius: 'var(--glia-radius-md, 3px)',
     boxShadow:
       '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 1px rgba(212, 168, 75, 0.15)',
     zIndex: 8999,
@@ -84,27 +84,27 @@ const styles: Record<string, CSSProperties> = {
   },
   searchContainer: {
     padding: '12px 12px 8px',
-    borderBottom: '1px solid var(--bb-color-window-border, #333333)',
+    borderBottom: '1px solid var(--glia-color-border, #333333)',
   },
   searchInput: {
     width: '100%',
     padding: '8px 12px',
     background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid var(--bb-color-window-border, #333333)',
-    borderRadius: 'var(--bb-radius-input, 2px)',
-    color: 'var(--bb-color-text-primary, #ffffff)',
-    fontFamily: 'var(--bb-font-mono)',
+    border: '1px solid var(--glia-color-border, #333333)',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
+    color: 'var(--glia-color-text-primary, #ffffff)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '11px',
     letterSpacing: '0.1em',
     outline: 'none',
     transition: 'border-color 0.15s ease',
   },
   sectionLabel: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '10px',
     letterSpacing: '0.15em',
     textTransform: 'uppercase' as const,
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     padding: '10px 14px 6px',
   },
   pinnedGrid: {
@@ -121,7 +121,7 @@ const styles: Record<string, CSSProperties> = {
     padding: '8px 4px',
     background: 'transparent',
     border: 'none',
-    borderRadius: 'var(--bb-radius-button, 2px)',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
     cursor: 'pointer',
     transition: 'all 0.1s ease',
   },
@@ -133,14 +133,14 @@ const styles: Record<string, CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'center',
     background: 'rgba(255, 255, 255, 0.04)',
-    borderRadius: 'var(--bb-radius-button, 2px)',
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
   },
   pinnedItemLabel: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '9px',
     letterSpacing: '0.05em',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     textAlign: 'center' as const,
     maxWidth: '60px',
     overflow: 'hidden',
@@ -151,7 +151,7 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     gap: '2px',
     padding: '4px 10px',
-    borderBottom: '1px solid var(--bb-color-window-border, #333333)',
+    borderBottom: '1px solid var(--glia-color-border, #333333)',
     overflowX: 'auto' as const,
     scrollbarWidth: 'none' as const,
   },
@@ -159,8 +159,8 @@ const styles: Record<string, CSSProperties> = {
     padding: '4px 10px',
     background: 'transparent',
     border: 'none',
-    borderRadius: 'var(--bb-radius-button, 2px)',
-    fontFamily: 'var(--bb-font-mono)',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '10px',
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
@@ -169,11 +169,11 @@ const styles: Record<string, CSSProperties> = {
     transition: 'all 0.1s ease',
   },
   categoryButtonInactive: {
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
   },
   categoryButtonActive: {
-    color: 'var(--bb-color-accent, #d4a84b)',
-    background: 'var(--bb-color-accent-glow, rgba(212, 168, 75, 0.2))',
+    color: 'var(--glia-color-accent, #d4a84b)',
+    background: 'var(--glia-glass-active-shadow, rgba(212, 168, 75, 0.2))',
   },
   appList: {
     flex: 1,
@@ -187,7 +187,7 @@ const styles: Record<string, CSSProperties> = {
     padding: '8px 10px',
     background: 'transparent',
     border: 'none',
-    borderRadius: 'var(--bb-radius-button, 2px)',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
@@ -195,11 +195,11 @@ const styles: Record<string, CSSProperties> = {
     transition: 'all 0.1s ease',
   },
   appItemNormal: {
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
   },
   appItemHighlighted: {
-    color: 'var(--bb-color-text-primary, #ffffff)',
-    background: 'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))',
+    color: 'var(--glia-color-text-primary, #ffffff)',
+    background: 'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))',
   },
   appItemIcon: {
     fontSize: '16px',
@@ -215,15 +215,15 @@ const styles: Record<string, CSSProperties> = {
     minWidth: 0,
   },
   appItemName: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '11px',
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
   },
   appItemDescription: {
-    fontFamily: 'var(--bb-font-body, var(--bb-font-mono))',
+    fontFamily: 'var(--glia-font-body, var(--glia-font-mono))',
     fontSize: '10px',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     letterSpacing: '0.02em',
     textTransform: 'none' as const,
     marginTop: '2px',
@@ -236,14 +236,14 @@ const styles: Record<string, CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '32px 16px',
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '11px',
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
   },
   footer: {
-    borderTop: '1px solid var(--bb-color-window-border, #333333)',
+    borderTop: '1px solid var(--glia-color-border, #333333)',
     padding: '8px 12px',
   },
 };
@@ -427,11 +427,11 @@ export function StartMenu({
                 }}
                 onFocus={(e) => {
                   (e.target as HTMLInputElement).style.borderColor =
-                    'var(--bb-color-accent, #d4a84b)';
+                    'var(--glia-color-accent, #d4a84b)';
                 }}
                 onBlur={(e) => {
                   (e.target as HTMLInputElement).style.borderColor =
-                    'var(--bb-color-window-border, #333333)';
+                    'var(--glia-color-border, #333333)';
                 }}
               />
             </div>
@@ -449,7 +449,7 @@ export function StartMenu({
                       onClick={() => handleLaunchApp(app.id)}
                       whileHover={{
                         background:
-                          'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))',
+                          'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))',
                       }}
                       transition={{ duration: 0.1 }}
                     >
@@ -475,7 +475,7 @@ export function StartMenu({
                   }}
                   onClick={() => setSelectedCategoryId(null)}
                   whileHover={{
-                    color: 'var(--bb-color-text-primary, #ffffff)',
+                    color: 'var(--glia-color-text-primary, #ffffff)',
                   }}
                   transition={{ duration: 0.1 }}
                 >
@@ -492,7 +492,7 @@ export function StartMenu({
                     }}
                     onClick={() => setSelectedCategoryId(cat.id)}
                     whileHover={{
-                      color: 'var(--bb-color-text-primary, #ffffff)',
+                      color: 'var(--glia-color-text-primary, #ffffff)',
                     }}
                     transition={{ duration: 0.1 }}
                   >
@@ -532,8 +532,8 @@ export function StartMenu({
                       onMouseEnter={() => setHighlightedIndex(idx)}
                       whileHover={{
                         background:
-                          'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))',
-                        color: 'var(--bb-color-text-primary, #ffffff)',
+                          'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))',
+                        color: 'var(--glia-color-text-primary, #ffffff)',
                       }}
                       transition={{ duration: 0.1 }}
                     >

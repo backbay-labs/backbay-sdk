@@ -6,7 +6,7 @@
  * A file browser with grid/list views, toolbar, breadcrumb navigation,
  * keyboard navigation, and context menu integration.
  *
- * Uses CSS variables for theming (--bb-color-*, --bb-font-*, etc.)
+ * Uses CSS variables for theming (--glia-color-*, --glia-font-*, etc.)
  */
 
 import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react';
@@ -70,9 +70,9 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    background: 'var(--bb-color-window-bg, #0a0a0a)',
-    color: 'var(--bb-color-text-secondary, #cccccc)',
-    fontFamily: 'var(--bb-font-mono, "JetBrains Mono", monospace)',
+    background: 'var(--glia-color-bg-panel, #0a0a0a)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
+    fontFamily: 'var(--glia-font-mono, "JetBrains Mono", monospace)',
     fontSize: '11px',
     overflow: 'hidden',
     outline: 'none',
@@ -86,8 +86,8 @@ const styles: Record<string, React.CSSProperties> = {
     height: '36px',
     minHeight: '36px',
     padding: '0 8px',
-    background: 'var(--bb-color-titlebar-bg, #111111)',
-    borderBottom: '1px solid var(--bb-color-window-border, #333333)',
+    background: 'var(--glia-color-bg-panel, #111111)',
+    borderBottom: '1px solid var(--glia-color-border, #333333)',
   },
   navButton: {
     display: 'flex',
@@ -96,11 +96,11 @@ const styles: Record<string, React.CSSProperties> = {
     width: '24px',
     height: '24px',
     border: 'none',
-    borderRadius: 'var(--bb-radius-button, 3px)',
+    borderRadius: 'var(--glia-radius-sm, 3px)',
     background: 'transparent',
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
     cursor: 'pointer',
-    fontFamily: 'var(--bb-font-mono, monospace)',
+    fontFamily: 'var(--glia-font-mono, monospace)',
     fontSize: '12px',
     transition: 'all 0.15s ease',
   },
@@ -112,7 +112,7 @@ const styles: Record<string, React.CSSProperties> = {
   toolbarSeparator: {
     width: '1px',
     height: '16px',
-    background: 'var(--bb-color-window-border, #333333)',
+    background: 'var(--glia-color-border, #333333)',
     margin: '0 2px',
   },
   viewToggle: {
@@ -122,28 +122,28 @@ const styles: Record<string, React.CSSProperties> = {
     width: '24px',
     height: '24px',
     border: 'none',
-    borderRadius: 'var(--bb-radius-button, 3px)',
+    borderRadius: 'var(--glia-radius-sm, 3px)',
     background: 'transparent',
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
     cursor: 'pointer',
-    fontFamily: 'var(--bb-font-mono, monospace)',
+    fontFamily: 'var(--glia-font-mono, monospace)',
     fontSize: '11px',
     transition: 'all 0.15s ease',
   },
   viewToggleActive: {
     background: 'rgba(212, 168, 75, 0.12)',
-    color: 'var(--bb-color-accent, #d4a84b)',
+    color: 'var(--glia-color-accent, #d4a84b)',
   },
   searchInput: {
     marginLeft: 'auto',
     height: '22px',
     width: '140px',
     padding: '0 6px',
-    border: '1px solid var(--bb-color-window-border, #333333)',
-    borderRadius: 'var(--bb-radius-input, 3px)',
+    border: '1px solid var(--glia-color-border, #333333)',
+    borderRadius: 'var(--glia-radius-sm, 3px)',
     background: 'rgba(0, 0, 0, 0.3)',
-    color: 'var(--bb-color-text-primary, #ffffff)',
-    fontFamily: 'var(--bb-font-mono, monospace)',
+    color: 'var(--glia-color-text-primary, #ffffff)',
+    fontFamily: 'var(--glia-font-mono, monospace)',
     fontSize: '10px',
     outline: 'none',
     transition: 'border-color 0.15s ease',
@@ -155,16 +155,16 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '2px',
     padding: '4px 8px',
-    fontFamily: 'var(--bb-font-mono, "JetBrains Mono", monospace)',
+    fontFamily: 'var(--glia-font-mono, "JetBrains Mono", monospace)',
     fontSize: '11px',
-    borderBottom: '1px solid var(--bb-color-window-border, #222222)',
+    borderBottom: '1px solid var(--glia-color-border, #222222)',
     overflow: 'hidden',
   },
   breadcrumbSegment: {
     border: 'none',
     background: 'transparent',
-    color: 'var(--bb-color-text-muted, #888888)',
-    fontFamily: 'var(--bb-font-mono, monospace)',
+    color: 'var(--glia-color-text-soft, #888888)',
+    fontFamily: 'var(--glia-font-mono, monospace)',
     fontSize: '11px',
     cursor: 'pointer',
     padding: '2px 4px',
@@ -173,11 +173,11 @@ const styles: Record<string, React.CSSProperties> = {
     whiteSpace: 'nowrap' as const,
   },
   breadcrumbSegmentActive: {
-    color: 'var(--bb-color-text-primary, #ffffff)',
+    color: 'var(--glia-color-text-primary, #ffffff)',
     cursor: 'default',
   },
   breadcrumbSeparator: {
-    color: 'var(--bb-color-text-muted, #555555)',
+    color: 'var(--glia-color-text-soft, #555555)',
     fontSize: '9px',
     userSelect: 'none' as const,
   },
@@ -201,7 +201,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '6px',
     padding: '8px 10px',
     minWidth: '88px',
-    borderRadius: 'var(--bb-radius-button, 3px)',
+    borderRadius: 'var(--glia-radius-sm, 3px)',
     background: 'transparent',
     border: '1px solid transparent',
     cursor: 'pointer',
@@ -209,7 +209,7 @@ const styles: Record<string, React.CSSProperties> = {
     outline: 'none',
   },
   gridItemSelected: {
-    background: 'var(--bb-color-icon-selected, rgba(212, 168, 75, 0.08))',
+    background: 'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.08))',
     boxShadow: '0 0 24px 8px rgba(212, 168, 75, 0.12), 0 0 48px 16px rgba(212, 168, 75, 0.06)',
   },
   gridItemIcon: {
@@ -222,7 +222,7 @@ const styles: Record<string, React.CSSProperties> = {
     transition: 'all 350ms ease-out',
   },
   gridItemLabel: {
-    fontFamily: 'var(--bb-font-display, "Cinzel", serif)',
+    fontFamily: 'var(--glia-font-display, "Cinzel", serif)',
     fontSize: '10px',
     fontWeight: 600,
     letterSpacing: '0.06em',
@@ -248,36 +248,36 @@ const styles: Record<string, React.CSSProperties> = {
   listHeader: {
     position: 'sticky' as const,
     top: 0,
-    background: 'var(--bb-color-titlebar-bg, #111111)',
+    background: 'var(--glia-color-bg-panel, #111111)',
     zIndex: 1,
   },
   listHeaderCell: {
     padding: '0 12px',
     height: '28px',
-    fontFamily: 'var(--bb-font-mono, monospace)',
+    fontFamily: 'var(--glia-font-mono, monospace)',
     fontSize: '10px',
     fontWeight: 600,
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     textAlign: 'left' as const,
-    borderBottom: '1px solid var(--bb-color-window-border, #333333)',
+    borderBottom: '1px solid var(--glia-color-border, #333333)',
     cursor: 'pointer',
     userSelect: 'none' as const,
     whiteSpace: 'nowrap' as const,
     transition: 'color 0.15s ease',
   },
   listHeaderCellActive: {
-    color: 'var(--bb-color-accent, #d4a84b)',
+    color: 'var(--glia-color-accent, #d4a84b)',
   },
   listRow: {
     height: '28px',
-    borderBottom: '1px solid var(--bb-color-window-border, #1a1a1a)',
+    borderBottom: '1px solid var(--glia-color-border, #1a1a1a)',
     cursor: 'pointer',
     transition: 'background 0.1s ease',
   },
   listRowSelected: {
-    background: 'var(--bb-color-icon-selected, rgba(212, 168, 75, 0.08))',
+    background: 'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.08))',
   },
   listCell: {
     padding: '0 12px',
@@ -299,13 +299,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
   listCellSize: {
     textAlign: 'right' as const,
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
   },
   listCellDate: {
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
   },
   listCellType: {
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     textTransform: 'uppercase' as const,
     fontSize: '10px',
     letterSpacing: '0.05em',
@@ -319,10 +319,10 @@ const styles: Record<string, React.CSSProperties> = {
     height: '24px',
     minHeight: '24px',
     padding: '0 10px',
-    borderTop: '1px solid var(--bb-color-window-border, #333333)',
-    fontFamily: 'var(--bb-font-mono, monospace)',
+    borderTop: '1px solid var(--glia-color-border, #333333)',
+    fontFamily: 'var(--glia-font-mono, monospace)',
     fontSize: '10px',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
   },
 
   // Empty state
@@ -331,8 +331,8 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'var(--bb-color-text-muted, #555555)',
-    fontFamily: 'var(--bb-font-mono, monospace)',
+    color: 'var(--glia-color-text-soft, #555555)',
+    fontFamily: 'var(--glia-font-mono, monospace)',
     fontSize: '11px',
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
@@ -502,7 +502,7 @@ function GridView({ files, selectedIds, focusedIndex, onSelect, onActivate, onCo
               style={{
                 ...styles.gridItem,
                 ...(isSelected ? styles.gridItemSelected : {}),
-                ...(isFocused && !isSelected ? { outline: '1px solid var(--bb-color-accent, #d4a84b)', outlineOffset: '-1px' } : {}),
+                ...(isFocused && !isSelected ? { outline: '1px solid var(--glia-color-accent, #d4a84b)', outlineOffset: '-1px' } : {}),
               }}
               onClick={(e) => onSelect(file.id, e.metaKey || e.ctrlKey)}
               onDoubleClick={() => onActivate(file)}
@@ -514,7 +514,7 @@ function GridView({ files, selectedIds, focusedIndex, onSelect, onActivate, onCo
               <div
                 style={{
                   ...styles.gridItemIcon,
-                  color: isSelected ? 'var(--bb-color-accent, #d4a84b)' : 'var(--bb-color-icon-text, #cccccc)',
+                  color: isSelected ? 'var(--glia-color-accent, #d4a84b)' : 'var(--glia-color-text-muted, #cccccc)',
                   textShadow: isSelected
                     ? '0 0 16px rgba(212, 168, 75, 0.35), 0 0 32px rgba(212, 168, 75, 0.2)'
                     : 'none',
@@ -525,7 +525,7 @@ function GridView({ files, selectedIds, focusedIndex, onSelect, onActivate, onCo
               <span
                 style={{
                   ...styles.gridItemLabel,
-                  color: isSelected ? 'var(--bb-color-accent, #d4a84b)' : 'var(--bb-color-icon-text, #cccccc)',
+                  color: isSelected ? 'var(--glia-color-accent, #d4a84b)' : 'var(--glia-color-text-muted, #cccccc)',
                 }}
               >
                 {file.name}
@@ -601,7 +601,7 @@ function ListView({ files, selectedIds, focusedIndex, sort, onSelect, onActivate
                 style={{
                   ...styles.listRow,
                   ...(isSelected ? styles.listRowSelected : {}),
-                  ...(isFocused && !isSelected ? { outline: '1px solid var(--bb-color-accent, #d4a84b)', outlineOffset: '-1px' } : {}),
+                  ...(isFocused && !isSelected ? { outline: '1px solid var(--glia-color-accent, #d4a84b)', outlineOffset: '-1px' } : {}),
                 }}
                 onClick={(e) => onSelect(file.id, e.metaKey || e.ctrlKey)}
                 onDoubleClick={() => onActivate(file)}
@@ -905,12 +905,12 @@ export function FileBrowser({
               left: contextMenu.position.x,
               top: contextMenu.position.y,
               minWidth: '180px',
-              background: 'var(--bb-color-context-menu-bg, #111111)',
-              border: '1px solid var(--bb-color-window-border, #333333)',
+              background: 'var(--glia-color-bg-elevated, #111111)',
+              border: '1px solid var(--glia-color-border, #333333)',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 1px rgba(212, 168, 75, 0.15)',
               padding: '6px',
               zIndex: 999999,
-              borderRadius: 'var(--bb-radius-menu, 3px)',
+              borderRadius: 'var(--glia-radius-md, 3px)',
             }}
           >
             {contextMenu.items.map((item, idx) => {
@@ -921,7 +921,7 @@ export function FileBrowser({
                     style={{
                       height: '1px',
                       margin: '5px 8px',
-                      background: 'var(--bb-color-window-border, #333333)',
+                      background: 'var(--glia-color-border, #333333)',
                     }}
                   />
                 );
@@ -936,7 +936,7 @@ export function FileBrowser({
                     padding: '8px 12px',
                     background: 'transparent',
                     border: 0,
-                    fontFamily: 'var(--bb-font-mono)',
+                    fontFamily: 'var(--glia-font-mono)',
                     fontSize: '11px',
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
@@ -946,8 +946,8 @@ export function FileBrowser({
                     alignItems: 'center',
                     gap: '10px',
                     color: item.danger
-                      ? 'var(--bb-color-destructive, #c44444)'
-                      : 'var(--bb-color-text-secondary, #cccccc)',
+                      ? 'var(--glia-color-accent-destructive, #c44444)'
+                      : 'var(--glia-color-text-muted, #cccccc)',
                     opacity: item.disabled ? 0.4 : 1,
                     pointerEvents: item.disabled ? 'none' : 'auto',
                   }}
@@ -959,7 +959,7 @@ export function FileBrowser({
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLButtonElement).style.background = item.danger
                       ? 'rgba(196, 92, 92, 0.12)'
-                      : 'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))';
+                      : 'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))';
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLButtonElement).style.background = 'transparent';

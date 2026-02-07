@@ -8,24 +8,24 @@ import type { StartMenuApp, StartMenuCategory } from '../../core/shell/types';
 // ═══════════════════════════════════════════════════════════════════════════
 
 const desktopVars: Record<string, string> = {
-  '--bb-color-start-menu-bg': '#111111',
-  '--bb-color-window-border': '#333333',
-  '--bb-color-context-menu-hover': 'rgba(212, 168, 75, 0.10)',
-  '--bb-color-accent': '#d4a84b',
-  '--bb-color-accent-glow': 'rgba(212, 168, 75, 0.2)',
-  '--bb-color-text-primary': '#ffffff',
-  '--bb-color-text-secondary': '#cccccc',
-  '--bb-color-text-muted': '#888888',
-  '--bb-color-destructive': '#c44444',
-  '--bb-blur-backdrop': 'blur(12px)',
-  '--bb-radius-menu': '3px',
-  '--bb-radius-button': '2px',
-  '--bb-radius-input': '2px',
-  '--bb-shadow-menu': '0 4px 16px rgba(0, 0, 0, 0.5)',
-  '--bb-font-display': "'Cinzel', serif",
-  '--bb-font-mono': "'JetBrains Mono', monospace",
-  '--bb-spacing-taskbar-height': '48px',
-  '--bb-duration-fast': '100ms',
+  '--glia-color-bg-elevated': '#111111',
+  '--glia-color-border': '#333333',
+  '--glia-glass-hover-bg': 'rgba(212, 168, 75, 0.10)',
+  '--glia-color-accent': '#d4a84b',
+  '--glia-glass-active-shadow': 'rgba(212, 168, 75, 0.2)',
+  '--glia-color-text-primary': '#ffffff',
+  '--glia-color-text-muted': '#cccccc',
+  '--glia-color-text-soft': '#888888',
+  '--glia-color-accent-destructive': '#c44444',
+  '--glia-blur-backdrop': 'blur(12px)',
+  '--glia-radius-md': '3px',
+  '--glia-radius-sm': '2px',
+  '--glia-radius-sm': '2px',
+  '--glia-shadow-hud-panel': '0 4px 16px rgba(0, 0, 0, 0.5)',
+  '--glia-font-display': "'Cinzel', serif",
+  '--glia-font-mono': "'JetBrains Mono', monospace",
+  '--glia-spacing-taskbar-height': '48px',
+  '--glia-duration-fast': '100ms',
 };
 
 const wrapperStyle: CSSProperties = {
@@ -219,11 +219,11 @@ export const CustomFooter: Story = {
       >
         <span
           style={{
-            fontFamily: 'var(--bb-font-mono)',
+            fontFamily: 'var(--glia-font-mono)',
             fontSize: '10px',
             letterSpacing: '0.1em',
             textTransform: 'uppercase' as const,
-            color: 'var(--bb-color-text-muted, #888888)',
+            color: 'var(--glia-color-text-soft, #888888)',
           }}
         >
           operator_01
@@ -232,13 +232,13 @@ export const CustomFooter: Story = {
           style={{
             padding: '4px 10px',
             background: 'transparent',
-            border: '1px solid var(--bb-color-window-border, #333333)',
-            borderRadius: 'var(--bb-radius-button, 2px)',
-            fontFamily: 'var(--bb-font-mono)',
+            border: '1px solid var(--glia-color-border, #333333)',
+            borderRadius: 'var(--glia-radius-sm, 2px)',
+            fontFamily: 'var(--glia-font-mono)',
             fontSize: '10px',
             letterSpacing: '0.1em',
             textTransform: 'uppercase' as const,
-            color: 'var(--bb-color-destructive, #c44444)',
+            color: 'var(--glia-color-accent-destructive, #c44444)',
             cursor: 'pointer',
           }}
         >

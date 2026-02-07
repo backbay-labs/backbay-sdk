@@ -12,6 +12,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { Agent, AgentRun, BBConfig, SyncStatus } from '../protocol/types.js';
+import { GliaErrorBoundary } from '../primitives/atoms/GliaErrorBoundary';
 
 // =============================================================================
 // Context Types
@@ -145,7 +146,13 @@ export function BBProvider({
     ]
   );
 
-  return <BBContext.Provider value={value}>{children}</BBContext.Provider>;
+  return (
+    <BBContext.Provider value={value}>
+      <GliaErrorBoundary variant="fullscreen">
+        {children}
+      </GliaErrorBoundary>
+    </BBContext.Provider>
+  );
 }
 
 // =============================================================================

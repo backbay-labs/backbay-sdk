@@ -143,6 +143,9 @@ export const MessageThread = React.forwardRef<HTMLDivElement, MessageThreadProps
       <div
         ref={scrollRef}
         onScroll={handleScroll}
+        role="log"
+        aria-live="polite"
+        aria-label="Message history"
         className={cn("flex-1 min-h-0", className)}
         style={{
           overflowY: "auto",

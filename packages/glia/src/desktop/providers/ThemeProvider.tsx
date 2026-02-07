@@ -7,7 +7,7 @@
 
 'use client';
 
-import React, { createContext, useContext, useMemo, useLayoutEffect, useEffect } from 'react';
+import React, { createContext, useContext, useRef, useMemo, useLayoutEffect, useEffect } from 'react';
 
 // SSR-safe useLayoutEffect - avoids React warnings during server rendering
 const useIsomorphicLayoutEffect =
@@ -93,6 +93,12 @@ export function ThemeProvider({
   target = 'root',
   className,
 }: ThemeProviderProps) {
+  const deprecationWarned = useRef(false);
+  if (!deprecationWarned.current) {
+    deprecationWarned.current = true;
+    console.warn("[Glia] DesktopOS ThemeProvider is deprecated. Use GliaThemeProvider instead.");
+  }
+
   // Merge custom theme with default
   const theme = useMemo(
     () => (partialTheme ? mergeTheme(defaultTheme, partialTheme) : defaultTheme),

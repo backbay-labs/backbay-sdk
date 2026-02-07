@@ -86,15 +86,15 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 'var(--bb-radius-button, 2px)',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
     background: 'transparent',
     border: 'none',
     cursor: 'pointer',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     fontSize: '16px',
     position: 'relative',
     padding: 0,
-    transition: 'all var(--bb-duration-fast, 100ms) ease',
+    transition: 'all var(--glia-duration-fast, 100ms) ease',
   },
   badge: {
     position: 'absolute',
@@ -103,10 +103,10 @@ const styles: Record<string, CSSProperties> = {
     width: '14px',
     height: '14px',
     borderRadius: '50%',
-    background: 'var(--bb-color-accent, #d4a84b)',
-    color: 'var(--bb-color-window-bg, #111111)',
+    background: 'var(--glia-color-accent, #d4a84b)',
+    color: 'var(--glia-color-bg-panel, #111111)',
     fontSize: '9px',
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontWeight: 700,
     display: 'flex',
     alignItems: 'center',
@@ -121,21 +121,21 @@ const styles: Record<string, CSSProperties> = {
     transform: 'translateX(-50%)',
     marginBottom: '8px',
     padding: '6px 10px',
-    background: 'var(--bb-color-context-menu-bg, #111111)',
-    border: '1px solid var(--bb-color-window-border, #333333)',
-    borderRadius: 'var(--bb-radius-menu, 3px)',
-    fontFamily: 'var(--bb-font-mono)',
+    background: 'var(--glia-color-bg-elevated, #111111)',
+    border: '1px solid var(--glia-color-border, #333333)',
+    borderRadius: 'var(--glia-radius-md, 3px)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '11px',
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
     whiteSpace: 'nowrap',
-    boxShadow: 'var(--bb-shadow-tooltip)',
+    boxShadow: 'var(--glia-shadow-soft)',
     zIndex: 10000,
     pointerEvents: 'none',
   },
   divider: {
     width: '1px',
     height: '24px',
-    background: 'var(--bb-color-window-border, #333333)',
+    background: 'var(--glia-color-border, #333333)',
     margin: '0 4px',
   },
   overflowButton: {
@@ -144,14 +144,14 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 'var(--bb-radius-button, 2px)',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
     background: 'transparent',
     border: 'none',
     cursor: 'pointer',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     fontSize: '10px',
     padding: 0,
-    transition: 'all var(--bb-duration-fast, 100ms) ease',
+    transition: 'all var(--glia-duration-fast, 100ms) ease',
   },
   overflowPanel: {
     position: 'absolute',
@@ -159,14 +159,14 @@ const styles: Record<string, CSSProperties> = {
     right: 0,
     marginBottom: '8px',
     minWidth: '160px',
-    background: 'var(--bb-color-context-menu-bg, #111111)',
-    border: '1px solid var(--bb-color-window-border, #333333)',
-    backdropFilter: 'var(--bb-blur-backdrop, blur(12px))',
+    background: 'var(--glia-color-bg-elevated, #111111)',
+    border: '1px solid var(--glia-color-border, #333333)',
+    backdropFilter: 'var(--glia-blur-backdrop, blur(12px))',
     boxShadow:
       '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 1px rgba(212, 168, 75, 0.15)',
     padding: '6px',
     zIndex: 10001,
-    borderRadius: 'var(--bb-radius-menu, 3px)',
+    borderRadius: 'var(--glia-radius-md, 3px)',
     display: 'flex',
     flexWrap: 'wrap',
     gap: '4px',
@@ -177,15 +177,15 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 'var(--bb-radius-button, 2px)',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
     background: 'transparent',
     border: 'none',
     cursor: 'pointer',
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     fontSize: '16px',
     position: 'relative',
     padding: 0,
-    transition: 'all var(--bb-duration-fast, 100ms) ease',
+    transition: 'all var(--glia-duration-fast, 100ms) ease',
   },
 };
 
@@ -207,9 +207,9 @@ function TrayIcon({ item }: TrayIconProps) {
         ...styles.trayIcon,
         ...(isHovered
           ? {
-              color: 'var(--bb-color-text-secondary, #cccccc)',
+              color: 'var(--glia-color-text-muted, #cccccc)',
               background:
-                'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))',
+                'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))',
             }
           : {}),
       }}
@@ -225,9 +225,9 @@ function TrayIcon({ item }: TrayIconProps) {
         setIsHovered(false);
       }}
       whileHover={{
-        color: 'var(--bb-color-text-secondary, #cccccc)',
+        color: 'var(--glia-color-text-muted, #cccccc)',
         background:
-          'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))',
+          'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))',
       }}
       transition={{ duration: 0.1 }}
     >
@@ -278,9 +278,9 @@ function NotificationBell({ count = 0, onClick }: NotificationBellProps) {
         ...styles.notificationBell,
         ...(isHovered
           ? {
-              color: 'var(--bb-color-text-secondary, #cccccc)',
+              color: 'var(--glia-color-text-muted, #cccccc)',
               background:
-                'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))',
+                'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))',
             }
           : {}),
       }}
@@ -292,9 +292,9 @@ function NotificationBell({ count = 0, onClick }: NotificationBellProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileHover={{
-        color: 'var(--bb-color-text-secondary, #cccccc)',
+        color: 'var(--glia-color-text-muted, #cccccc)',
         background:
-          'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))',
+          'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))',
       }}
       transition={{ duration: 0.1 }}
     >
@@ -405,9 +405,9 @@ export function SystemTray({
             aria-haspopup="true"
             aria-label={`${overflowItems.length} more items`}
             whileHover={{
-              color: 'var(--bb-color-text-secondary, #cccccc)',
+              color: 'var(--glia-color-text-muted, #cccccc)',
               background:
-                'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))',
+                'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))',
             }}
             transition={{ duration: 0.1 }}
           >

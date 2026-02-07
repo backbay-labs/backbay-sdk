@@ -17,3 +17,4 @@ export * from "./GlassSlider";
 export * from "./GlassAccordion";
 export * from "./StreamingText";
 export * from "./CodeBlock";
+export * from "./GliaErrorBoundary";

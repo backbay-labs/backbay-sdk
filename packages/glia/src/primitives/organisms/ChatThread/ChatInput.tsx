@@ -149,6 +149,7 @@ export const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
+          aria-label="Message input"
           rows={1}
           style={{
             flex: 1,
@@ -164,7 +165,7 @@ export const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
             minHeight: 28,
             opacity: disabled ? 0.5 : 1,
           }}
-          className="placeholder:text-[var(--theme-text-soft,#64748B)]"
+          className="placeholder:text-[var(--glia-color-text-soft,#64748B)]"
         />
 
         {showSubmitButton && (

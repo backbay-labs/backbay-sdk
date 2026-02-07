@@ -132,18 +132,18 @@ export function desktopThemeFromUiTheme(
 
   // --- Fonts ---
   const fonts: DesktopOSTheme['fonts'] = {
-    display: fontOverrides?.display ?? "'Inter', sans-serif",
-    body: fontOverrides?.body ?? "'Inter', sans-serif",
-    mono: fontOverrides?.mono ?? "'JetBrains Mono', monospace",
+    display: fontOverrides?.display ?? uiTheme.fonts.display,
+    body: fontOverrides?.body ?? uiTheme.fonts.body,
+    mono: fontOverrides?.mono ?? uiTheme.fonts.mono,
     ...overrides?.fonts,
   };
 
   // --- Radii ---
   const radii: DesktopOSTheme['radii'] = {
-    window: '8px',
-    button: '6px',
-    menu: '8px',
-    input: '6px',
+    window: uiTheme.radii.lg,
+    button: uiTheme.radii.sm,
+    menu: uiTheme.radii.md,
+    input: uiTheme.radii.sm,
     ...overrides?.radii,
   };
 
@@ -158,12 +158,12 @@ export function desktopThemeFromUiTheme(
 
   // --- Spacing ---
   const spacing: DesktopOSTheme['spacing'] = {
-    windowPadding: '12px',
-    taskbarHeight: '48px',
-    iconSize: '64px',
-    iconGap: '16px',
-    titlebarHeight: '36px',
-    windowBorderWidth: '1px',
+    windowPadding: uiTheme.spacing.windowPadding,
+    taskbarHeight: uiTheme.spacing.taskbarHeight,
+    iconSize: uiTheme.spacing.iconSize,
+    iconGap: uiTheme.spacing.iconGap,
+    titlebarHeight: uiTheme.spacing.titlebarHeight,
+    windowBorderWidth: uiTheme.spacing.windowBorderWidth,
     ...overrides?.spacing,
   };
 

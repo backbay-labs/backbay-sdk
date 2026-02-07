@@ -125,4 +125,25 @@ export const solarpunkTheme: UiTheme = {
       hoverShadow: "0 0 12px rgba(245, 166, 35, 0.12)",
     },
   },
+
+  fonts: {
+    display: "'Inter', sans-serif",
+    body: "'Inter', sans-serif",
+    mono: "'JetBrains Mono', monospace",
+  },
+
+  radii: {
+    sm: "6px",
+    md: "8px",
+    lg: "8px",
+  },
+
+  spacing: {
+    taskbarHeight: "48px",
+    titlebarHeight: "36px",
+    windowPadding: "12px",
+    iconSize: "64px",
+    iconGap: "16px",
+    windowBorderWidth: "1px",
+  },
 };

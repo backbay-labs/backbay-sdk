@@ -260,10 +260,10 @@ export const InsideWindow: Story = {
     <div
       style={{
         width: '600px',
-        border: '1px solid var(--bb-color-window-border, #333333)',
-        borderRadius: 'var(--bb-radius-window, 6px)',
+        border: '1px solid var(--glia-color-border, #333333)',
+        borderRadius: 'var(--glia-radius-lg, 6px)',
         overflow: 'hidden',
-        background: 'var(--bb-color-window-bg, #0a0a0a)',
+        background: 'var(--glia-color-bg-panel, #0a0a0a)',
       }}
     >
       {/* Titlebar mock */}
@@ -273,18 +273,18 @@ export const InsideWindow: Story = {
           alignItems: 'center',
           height: '36px',
           padding: '0 12px',
-          background: 'var(--bb-color-titlebar-bg, #111111)',
-          borderBottom: '1px solid var(--bb-color-window-border, #333333)',
+          background: 'var(--glia-color-bg-panel, #111111)',
+          borderBottom: '1px solid var(--glia-color-border, #333333)',
         }}
       >
         <span
           style={{
-            fontFamily: 'var(--bb-font-display, sans-serif)',
+            fontFamily: 'var(--glia-font-display, sans-serif)',
             fontSize: '0.8125rem',
             fontWeight: 600,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
-            color: 'var(--bb-color-text-primary, #ffffff)',
+            color: 'var(--glia-color-text-primary, #ffffff)',
           }}
         >
           Text Editor
@@ -321,7 +321,7 @@ export const InsideWindow: Story = {
       {/* Menubar */}
       <div
         style={{
-          borderBottom: '1px solid var(--bb-color-window-border, #333333)',
+          borderBottom: '1px solid var(--glia-color-border, #333333)',
           padding: '0 4px',
         }}
       >
@@ -338,9 +338,9 @@ export const InsideWindow: Story = {
         style={{
           padding: '16px',
           height: '200px',
-          fontFamily: 'var(--bb-font-mono)',
+          fontFamily: 'var(--glia-font-mono)',
           fontSize: '12px',
-          color: 'var(--bb-color-text-secondary, #cccccc)',
+          color: 'var(--glia-color-text-muted, #cccccc)',
           lineHeight: 1.6,
         }}
       >

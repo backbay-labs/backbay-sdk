@@ -116,7 +116,7 @@ function rgbToHslComponents(rgb: RgbColor): string {
   return `${hDeg} ${sPct}% ${lPct}%`;
 }
 
-function colorToHslComponents(color: string): string | null {
+export function colorToHslComponents(color: string): string | null {
   const rgb = parseColorToRgb(color);
   if (!rgb) return null;
   return rgbToHslComponents(rgb);

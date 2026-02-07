@@ -58,14 +58,14 @@ const styles: Record<string, CSSProperties> = {
   menu: {
     position: 'fixed',
     minWidth: '200px',
-    background: 'var(--bb-color-context-menu-bg, #111111)',
-    border: '1px solid var(--bb-color-window-border, #333333)',
-    backdropFilter: 'var(--bb-blur-backdrop, blur(12px))',
+    background: 'var(--glia-color-bg-elevated, #111111)',
+    border: '1px solid var(--glia-color-border, #333333)',
+    backdropFilter: 'var(--glia-blur-backdrop, blur(12px))',
     boxShadow:
       '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 1px rgba(212, 168, 75, 0.15)',
     padding: '6px',
     zIndex: 999999,
-    borderRadius: 'var(--bb-radius-menu, 3px)',
+    borderRadius: 'var(--glia-radius-md, 3px)',
   },
   item: {
     width: '100%',
@@ -73,7 +73,7 @@ const styles: Record<string, CSSProperties> = {
     padding: '8px 12px',
     background: 'transparent',
     border: 0,
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '11px',
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
@@ -85,10 +85,10 @@ const styles: Record<string, CSSProperties> = {
     transition: 'all 0.1s ease',
   },
   itemNormal: {
-    color: 'var(--bb-color-text-secondary, #cccccc)',
+    color: 'var(--glia-color-text-muted, #cccccc)',
   },
   itemDestructive: {
-    color: 'var(--bb-color-destructive, #c44444)',
+    color: 'var(--glia-color-accent-destructive, #c44444)',
   },
   itemDisabled: {
     opacity: 0.4,
@@ -107,7 +107,7 @@ const styles: Record<string, CSSProperties> = {
   separator: {
     height: '1px',
     margin: '5px 8px',
-    background: 'var(--bb-color-window-border, #333333)',
+    background: 'var(--glia-color-border, #333333)',
   },
 };
 
@@ -228,10 +228,10 @@ export function ContextMenu({
               whileHover={{
                 background: item.danger
                   ? 'rgba(196, 92, 92, 0.12)'
-                  : 'var(--bb-color-context-menu-hover, rgba(212, 168, 75, 0.10))',
+                  : 'var(--glia-glass-hover-bg, rgba(212, 168, 75, 0.10))',
                 color: item.danger
                   ? '#d77777'
-                  : 'var(--bb-color-text-primary, #ffffff)',
+                  : 'var(--glia-color-text-primary, #ffffff)',
               }}
               transition={{ duration: 0.1 }}
             >

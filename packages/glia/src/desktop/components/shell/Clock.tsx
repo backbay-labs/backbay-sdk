@@ -15,7 +15,7 @@
  * <Clock format="standard" />
  *
  * // Styled with CSS variables
- * <Clock style={{ '--bb-font-mono': 'Monaco, monospace' }} />
+ * <Clock style={{ '--glia-font-mono': 'Monaco, monospace' }} />
  * ```
  */
 
@@ -83,17 +83,17 @@ const styles: Record<string, CSSProperties> = {
     height: '100%',
   },
   clock: {
-    fontFamily: 'var(--bb-font-mono)',
+    fontFamily: 'var(--glia-font-mono)',
     fontSize: '13px',
-    color: 'var(--bb-color-text-muted)',
+    color: 'var(--glia-color-text-soft)',
     padding: '0 12px',
     letterSpacing: '0.05em',
     cursor: 'default',
     userSelect: 'none',
-    transition: 'color var(--bb-duration-fast, 100ms) ease',
+    transition: 'color var(--glia-duration-fast, 100ms) ease',
   },
   clockHover: {
-    color: 'var(--bb-color-text-secondary)',
+    color: 'var(--glia-color-text-muted)',
   },
   tooltip: {
     position: 'absolute',
@@ -101,14 +101,14 @@ const styles: Record<string, CSSProperties> = {
     right: 0,
     marginBottom: '8px',
     padding: '8px 12px',
-    background: 'var(--bb-color-context-menu-bg, #111111)',
-    border: '1px solid var(--bb-color-window-border, #333333)',
-    borderRadius: 'var(--bb-radius-menu, 3px)',
-    fontFamily: 'var(--bb-font-body)',
+    background: 'var(--glia-color-bg-elevated, #111111)',
+    border: '1px solid var(--glia-color-border, #333333)',
+    borderRadius: 'var(--glia-radius-md, 3px)',
+    fontFamily: 'var(--glia-font-body)',
     fontSize: '12px',
-    color: 'var(--bb-color-text-secondary)',
+    color: 'var(--glia-color-text-muted)',
     whiteSpace: 'nowrap',
-    boxShadow: 'var(--bb-shadow-tooltip)',
+    boxShadow: 'var(--glia-shadow-soft)',
     zIndex: 10000,
   },
 };

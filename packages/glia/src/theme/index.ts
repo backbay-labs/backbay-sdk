@@ -13,8 +13,11 @@ export type {
   UiColorTokens,
   UiControlTokens,
   UiElevationTokens,
+  UiFontTokens,
   UiGlassTokens,
   UiMotionTokens,
+  UiRadiiTokens,
+  UiSpacingTokens,
   UiTheme,
   UiThemeContextValue,
   UiThemeId,
@@ -50,6 +53,18 @@ export {
   useUiTheme,
 } from "./UiThemeProvider";
 export type { UiThemeProviderProps } from "./UiThemeProvider";
+
+// Unified Provider & Hooks
+export {
+  GliaThemeProvider,
+  useGliaTheme,
+  useFontTokens,
+  useRadiiTokens,
+  useSpacingTokens,
+  applyGliaCssVariables,
+  buildGliaCssVariables,
+} from "./GliaThemeProvider";
+export type { GliaThemeProviderProps, GliaThemeContextValue } from "./GliaThemeProvider";
 
 // Bridge
 export { desktopThemeFromUiTheme, type ThemeBridgeOptions } from "./bridge";

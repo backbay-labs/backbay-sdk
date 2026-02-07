@@ -98,9 +98,15 @@ export interface UiElevationTokens {
 // MOTION TOKENS
 // ============================================================================
 
+type CubicBezier = [number, number, number, number];
+type EaseName = "linear" | "easeIn" | "easeOut" | "easeInOut"
+  | "circIn" | "circOut" | "circInOut"
+  | "backIn" | "backOut" | "backInOut"
+  | "anticipate";
+
 export interface MotionConfig {
   duration: number;
-  ease: string | number[];
+  ease: EaseName | CubicBezier;
 }
 
 export interface UiMotionTokens {
@@ -176,6 +182,51 @@ export interface UiControlTokens {
 }
 
 // ============================================================================
+// FONT TOKENS
+// ============================================================================
+
+export interface UiFontTokens {
+  /** Display font (headings, titles) */
+  display: string;
+  /** Body font (content) */
+  body: string;
+  /** Monospace font (code) */
+  mono: string;
+}
+
+// ============================================================================
+// RADII TOKENS
+// ============================================================================
+
+export interface UiRadiiTokens {
+  /** Small radius -- inputs, buttons */
+  sm: string;
+  /** Medium radius -- menus, cards */
+  md: string;
+  /** Large radius -- windows, modals */
+  lg: string;
+}
+
+// ============================================================================
+// SPACING TOKENS
+// ============================================================================
+
+export interface UiSpacingTokens {
+  /** Taskbar height */
+  taskbarHeight: string;
+  /** Titlebar height */
+  titlebarHeight: string;
+  /** Window content padding */
+  windowPadding: string;
+  /** Desktop icon size */
+  iconSize: string;
+  /** Desktop icon grid gap */
+  iconGap: string;
+  /** Window border width */
+  windowBorderWidth: string;
+}
+
+// ============================================================================
 // COMPLETE THEME INTERFACE
 // ============================================================================
 
@@ -199,6 +250,12 @@ export interface UiTheme {
   ambient: UiAmbientTokens;
   /** Control (switch, slider, button) tokens */
   controls: UiControlTokens;
+  /** Font family tokens */
+  fonts: UiFontTokens;
+  /** Border radius tokens */
+  radii: UiRadiiTokens;
+  /** Spacing tokens */
+  spacing: UiSpacingTokens;
 }
 
 // ============================================================================

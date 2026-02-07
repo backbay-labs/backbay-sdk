@@ -74,13 +74,13 @@ const createStyles = (isActive: boolean, isFocused: boolean): Record<string, CSS
     gap: '6px',
     padding: '6px 12px',
     height: '36px',
-    background: isActive ? 'var(--bb-color-context-menu-hover, #1a1a1a)' : 'transparent',
-    borderRadius: 'var(--bb-radius-button, 2px)',
-    fontFamily: 'var(--bb-font-display)',
+    background: isActive ? 'var(--glia-glass-hover-bg, #1a1a1a)' : 'transparent',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
+    fontFamily: 'var(--glia-font-display)',
     fontSize: '11px',
     letterSpacing: '0.08em',
     textTransform: 'uppercase' as const,
-    color: isFocused ? 'var(--bb-color-accent, #d4a84b)' : 'var(--bb-color-text-muted, #888888)',
+    color: isFocused ? 'var(--glia-color-accent, #d4a84b)' : 'var(--glia-color-text-soft, #888888)',
     cursor: 'pointer',
     position: 'relative' as const,
     border: 'none',
@@ -94,9 +94,9 @@ const createStyles = (isActive: boolean, isFocused: boolean): Record<string, CSS
     transform: 'translateX(-50%)',
     width: isFocused ? '60%' : '0',
     height: '2px',
-    background: 'var(--bb-color-accent, #d4a84b)',
+    background: 'var(--glia-color-accent, #d4a84b)',
     borderRadius: '1px',
-    transition: 'width var(--bb-duration-fast, 100ms) ease',
+    transition: 'width var(--glia-duration-fast, 100ms) ease',
   },
   icon: {
     display: 'inline-flex',
@@ -192,8 +192,8 @@ function TaskbarButtonInner({
       onMouseLeave={handleMouseLeave}
       data-taskbar-button={windowId}
       whileHover={{
-        background: 'var(--bb-color-context-menu-hover, #1a1a1a)',
-        color: 'var(--bb-color-text-secondary, #cccccc)',
+        background: 'var(--glia-glass-hover-bg, #1a1a1a)',
+        color: 'var(--glia-color-text-muted, #cccccc)',
       }}
       transition={{ duration: 0.15 }}
     >

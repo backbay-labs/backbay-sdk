@@ -106,10 +106,10 @@ const styles: Record<string, CSSProperties> = {
     bottom: 0,
     left: 0,
     right: 0,
-    height: 'var(--bb-spacing-taskbar-height, 48px)',
-    background: 'var(--bb-color-taskbar-bg, rgba(17, 17, 17, 0.8))',
-    backdropFilter: 'var(--bb-blur-backdrop, blur(12px))',
-    borderTop: '1px solid var(--bb-color-window-border, #333333)',
+    height: 'var(--glia-spacing-taskbar-height, 48px)',
+    background: 'var(--glia-glass-panel-bg, rgba(17, 17, 17, 0.8))',
+    backdropFilter: 'var(--glia-blur-backdrop, blur(12px))',
+    borderTop: '1px solid var(--glia-color-border, #333333)',
     display: 'flex',
     alignItems: 'center',
     padding: '0 8px',
@@ -122,25 +122,25 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 'var(--bb-radius-button, 2px)',
+    borderRadius: 'var(--glia-radius-sm, 2px)',
     fontSize: '18px',
     background: 'transparent',
     border: 'none',
     cursor: 'pointer',
-    transition: 'all var(--bb-duration-fast, 100ms) ease',
+    transition: 'all var(--glia-duration-fast, 100ms) ease',
   },
   startButtonActive: {
-    color: 'var(--bb-color-accent, #d4a84b)',
-    background: 'var(--bb-color-accent-glow, rgba(212, 168, 75, 0.2))',
+    color: 'var(--glia-color-accent, #d4a84b)',
+    background: 'var(--glia-glass-active-shadow, rgba(212, 168, 75, 0.2))',
   },
   startButtonInactive: {
-    color: 'var(--bb-color-text-muted, #888888)',
+    color: 'var(--glia-color-text-soft, #888888)',
     background: 'transparent',
   },
   divider: {
     width: '1px',
     height: '24px',
-    background: 'var(--bb-color-window-border, #333333)',
+    background: 'var(--glia-color-border, #333333)',
     margin: '0 4px',
   },
   section: {
@@ -209,9 +209,11 @@ function StartButton({
       className={className}
       onClick={onClick}
       title={title}
+      aria-label={title}
+      aria-pressed={active}
       whileHover={{
-        background: 'var(--bb-color-context-menu-hover, #1a1a1a)',
-        color: 'var(--bb-color-accent, #d4a84b)',
+        background: 'var(--glia-glass-hover-bg, #1a1a1a)',
+        color: 'var(--glia-color-accent, #d4a84b)',
       }}
       transition={{ duration: 0.15 }}
     >
@@ -352,6 +354,8 @@ export function Taskbar({
     <div
       style={{ ...styles.container, ...style }}
       className={className}
+      role="toolbar"
+      aria-label="Taskbar"
       data-shell-target="taskbar"
     >
       {children}

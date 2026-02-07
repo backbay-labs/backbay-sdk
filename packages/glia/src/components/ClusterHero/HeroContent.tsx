@@ -18,7 +18,7 @@ const fadeUpVariants = {
 
 const fadeUpTransition = {
   duration: 0.7,
-  ease: [0.22, 1, 0.36, 1], // Custom ease-out curve
+  ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
 };
 
 function ClusterBadge({ delay }: { delay: number }) {

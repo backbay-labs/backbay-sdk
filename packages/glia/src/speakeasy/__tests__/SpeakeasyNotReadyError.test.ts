@@ -2,7 +2,7 @@
  * Tests for SpeakeasyNotReadyError and auth readiness checks
  */
 
-import { describe, it, expect } from 'bun:test';
+import { describe, it, expect } from 'vitest';
 import { SpeakeasyNotReadyError } from '../SpeakeasyProvider.js';
 
 describe('SpeakeasyNotReadyError', () => {
