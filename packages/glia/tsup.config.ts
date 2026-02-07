@@ -40,7 +40,7 @@ export default defineConfig({
     'desktop/themes/index': 'src/desktop/themes/index.ts',
   },
   format: ['esm'],
-  dts: true,
+  dts: false, // DTS via tsc (tsup DTS OOMs with 16 entry points)
   sourcemap: true,
   clean: true,
   splitting: true,
@@ -63,7 +63,12 @@ export default defineConfig({
     '@react-three/fiber',
     '@react-three/drei',
     'shiki',
+    'styled-components',
     // Workspace dependencies
     '@backbay/contract',
+    '@backbay/glia-agent',
+    '@backbay/raymond',
+    '@backbay/glia-three',
+    '@backbay/glia-desktop',
   ],
 });

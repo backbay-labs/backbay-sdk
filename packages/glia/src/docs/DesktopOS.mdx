@@ -1,0 +1,292 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Desktop OS" />
+
+# Desktop OS Shell
+
+Glia includes a full desktop-style operating system shell built on React. It provides
+window management, a taskbar, start menu, system tray, notification center, and
+snap zones -- everything needed to embed a desktop metaphor in the browser.
+
+---
+
+## DesktopOSProvider
+
+The root provider wires together windows, processes, taskbar, and theming:
+
+```tsx
+import { DesktopOSProvider } from "@backbay/glia/desktop";
+import type { ProcessDefinition } from "@backbay/glia/desktop";
+
+const myApps: ProcessDefinition[] = [
+  {
+    id: "notepad",
+    name: "Notepad",
+    icon: <NotepadIcon />,
+    component: NotepadApp,
+    defaultSize: { width: 600, height: 400 },
+  },
+  {
+    id: "terminal",
+    name: "Terminal",
+    icon: <TerminalIcon />,
+    component: TerminalApp,
+    defaultSize: { width: 800, height: 500 },
+    singleton: true, // Only one instance allowed
+  },
+];
+
+function Desktop() {
+  return (
+    <DesktopOSProvider
+      processes={myApps}
+      enableSnapZones
+      enableWindowGroups
+      enableAnimations
+      initialPinnedApps={["notepad", "terminal"]}
+    >
+      <DesktopSurface />
+      <Taskbar />
+    </DesktopOSProvider>
+  );
+}
+```
+
+### Props
+
+| Prop                  | Type                          | Default | Description                          |
+|-----------------------|-------------------------------|---------|--------------------------------------|
+| `processes`           | `ProcessDefinition[]`         | `[]`    | Available applications               |
+| `initialWindows`      | `WindowState[]`               | --      | Pre-opened windows on mount          |
+| `initialPinnedApps`   | `string[]`                    | --      | App IDs pinned to the taskbar        |
+| `theme`               | `PartialDesktopOSTheme`       | --      | Desktop OS theme overrides           |
+| `enableSnapZones`     | `boolean`                     | `true`  | Enable window snap-to-edge           |
+| `enableWindowGroups`  | `boolean`                     | `true`  | Enable window grouping               |
+| `enableAnimations`    | `boolean`                     | `true`  | Enable transition animations         |
+| `onWindowsChange`     | `(windows: WindowState[]) => void` | -- | Callback when windows change         |
+| `onPinnedAppsChange`  | `(ids: string[]) => void`     | --      | Callback when pinned apps change     |
+
+---
+
+## useDesktopOS()
+
+The primary hook for interacting with the desktop shell. Returns four subsystems:
+
+```tsx
+import { useDesktopOS } from "@backbay/glia/desktop";
+
+function MyComponent() {
+  const { windows, processes, taskbar, config } = useDesktopOS();
+
+  // Launch an app
+  const handleOpen = () => {
+    processes.launch("notepad");
+  };
+
+  // Focus a window
+  const handleFocus = (windowId: string) => {
+    windows.focus(windowId);
+  };
+
+  return <button onClick={handleOpen}>Open Notepad</button>;
+}
+```
+
+### windows (UseWindowManagerReturn)
+
+| Method / Property  | Description                                          |
+|--------------------|------------------------------------------------------|
+| `windows`          | Array of all `WindowState` objects                   |
+| `focusedId`        | ID of the currently focused window, or `null`        |
+| `open(opts)`       | Open a new window, returns its ID                    |
+| `close(id)`        | Close a window by ID                                 |
+| `focus(id)`        | Bring a window to front                              |
+| `minimize(id)`     | Minimize a window                                    |
+| `maximize(id)`     | Toggle maximize on a window                          |
+| `restore(id)`      | Restore a minimized/maximized window                 |
+| `move(id, pos)`    | Move a window to `{ x, y }`                         |
+| `resize(id, size)` | Resize a window to `{ width, height }`               |
+| `setTitle(id, t)`  | Update a window's title                              |
+
+### processes
+
+| Method / Property   | Description                                         |
+|---------------------|-----------------------------------------------------|
+| `definitions`       | Array of registered `ProcessDefinition` objects     |
+| `instances`         | Array of running `ProcessInstance` objects           |
+| `launch(id, args?)` | Launch a process, returns instance ID or null       |
+| `terminate(id)`     | Terminate a running process instance                |
+| `getDefinition(id)` | Get a process definition by ID                      |
+| `getInstanceByWindow(windowId)` | Find process instance for a window     |
+
+### taskbar (UseTaskbarReturn)
+
+Manages pinned apps, running indicators, and taskbar interactions.
+
+### config
+
+```tsx
+config.enableSnapZones;    // boolean
+config.enableWindowGroups; // boolean
+config.enableAnimations;   // boolean
+```
+
+---
+
+## Window management
+
+### Opening windows
+
+Windows are created through the process system or directly via the window manager:
+
+```tsx
+// Via process (recommended -- links window to a registered app)
+const instanceId = processes.launch("notepad", { file: "/readme.txt" });
+
+// Via window manager directly (for custom/unregistered windows)
+const windowId = windows.open({
+  title: "Custom Window",
+  size: { width: 500, height: 400 },
+  minSize: { width: 300, height: 200 },
+});
+```
+
+### Snap zones
+
+When `enableSnapZones` is true, dragging a window to a screen edge snaps it to a
+predefined zone (left half, right half, maximize, etc.). The snap zone system uses
+`useSnapZones()` internally.
+
+---
+
+## Shell components
+
+### Taskbar
+
+The bottom bar showing pinned apps, running windows, and the system tray:
+
+```tsx
+import { Taskbar } from "@backbay/glia/desktop";
+
+<Taskbar />
+```
+
+The taskbar reads its state from `useDesktopOS()`. Pinned apps show even when not
+running; running apps show active indicators.
+
+### StartMenu
+
+A searchable application launcher:
+
+```tsx
+import { StartMenu } from "@backbay/glia/desktop";
+
+<StartMenu />
+```
+
+Opens from the taskbar's start button. Lists all registered process definitions,
+supports search filtering, and launches apps on click.
+
+### SystemTray
+
+The right side of the taskbar showing system indicators (clock, battery, network):
+
+```tsx
+import { SystemTray } from "@backbay/glia/desktop";
+
+<SystemTray />
+```
+
+### NotificationCenter
+
+Toast-style notification system:
+
+```tsx
+import { NotificationCenter } from "@backbay/glia/desktop";
+import { useNotificationStore } from "@backbay/glia/desktop";
+
+// In your app
+<NotificationCenter />
+
+// Push a notification from anywhere
+const { addNotification } = useNotificationStore();
+addNotification({
+  title: "Build Complete",
+  body: "All checks passed.",
+  variant: "success",
+});
+```
+
+### FileBrowser
+
+A file-tree browser component for navigating hierarchical data:
+
+```tsx
+import { FileBrowser } from "@backbay/glia/desktop";
+```
+
+---
+
+## Desktop theme
+
+The desktop shell accepts a `PartialDesktopOSTheme` for overrides:
+
+```tsx
+<DesktopOSProvider
+  processes={apps}
+  theme={{
+    colors: {
+      accent: "#ff6b6b",
+      windowBg: "rgba(20, 20, 30, 0.85)",
+    },
+  }}
+>
+```
+
+For full consistency with the primitives theme, use the theme bridge:
+
+```tsx
+import { desktopThemeFromUiTheme, nebulaTheme } from "@backbay/glia/theme";
+
+const desktopTheme = desktopThemeFromUiTheme(nebulaTheme);
+
+<DesktopOSProvider processes={apps} theme={desktopTheme}>
+```
+
+---
+
+## Provider nesting order
+
+When using both the theme system and desktop OS:
+
+```tsx
+<GliaThemeProvider themeId="nebula">
+  <BBProvider config={config}>
+    <DesktopOSProvider processes={apps}>
+      <SpeakeasyProvider domain="example.com">
+        <App />
+      </SpeakeasyProvider>
+    </DesktopOSProvider>
+  </BBProvider>
+</GliaThemeProvider>
+```
+
+Or use `GliaProviders` which handles this nesting automatically.
+
+---
+
+## Detecting desktop context
+
+Components that work both standalone and inside the desktop shell can check:
+
+```tsx
+import { useIsInDesktopOS } from "@backbay/glia/desktop";
+
+function MyWidget() {
+  const isInDesktop = useIsInDesktopOS();
+
+  if (isInDesktop) {
+    // Adapt layout for windowed context
+  }
+}
+```

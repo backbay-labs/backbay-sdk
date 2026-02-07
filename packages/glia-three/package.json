@@ -1,0 +1,40 @@
+{
+  "name": "@backbay/glia-three",
+  "version": "0.2.0-alpha.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./three": { "types": "./dist/three/index.d.ts", "import": "./dist/three/index.js" },
+    "./environment": { "types": "./dist/environment/index.d.ts", "import": "./dist/environment/index.js" }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@backbay/contract": "0.1.0-alpha.1",
+    "@backbay/glia-agent": "workspace:*",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.0"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19",
+    "three": ">=0.150",
+    "@react-three/fiber": "^9",
+    "@react-three/drei": "^10"
+  },
+  "optionalDependencies": {
+    "framer-motion": "^12",
+    "styled-components": "^6"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "styled-components": "^6.3.8",
+    "tsup": "^8.5.1",
+    "@types/three": "^0.170.0",
+    "@types/react": "^19.0.0"
+  }
+}

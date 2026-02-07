@@ -1,0 +1,338 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Speakeasy Auth" />
+
+# Speakeasy Authentication
+
+Speakeasy is a gesture-based authentication system that gates entry into privileged
+UI modes. It uses a "knock-challenge-verify-admit" flow inspired by the concept of
+a speakeasy door: you knock, prove you know the secret gesture, and are admitted.
+
+---
+
+## Concepts
+
+### The Doorman
+
+The **DoormanStateMachine** is a Zustand-backed finite state machine that manages
+the authentication lifecycle. It does not handle cryptography directly -- it
+orchestrates state transitions and enforces timing constraints.
+
+### States
+
+```
+IDLE -----> CHALLENGED -----> VERIFYING -----> ADMITTED
+  ^            |                  |                |
+  |            v                  v                v
+  +------- (timeout)         COOLDOWN          (timeout)
+  |                              |
+  |                              v
+  +------------------------- LOCKED
+                                |
+                                v
+                              IDLE
+```
+
+| State        | Description                                           |
+|--------------|-------------------------------------------------------|
+| `IDLE`       | No authentication in progress                         |
+| `CHALLENGED` | Knock detected; waiting for gesture within time limit |
+| `VERIFYING`  | Gesture submitted; crypto verification in progress    |
+| `ADMITTED`   | Authenticated; capability token issued                |
+| `DECOY`      | Panic gesture detected; showing decoy UI              |
+| `COOLDOWN`   | Failed attempt; exponential backoff before retry      |
+| `LOCKED`     | Max failures reached; locked out for a duration       |
+
+### Gesture types
+
+Speakeasy supports four gesture primitives that can be combined into sequences:
+
+| Type          | Parameters                                     |
+|---------------|------------------------------------------------|
+| `tap`         | `count` (multi-tap), `region` (center/edge)    |
+| `hold`        | `durationMs`, `region`                         |
+| `radial_drag` | `fromAngle`, `toAngle`, `notches`              |
+| `flick`       | `direction` (up/down/left/right), `velocity`   |
+
+A `GestureSequence` is an ordered list of these steps, plus a `rhythmHash` (SHA-256
+of timing intervals) for anti-replay protection.
+
+---
+
+## Setup
+
+### SpeakeasyProvider
+
+Wrap the area of your app that needs gesture authentication:
+
+```tsx
+import { SpeakeasyProvider } from "@backbay/glia/speakeasy";
+
+<SpeakeasyProvider
+  domain="myapp.example.com"
+  issuer="myapp:speakeasy"
+  scopes={["speakeasy.*", "admin.panel"]}
+  onAdmitted={(capability) => {
+    console.log("Admitted with token:", capability.tokenId);
+  }}
+  onExit={() => {
+    console.log("Exited speakeasy mode");
+  }}
+>
+  <ProtectedArea />
+</SpeakeasyProvider>
+```
+
+### Props
+
+| Prop                   | Type                                  | Default               | Description                                |
+|------------------------|---------------------------------------|-----------------------|--------------------------------------------|
+| `domain`               | `string`                              | `location.origin`     | Domain binding for anti-phishing           |
+| `doormanConfig`        | `Partial<DoormanConfig>`              | defaults (see below)  | Override timing and threshold values       |
+| `storage`              | `SpeakeasyStorage`                    | localStorage adapter  | Backend for verifier persistence           |
+| `deviceSecret`         | `string \| Uint8Array`                | auto-generated        | Device-bound secret for key derivation     |
+| `deviceSecretProvider` | `SpeakeasyDeviceSecretProvider`       | default provider      | Async provider for device secret           |
+| `issuer`               | `string`                              | `"bb-ui:speakeasy"`   | Capability token issuer identity           |
+| `scopes`               | `string[]`                            | `["speakeasy.*"]`     | Scopes granted on admission                |
+| `onAdmitted`           | `(cap: CapabilityToken) => void`      | --                    | Called after successful admission           |
+| `onExit`               | `() => void`                          | --                    | Called when exiting speakeasy mode         |
+
+### Doorman configuration defaults
+
+```tsx
+const DEFAULT_DOORMAN_CONFIG = {
+  challengeWindowMs: 30_000,       // 30s to complete gesture after knock
+  admissionTtlMs: 300_000,         // 5 min session duration
+  decoyTtlMs: 60_000,              // 1 min decoy session
+  maxConsecutiveFailures: 3,       // Lock out after 3 failures
+  cooldownBaseMs: 1_000,           // 1s base for exponential backoff
+  lockDurationMs: 300_000,         // 5 min lockout
+  panicGestureEnabled: true,       // Enable decoy mode trigger
+  panicAction: "lock",             // "lock" or "decoy" on panic gesture
+  panicLockMultiplier: 2,          // 2x lockDurationMs on panic
+};
+```
+
+---
+
+## Authentication flow
+
+### 1. Registration
+
+A user registers a gesture secret once. The gesture is never stored directly --
+instead, a derived verifier key is persisted:
+
+```
+gesture + domain + salt + deviceSecret
+  -> canonicalize
+  -> SHA-256
+  -> Verifier { hash, salt, domain, createdAt, version }
+```
+
+```tsx
+const { register } = useSpeakeasyPrivate();
+
+await register({
+  steps: [
+    { type: "tap", count: 3, region: "center" },
+    { type: "hold", durationMs: 1500, region: "edge" },
+    { type: "flick", direction: "up", velocity: 1.2 },
+  ],
+  totalDurationMs: 3200,
+  rhythmHash: "...",
+  timestamp: Date.now(),
+});
+```
+
+### 2. Knock
+
+The user triggers entry (e.g., clicking the Speakeasy orb). This transitions the
+doorman from IDLE to CHALLENGED and generates a cryptographic challenge:
+
+```tsx
+const { knock } = useSpeakeasyPublic();
+knock();
+```
+
+The challenge contains:
+- `nonce`: 32-byte random hex
+- `salt`: 16-byte random hex
+- `issuedAt` / `expiresAt`: timing window
+
+### 3. Challenge
+
+The UI presents the gesture input surface (SpeakeasyRitualPad). The user has
+`challengeWindowMs` (default 30s) to complete their gesture. If time expires,
+the doorman returns to IDLE.
+
+### 4. Verification
+
+The submitted gesture is verified against the stored verifier:
+
+```
+gesture + domain + verifierSalt + deviceSecret -> SHA-256 -> keyBytes
+challenge + rhythmHash -> HMAC-SHA256(keyBytes) -> response
+compare response against expected (timing-safe equality)
+```
+
+```tsx
+const { submitGesture } = useSpeakeasyPrivate();
+await submitGesture(gestureSequence);
+```
+
+### 5. Admission
+
+On success, a **CapabilityToken** is issued:
+
+```tsx
+interface CapabilityToken {
+  tokenId: string;       // Unique ID for revocation
+  issuer: string;        // "bb-ui:speakeasy"
+  scopes: string[];      // ["speakeasy.*"]
+  notBefore: number;     // Valid from
+  expiresAt: number;     // Valid until
+  signature: string;     // Ed25519 signature
+  constraints?: {
+    maxUses?: number;
+    allowedOrigins?: string[];
+  };
+}
+```
+
+The doorman transitions to ADMITTED and the session timer starts.
+
+---
+
+## Hooks
+
+### useSpeakeasyPublic()
+
+Safe for all components. Read-only state and non-sensitive actions:
+
+```tsx
+const {
+  state,           // DoormanState
+  isReady,         // Provider fully initialized
+  isAdmitted,      // In speakeasy mode
+  isDecoy,         // In panic/decoy mode
+  knock,           // Initiate authentication
+  exit,            // Leave speakeasy mode
+  timeRemaining,   // ms until state expires
+} = useSpeakeasyPublic();
+```
+
+### useSpeakeasyPrivate()
+
+For trusted components only. Access to capability tokens and registration:
+
+```tsx
+const {
+  capability,        // CapabilityToken | null
+  isRegistered,      // Has a stored gesture verifier
+  register,          // Register a new gesture
+  clearRegistration, // Wipe the stored verifier
+  submitGesture,     // Submit gesture for verification
+} = useSpeakeasyPrivate();
+```
+
+This split prevents untrusted components from accessing sensitive token data.
+
+---
+
+## Security model
+
+### Key derivation
+
+Verifier keys are derived using SHA-256 over a structured input:
+
+```
+bb-ui:speakeasy:verifier:v1|domain:{domain}|salt:{salt}|{canonicalizedGesture}{deviceSecret}
+```
+
+This binds the verifier to:
+- The specific domain (anti-phishing)
+- A random salt (prevents rainbow tables)
+- A device secret (ties to this device)
+
+### Challenge-response
+
+The challenge-response uses HMAC-SHA256:
+
+```
+message = bb-ui:speakeasy:v1|nonce:{nonce}|salt:{salt}|rhythm:{rhythmHash}
+response = HMAC-SHA256(verifierKey, message)
+```
+
+Verification uses **timing-safe comparison** to prevent timing attacks.
+
+### Anti-replay
+
+- Each challenge includes a unique nonce and salt
+- The `rhythmHash` captures timing intervals of the gesture
+- Challenges have a strict expiration window
+
+### Panic gesture
+
+A special gesture pattern triggers panic mode:
+- **Decoy mode**: Shows fake/benign UI while appearing authenticated
+- **Lock mode**: Immediately locks with extended duration
+
+---
+
+## Components
+
+### SpeakeasyOrb
+
+A glowing orb that reflects the current doorman state. Its color, pulse speed,
+and glow intensity change across states:
+
+```tsx
+import { SpeakeasyOrb } from "@backbay/glia/speakeasy";
+
+<SpeakeasyOrb size={64} onClick={() => knock()} />
+```
+
+### SpeakeasyRitualPad
+
+The gesture input surface where users perform their secret gesture:
+
+```tsx
+import { SpeakeasyRitualPad } from "@backbay/glia/speakeasy";
+```
+
+### SpeakeasyRegistrationDialog
+
+A guided dialog for registering a new gesture:
+
+```tsx
+import { SpeakeasyRegistrationDialog } from "@backbay/glia/speakeasy";
+```
+
+### SpeakeasyConsentDialog
+
+Consent dialog shown before registration:
+
+```tsx
+import { SpeakeasyConsentDialog } from "@backbay/glia/speakeasy";
+```
+
+---
+
+## Error handling
+
+The `SpeakeasyProvider` wraps its children in a `GliaErrorBoundary` that:
+1. Catches any rendering errors in the speakeasy subtree
+2. Resets the DoormanStateMachine to IDLE
+3. Logs the error message (without key material)
+
+Operations that require a resolved device secret throw `SpeakeasyNotReadyError`
+if called before initialization completes. Check `isReady` before enabling
+user interactions:
+
+```tsx
+const { isReady, knock } = useSpeakeasyPublic();
+
+<button disabled={!isReady} onClick={knock}>
+  Enter Speakeasy
+</button>
+```
