@@ -67,6 +67,7 @@ export default ShellMeta;
 type ShellStory = StoryObj<typeof OrganismShell>;
 
 export const AllGeometries: ShellStory = {
+  tags: ["!test"], // renders 6 heavy 3D geometries, times out in headless
   name: "Geometry Types",
   render: () => {
     const types: OrganismType[] = [

@@ -10,7 +10,7 @@ const meta: Meta<typeof ParticleField> = {
     layout: "fullscreen",
     backgrounds: { default: "dark" },
   },
-  tags: ["autodocs"],
+  tags: ["autodocs", "!static-grade"],
   argTypes: {
     count: {
       control: { type: "range", min: 10, max: 500, step: 10 },

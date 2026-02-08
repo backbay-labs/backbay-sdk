@@ -18,3 +18,4 @@ export * from "./GlassAccordion";
 export * from "./StreamingText";
 export * from "./CodeBlock";
 export * from "./GliaErrorBoundary";
+export * from "./HUDLoader";

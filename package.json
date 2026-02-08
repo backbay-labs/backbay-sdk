@@ -26,9 +26,11 @@
     "prepare": "husky || true"
   },
   "devDependencies": {
+    "@backbay/glia": "workspace:*",
     "@changesets/changelog-github": "^0.5.2",
     "@changesets/cli": "^2.29.8",
     "@eslint/js": "^9.39.2",
+    "@storybook/addon-docs": "10.2.0",
     "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
@@ -55,6 +57,7 @@
     ]
   },
   "resolutions": {
-    "esbuild": "0.27.2"
+    "esbuild": "0.27.2",
+    "resolve": "^1.22.8"
   }
 }

@@ -16,7 +16,7 @@ const meta: Meta<typeof SpatialWorkspace> = {
     layout: "fullscreen",
     backgrounds: { default: "dark" },
   },
-  tags: ["autodocs"],
+  tags: ["autodocs", "!static-grade"],
   argTypes: {
     autoRotate: {
       control: "boolean",

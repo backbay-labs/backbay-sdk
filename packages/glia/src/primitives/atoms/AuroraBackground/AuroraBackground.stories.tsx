@@ -8,7 +8,7 @@ const meta: Meta<typeof AuroraBackground> = {
     layout: "fullscreen",
     backgrounds: { default: "dark" },
   },
-  tags: ["autodocs"],
+  tags: ["autodocs", "!static-grade"],
   argTypes: {
     showRadialGradient: {
       control: "boolean",

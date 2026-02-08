@@ -1,57 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import React, { createContext, useContext, type ReactNode } from 'react';
+import React from 'react';
 
-import type {
-  DoormanState,
-  SpeakeasyContextValue,
-  GestureSequence,
-} from '../types';
+import { SpeakeasyProvider } from '../SpeakeasyProvider';
 import { SpeakeasyOrb } from './SpeakeasyOrb';
-
-/**
- * Mock SpeakeasyProvider that injects controlled context values
- * without requiring actual crypto, storage, or Zustand state.
- */
-
-// Re-create the context locally for mocking (the real one is not exported)
-const MockSpeakeasyContext = createContext<SpeakeasyContextValue | null>(null);
-
-function MockSpeakeasyProvider({
-  children,
-  state = 'IDLE',
-  isAdmitted = false,
-  timeRemaining = null,
-}: {
-  children: ReactNode;
-  state?: DoormanState;
-  isAdmitted?: boolean;
-  timeRemaining?: number | null;
-}) {
-  const value: SpeakeasyContextValue = {
-    state,
-    isReady: true,
-    isAdmitted,
-    isDecoy: state === 'DECOY',
-    knock: () => {},
-    exit: () => {},
-    timeRemaining,
-    capability: null,
-    isRegistered: true,
-    register: async () => {},
-    clearRegistration: async () => {},
-    submitGesture: async () => {},
-  };
-
-  return (
-    <MockSpeakeasyContext.Provider value={value}>
-      {children}
-    </MockSpeakeasyContext.Provider>
-  );
-}
-
-// We cannot easily inject our mock into the real useSpeakeasy hook,
-// so we render the Orb with mocked visual props directly and demonstrate
-// the visual states through the orb's CSS-driven appearance.
 
 const meta: Meta<typeof SpeakeasyOrb> = {
   title: 'Speakeasy/SpeakeasyOrb',
@@ -63,21 +14,17 @@ const meta: Meta<typeof SpeakeasyOrb> = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div style={{ padding: 80, display: 'grid', placeItems: 'center' }}>
-        <Story />
-      </div>
+      <SpeakeasyProvider domain="storybook.local" deviceSecret="storybook-secret">
+        <div style={{ padding: 80, display: 'grid', placeItems: 'center' }}>
+          <Story />
+        </div>
+      </SpeakeasyProvider>
     ),
   ],
 };
 
 export default meta;
 type Story = StoryObj<typeof SpeakeasyOrb>;
-
-/**
- * The stories below demonstrate the SpeakeasyOrb with different
- * visual configurations to simulate each doorman state.
- * In production, the orb reads state from useSpeakeasy().
- */
 
 export const Idle: Story = {
   args: {

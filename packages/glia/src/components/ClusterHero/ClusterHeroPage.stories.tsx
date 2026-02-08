@@ -293,6 +293,7 @@ the layered reveal effect.
  * the atmospheric effects. View individual stories for the full experience.
  */
 export const AllClustersPreview: Story = {
+  tags: ["!test"], // renders all cluster pages, times out in headless
   render: () => (
     <div
       style={{

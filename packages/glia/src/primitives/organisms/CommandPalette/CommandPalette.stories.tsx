@@ -262,6 +262,42 @@ export const WithFooter: Story = {
   ),
 };
 
+export const Open: Story = {
+  render: () => {
+    const [open, setOpen] = useState(true);
+
+    return (
+      <div className="min-h-[500px] flex flex-col items-center justify-center gap-4 p-8">
+        <CommandPalette
+          open={open}
+          onOpenChange={setOpen}
+          items={defaultCommands}
+          placeholder="Search commands..."
+          footer={
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="flex items-center gap-4">
+                <span>
+                  <kbd className="px-1 py-0.5 bg-muted rounded">↑↓</kbd> Navigate
+                </span>
+                <span>
+                  <kbd className="px-1 py-0.5 bg-muted rounded">↵</kbd> Select
+                </span>
+                <span>
+                  <kbd className="px-1 py-0.5 bg-muted rounded">Esc</kbd> Close
+                </span>
+              </div>
+              <span>{defaultCommands.length} commands</span>
+            </div>
+          }
+        />
+        {!open && (
+          <GlowButton onClick={() => setOpen(true)}>Reopen Command Palette</GlowButton>
+        )}
+      </div>
+    );
+  },
+};
+
 export const NoAnimations: Story = {
   render: () => <CommandPaletteDemo disableAnimations />,
 };

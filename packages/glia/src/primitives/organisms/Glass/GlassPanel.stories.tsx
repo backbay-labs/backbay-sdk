@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { GlassPanel, GlassHeader, GlassCard, GlassSection } from "./GlassPanel";
-import { Settings, Bell, User, ChevronRight, Zap, Shield, Sparkles } from "lucide-react";
+import { Settings, Bell, User, ChevronRight, Zap, Shield, Sparkles, TrendingUp, Activity, Cpu, Wifi } from "lucide-react";
 import { GlowButton } from "../../atoms/GlowButton/GlowButton";
 import { UiThemeProvider } from "../../../theme";
 import { GLASS_MATERIALS, type GlassMaterialId } from "../../../theme/materials";
@@ -65,19 +65,252 @@ const meta: Meta<typeof GlassPanel> = {
 export default meta;
 type Story = StoryObj<typeof GlassPanel>;
 
+// ============================================================================
+// DEFAULT — Dashboard status card with rich content
+// ============================================================================
+
 export const Default: Story = {
-  args: {
-    children: (
-      <div className="p-6">
-        <h3 className="text-lg font-semibold mb-2">Glass Panel</h3>
-        <p className="text-muted-foreground text-sm">
-          A beautiful glassmorphism panel with backdrop blur and subtle borders.
-        </p>
-      </div>
-    ),
-    className: "w-80",
-  },
+  render: () => (
+    <WithTheme>
+      <GlassPanel
+        material="frosted"
+        showNoise
+        showHoverGlow
+        className="w-80"
+      >
+        <div style={{ padding: 24 }}>
+          <div
+            style={{
+              fontFamily: "monospace",
+              fontSize: 10,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#64748B",
+              marginBottom: 12,
+            }}
+          >
+            System Status
+          </div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 8 }}>
+            <span style={{ fontSize: 36, fontWeight: 700, color: "#E5E7EB", lineHeight: 1 }}>
+              98.7%
+            </span>
+            <span
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#10B981",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+              }}
+            >
+              <TrendingUp style={{ width: 14, height: 14 }} />
+              +2.3%
+            </span>
+          </div>
+          <p style={{ fontSize: 13, color: "#94A3B8", lineHeight: 1.5, margin: 0 }}>
+            All systems nominal. Uptime has increased over the last 24-hour window
+            with zero critical incidents reported.
+          </p>
+        </div>
+      </GlassPanel>
+    </WithTheme>
+  ),
 };
+
+// ============================================================================
+// ALL MATERIALS — Side-by-side comparison
+// ============================================================================
+
+export const AllMaterials: Story = {
+  render: () => (
+    <WithTheme>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, maxWidth: 900 }}>
+        {(Object.keys(GLASS_MATERIALS) as GlassMaterialId[]).map((id) => {
+          const mat = GLASS_MATERIALS[id];
+          return (
+            <GlassPanel key={id} material={id} className="p-5" style={{ minHeight: 140 }}>
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 10,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "#64748B",
+                  marginBottom: 8,
+                }}
+              >
+                {id}
+              </div>
+              <h4 style={{ fontWeight: 600, marginBottom: 4, color: "#E5E7EB", fontSize: 15 }}>{mat.name}</h4>
+              <p style={{ fontSize: 12, color: "#94A3B8", lineHeight: 1.5 }}>
+                {mat.backdropFilter} / saturate {mat.saturate}% / brightness {mat.brightness}%
+              </p>
+              <p style={{ fontSize: 11, color: "#64748B", marginTop: 8 }}>
+                noise: {mat.showNoise ? `${mat.noisePreset} @ ${mat.noiseOpacity}` : "off"}
+              </p>
+            </GlassPanel>
+          );
+        })}
+      </div>
+    </WithTheme>
+  ),
+};
+
+// ============================================================================
+// INTERACTIVE — Grid of GlassCards with hover effects
+// ============================================================================
+
+const interactiveCards = [
+  { icon: <Activity style={{ width: 20, height: 20, color: "#22D3EE" }} />, label: "Network", value: "1.2 Gbps", accent: "#22D3EE" },
+  { icon: <Cpu style={{ width: 20, height: 20, color: "#F43F5E" }} />, label: "Compute", value: "68%", accent: "#F43F5E" },
+  { icon: <Shield style={{ width: 20, height: 20, color: "#10B981" }} />, label: "Security", value: "Nominal", accent: "#10B981" },
+  { icon: <Wifi style={{ width: 20, height: 20, color: "#8B5CF6" }} />, label: "Uplink", value: "Active", accent: "#8B5CF6" },
+];
+
+export const Interactive: Story = {
+  render: () => (
+    <WithTheme>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, maxWidth: 480 }}>
+        {interactiveCards.map((card) => (
+          <GlassCard key={card.label} interactive>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, padding: 4 }}>
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: `${card.accent}15`,
+                }}
+              >
+                {card.icon}
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontFamily: "monospace",
+                    fontSize: 10,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: "#64748B",
+                  }}
+                >
+                  {card.label}
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: "#E5E7EB" }}>
+                  {card.value}
+                </div>
+              </div>
+            </div>
+          </GlassCard>
+        ))}
+      </div>
+    </WithTheme>
+  ),
+};
+
+// ============================================================================
+// NESTED GLASS — Glass-in-glass layering
+// ============================================================================
+
+export const NestedGlass: Story = {
+  render: () => (
+    <WithTheme>
+      <GlassPanel material="frosted" showNoise className="p-6" style={{ width: 480 }}>
+        <div
+          style={{
+            fontFamily: "monospace",
+            fontSize: 10,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "#64748B",
+            marginBottom: 16,
+          }}
+        >
+          Cluster Overview
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+          <GlassCard interactive>
+            <div style={{ textAlign: "center", padding: 8 }}>
+              <div style={{ fontSize: 24, fontWeight: 700, color: "#22D3EE" }}>47</div>
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 9,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "#64748B",
+                  marginTop: 4,
+                }}
+              >
+                Active Nodes
+              </div>
+            </div>
+          </GlassCard>
+          <GlassCard interactive>
+            <div style={{ textAlign: "center", padding: 8 }}>
+              <div style={{ fontSize: 24, fontWeight: 700, color: "#F43F5E" }}>12</div>
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 9,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "#64748B",
+                  marginTop: 4,
+                }}
+              >
+                Pending Jobs
+              </div>
+            </div>
+          </GlassCard>
+          <GlassCard interactive>
+            <div style={{ textAlign: "center", padding: 8 }}>
+              <div style={{ fontSize: 24, fontWeight: 700, color: "#10B981" }}>99.2%</div>
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 9,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "#64748B",
+                  marginTop: 4,
+                }}
+              >
+                SLA Uptime
+              </div>
+            </div>
+          </GlassCard>
+          <GlassCard interactive>
+            <div style={{ textAlign: "center", padding: 8 }}>
+              <div style={{ fontSize: 24, fontWeight: 700, color: "#8B5CF6" }}>3.2s</div>
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 9,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "#64748B",
+                  marginTop: 4,
+                }}
+              >
+                Avg Latency
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+      </GlassPanel>
+    </WithTheme>
+  ),
+};
+
+// ============================================================================
+// EXISTING STORIES (kept)
+// ============================================================================
 
 export const AllVariants: Story = {
   render: () => (
@@ -123,22 +356,6 @@ export const Elevations: Story = {
       </GlassPanel>
     </div>
   ),
-};
-
-export const Interactive: Story = {
-  args: {
-    interactive: true,
-    showHoverGlow: true,
-    children: (
-      <div className="p-6">
-        <h3 className="text-lg font-semibold mb-2">Interactive Panel</h3>
-        <p className="text-muted-foreground text-sm">
-          Hover over this panel to see the glow effect and border highlight.
-        </p>
-      </div>
-    ),
-    className: "w-80",
-  },
 };
 
 export const ActiveState: Story = {

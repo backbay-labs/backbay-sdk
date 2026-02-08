@@ -1,21 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 
-import type {
-  DoormanState,
-  SpeakeasyContextValue,
-  GestureSequence,
-  CapabilityToken,
-} from '../types';
+import { SpeakeasyProvider } from '../SpeakeasyProvider';
 import { SpeakeasyRegistrationDialog } from './SpeakeasyRegistrationDialog';
-
-/**
- * The RegistrationDialog depends on useSpeakeasy() and Radix Dialog.
- * These stories render it with controlled open/close state.
- *
- * Note: Full gesture interaction requires a running SpeakeasyProvider
- * with real crypto. These stories demonstrate the UI shell and visual states.
- */
 
 const meta: Meta<typeof SpeakeasyRegistrationDialog> = {
   title: 'Speakeasy/SpeakeasyRegistrationDialog',
@@ -25,6 +12,13 @@ const meta: Meta<typeof SpeakeasyRegistrationDialog> = {
     backgrounds: { default: 'dark' },
   },
   tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <SpeakeasyProvider domain="storybook.local" deviceSecret="storybook-secret">
+        <Story />
+      </SpeakeasyProvider>
+    ),
+  ],
 };
 
 export default meta;

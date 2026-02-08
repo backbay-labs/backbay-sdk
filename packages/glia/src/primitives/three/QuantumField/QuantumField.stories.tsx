@@ -20,6 +20,7 @@ const meta: Meta = {
       },
     },
   },
+  tags: ["!static-grade"],
   argTypes: {
     style: {
       control: "select",

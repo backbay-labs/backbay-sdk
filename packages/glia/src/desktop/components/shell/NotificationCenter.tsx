@@ -72,13 +72,14 @@ const styles: Record<string, CSSProperties> = {
     top: 0,
     width: '380px',
     maxWidth: '100vw',
-    background: 'var(--glia-color-bg-elevated, rgba(17, 17, 17, 0.95))',
-    backdropFilter: 'var(--glia-blur-backdrop, blur(12px))',
-    borderLeft: '1px solid var(--glia-color-border, #333333)',
+    background: 'var(--glia-color-bg-elevated, rgba(10, 10, 10, 0.85))',
+    backdropFilter: 'blur(24px)',
+    WebkitBackdropFilter: 'blur(24px)',
+    borderLeft: '1px solid rgba(255, 255, 255, 0.06)',
     display: 'flex',
     flexDirection: 'column',
     zIndex: 9999,
-    boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.4)',
+    boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.4), inset 1px 0 0 rgba(255, 255, 255, 0.02)',
   },
   header: {
     display: 'flex',
@@ -161,7 +162,7 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     gap: '10px',
     padding: '12px 16px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
     cursor: 'default',
     transition: 'background 0.1s ease',
     position: 'relative' as const,
@@ -337,7 +338,7 @@ function NotificationItem({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20, height: 0, padding: 0 }}
       transition={{ duration: 0.15 }}
-      whileHover={{ background: 'rgba(255, 255, 255, 0.03)' }}
+      whileHover={{ background: 'rgba(255, 255, 255, 0.04)', boxShadow: '0 0 20px rgba(34, 211, 238, 0.04)' }}
     >
       {/* Unread indicator */}
       {!notification.read && <div style={styles.unreadIndicator} />}
@@ -467,9 +468,11 @@ export function NotificationCenter({
                     onClick={markAllRead}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.color = 'var(--glia-color-text-primary, #ffffff)';
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.color = 'var(--glia-color-text-soft, #888888)';
+                      e.currentTarget.style.background = 'transparent';
                     }}
                   >
                     Mark All Read

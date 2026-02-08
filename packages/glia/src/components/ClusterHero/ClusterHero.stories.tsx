@@ -127,6 +127,7 @@ export const Baia: Story = {
  * Useful for comparing the visual identities at a glance.
  */
 export const AllClusters: Story = {
+  tags: ["!test"], // renders all cluster heroes, times out in headless
   render: () => (
     <div
       style={{

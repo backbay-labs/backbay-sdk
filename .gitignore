@@ -78,6 +78,7 @@ build/
 .next/
 .turbo/
 storybook-static/
+.visual-review/
 
 # Cache
 .cache/

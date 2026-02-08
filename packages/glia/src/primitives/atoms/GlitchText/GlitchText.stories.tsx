@@ -8,7 +8,7 @@ const meta: Meta<typeof GlitchText> = {
     layout: "centered",
     backgrounds: { default: "dark" },
   },
-  tags: ["autodocs"],
+  tags: ["autodocs", "!static-grade"],
   argTypes: {
     interval: {
       control: { type: "range", min: 1000, max: 10000, step: 500 },

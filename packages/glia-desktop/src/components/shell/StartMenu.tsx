@@ -73,12 +73,13 @@ const styles: Record<string, CSSProperties> = {
     maxHeight: '480px',
     display: 'flex',
     flexDirection: 'column',
-    background: 'var(--glia-color-bg-elevated, #111111)',
-    border: '1px solid var(--glia-color-border, #333333)',
-    backdropFilter: 'var(--glia-blur-backdrop, blur(12px))',
+    background: 'var(--glia-color-bg-elevated, rgba(10, 10, 10, 0.85))',
+    border: '1px solid rgba(255, 255, 255, 0.06)',
+    backdropFilter: 'blur(24px)',
+    WebkitBackdropFilter: 'blur(24px)',
     borderRadius: 'var(--glia-radius-md, 3px)',
     boxShadow:
-      '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 1px rgba(212, 168, 75, 0.15)',
+      '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 1px rgba(212, 168, 75, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.02)',
     zIndex: 8999,
     overflow: 'hidden',
   },
@@ -89,15 +90,15 @@ const styles: Record<string, CSSProperties> = {
   searchInput: {
     width: '100%',
     padding: '8px 12px',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid var(--glia-color-border, #333333)',
+    background: 'rgba(255, 255, 255, 0.04)',
+    border: '1px solid rgba(255, 255, 255, 0.06)',
     borderRadius: 'var(--glia-radius-sm, 2px)',
     color: 'var(--glia-color-text-primary, #ffffff)',
     fontFamily: 'var(--glia-font-mono)',
     fontSize: '11px',
     letterSpacing: '0.1em',
     outline: 'none',
-    transition: 'border-color 0.15s ease',
+    transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
   },
   sectionLabel: {
     fontFamily: 'var(--glia-font-mono)',
@@ -132,8 +133,9 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'rgba(255, 255, 255, 0.04)',
+    background: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 'var(--glia-radius-sm, 2px)',
+    border: '1px solid rgba(255, 255, 255, 0.04)',
     color: 'var(--glia-color-text-muted, #cccccc)',
   },
   pinnedItemLabel: {
@@ -426,12 +428,14 @@ export function StartMenu({
                   setHighlightedIndex(-1);
                 }}
                 onFocus={(e) => {
-                  (e.target as HTMLInputElement).style.borderColor =
-                    'var(--glia-color-accent, #d4a84b)';
+                  const el = e.target as HTMLInputElement;
+                  el.style.borderColor = 'var(--glia-color-accent, #d4a84b)';
+                  el.style.boxShadow = '0 0 12px rgba(212, 168, 75, 0.15)';
                 }}
                 onBlur={(e) => {
-                  (e.target as HTMLInputElement).style.borderColor =
-                    'var(--glia-color-border, #333333)';
+                  const el = e.target as HTMLInputElement;
+                  el.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                  el.style.boxShadow = 'none';
                 }}
               />
             </div>

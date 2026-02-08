@@ -47,12 +47,12 @@ const cellVariants = cva("", {
   },
 });
 
-const headerCellVariants = cva("font-medium", {
+const headerCellVariants = cva("font-medium font-mono", {
   variants: {
     variant: {
-      compact: "px-2 py-1.5 text-[10px] uppercase tracking-wider",
-      default: "px-3 py-2.5 text-xs uppercase tracking-wider",
-      comfortable: "px-4 py-3.5 text-xs uppercase tracking-wider",
+      compact: "px-2 py-1.5 text-[10px] uppercase tracking-[0.12em]",
+      default: "px-3 py-2.5 text-xs uppercase tracking-[0.12em]",
+      comfortable: "px-4 py-3.5 text-xs uppercase tracking-[0.12em]",
     },
   },
   defaultVariants: {
