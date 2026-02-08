@@ -25,9 +25,9 @@ interface ActionButtonProps {
 
 function ActionButton({ action, onClick, index, layout, total }: ActionButtonProps) {
   const categoryColors = {
-    primary: "bg-indigo-500/30 border-indigo-500/50 text-indigo-200 hover:bg-indigo-500/40",
-    secondary: "bg-white/10 border-white/20 text-white/80 hover:bg-white/20",
-    danger: "bg-red-500/30 border-red-500/50 text-red-200 hover:bg-red-500/40",
+    primary: "bg-cyan-500/10 border-cyan-500/[0.15] text-cyan-200 hover:bg-cyan-500/20 hover:shadow-[0_0_12px_rgba(34,211,238,0.2)]",
+    secondary: "bg-white/[0.05] border-white/[0.06] text-white/80 hover:bg-white/[0.1] hover:shadow-[0_0_10px_rgba(255,255,255,0.05)]",
+    danger: "bg-rose-500/10 border-rose-500/[0.15] text-rose-200 hover:bg-rose-500/20 hover:shadow-[0_0_12px_rgba(244,63,94,0.2)]",
   };
 
   const colorClass = categoryColors[action.category || "secondary"];
@@ -51,7 +51,8 @@ function ActionButton({ action, onClick, index, layout, total }: ActionButtonPro
       disabled={action.enabled === false}
       style={style}
       className={`
-        px-3 py-1.5 rounded-lg border text-xs font-mono
+        px-3 py-1.5 rounded-lg border text-xs font-mono uppercase tracking-wider
+        backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]
         transition-all duration-150
         disabled:opacity-30 disabled:cursor-not-allowed
         ${colorClass}

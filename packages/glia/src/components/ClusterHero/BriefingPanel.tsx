@@ -139,7 +139,11 @@ export function BriefingPanel({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={cn("flex flex-col gap-4", className)}
+      className={cn("flex flex-col gap-4 rounded-xl p-4 backdrop-blur-xl", className)}
+      style={{
+        background: "rgba(2,4,10,0.6)",
+        border: "1px solid rgba(255,255,255,0.06)",
+      }}
     >
       <Description text={description} />
       <CapabilityChips capabilities={capabilities} accentColor={accentColor} />

@@ -1,10 +1,10 @@
 "use client";
 
-import { PointMaterial, Points, useAnimations, useGLTF } from "@react-three/drei";
+import { PointMaterial, Points, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import React, { useLayoutEffect, useMemo, useRef } from "react";
+import React, { Suspense, useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { Color, Group, Mesh, MeshStandardMaterial, Vector3 } from "three";
+import { Color, Group, Mesh, MeshStandardMaterial } from "three";
 import type { GlyphObjectProps } from "./types";
 import { useGlyphController } from "./useGlyphController";
 import { useGlyphEmotion } from "./useGlyphEmotion";
@@ -23,8 +23,6 @@ const PARTICLE_INNER_BOUND = 0.8;
 /** Linear interpolation helper */
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
 
-const DEFAULT_GLYPH_URL = "/models/glyph.glb";
-
 const GLYPH_COLORS = {
   core: "#f2c96b",
   coreEmissive: "#d4a84b",
@@ -33,6 +31,121 @@ const GLYPH_COLORS = {
   face: "#8a8f98",
   faceEmissive: "#dc143c",
 };
+
+// ── Procedural geometry (used when no GLB model is available) ───────────────
+
+function ProceduralGlyphGeometry() {
+  const coreRef = useRef<Mesh>(null);
+  const ring1Ref = useRef<Mesh>(null);
+  const ring2Ref = useRef<Mesh>(null);
+  const ring3Ref = useRef<Mesh>(null);
+  const browRef = useRef<Mesh>(null);
+  const eyeLRef = useRef<Mesh>(null);
+  const eyeRRef = useRef<Mesh>(null);
+
+  return (
+    <group>
+      {/* Core body */}
+      <mesh ref={coreRef} name="glyph_core">
+        <icosahedronGeometry args={[0.6, 2]} />
+        <meshStandardMaterial
+          color={GLYPH_COLORS.core}
+          emissive={GLYPH_COLORS.coreEmissive}
+          emissiveIntensity={0.5}
+          roughness={0.45}
+          metalness={0.2}
+        />
+      </mesh>
+
+      {/* Ring 1 — equatorial */}
+      <mesh ref={ring1Ref} name="glyph_ring_1" rotation={[0, 0, 0]}>
+        <torusGeometry args={[0.85, 0.035, 16, 64]} />
+        <meshStandardMaterial
+          color={GLYPH_COLORS.ring}
+          emissive={GLYPH_COLORS.ringEmissive}
+          emissiveIntensity={1.0}
+          roughness={0.25}
+          metalness={0.2}
+          toneMapped={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Ring 2 — tilted */}
+      <mesh ref={ring2Ref} name="glyph_ring_2" rotation={[Math.PI / 3, 0, Math.PI / 6]}>
+        <torusGeometry args={[0.92, 0.025, 16, 64]} />
+        <meshStandardMaterial
+          color={GLYPH_COLORS.ring}
+          emissive={GLYPH_COLORS.ringEmissive}
+          emissiveIntensity={0.8}
+          roughness={0.25}
+          metalness={0.2}
+          toneMapped={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Ring 3 — opposite tilt */}
+      <mesh ref={ring3Ref} name="glyph_ring_3" rotation={[-Math.PI / 4, 0, -Math.PI / 5]}>
+        <torusGeometry args={[0.88, 0.02, 16, 64]} />
+        <meshStandardMaterial
+          color={GLYPH_COLORS.ring}
+          emissive={GLYPH_COLORS.ringEmissive}
+          emissiveIntensity={0.6}
+          roughness={0.25}
+          metalness={0.2}
+          toneMapped={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Brow */}
+      <mesh ref={browRef} name="glyph_brow" position={[0, 0.32, 0.48]}>
+        <boxGeometry args={[0.28, 0.04, 0.04]} />
+        <meshStandardMaterial
+          color={GLYPH_COLORS.face}
+          emissive={GLYPH_COLORS.faceEmissive}
+          emissiveIntensity={0.35}
+          roughness={0.7}
+          metalness={0.2}
+        />
+      </mesh>
+
+      {/* Eye Left */}
+      <mesh ref={eyeLRef} name="glyph_eye_l" position={[-0.13, 0.2, 0.52]}>
+        <sphereGeometry args={[0.055, 16, 16]} />
+        <meshStandardMaterial
+          color={GLYPH_COLORS.face}
+          emissive={GLYPH_COLORS.faceEmissive}
+          emissiveIntensity={0.4}
+          roughness={0.5}
+          metalness={0.3}
+        />
+      </mesh>
+
+      {/* Eye Right */}
+      <mesh ref={eyeRRef} name="glyph_eye_r" position={[0.13, 0.2, 0.52]}>
+        <sphereGeometry args={[0.055, 16, 16]} />
+        <meshStandardMaterial
+          color={GLYPH_COLORS.face}
+          emissive={GLYPH_COLORS.faceEmissive}
+          emissiveIntensity={0.4}
+          roughness={0.5}
+          metalness={0.3}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ── GLB Model loader (used when modelUrl is provided) ──────────────────────
+
+function GLBModel({ url }: { url: string }) {
+  const { scene } = useGLTF(url);
+  return <primitive object={scene} />;
+}
+
+// ── Main component ─────────────────────────────────────────────────────────
 
 export function GlyphObject({
   state = "idle",
@@ -51,6 +164,7 @@ export function GlyphObject({
 }: GlyphObjectProps) {
   const showParticles = enableParticles ?? variant === "sentinel";
   const rootRef = useRef<Group>(null);
+  const sceneRef = useRef<Group>(null);
   const timeOffset = useRef(Math.random() * Math.PI * 2);
   const ringPhase = useRef(Math.random() * Math.PI * 2);
   const ringTiltRadiansRef = useRef(0);
@@ -67,15 +181,11 @@ export function GlyphObject({
   const eyeLeftRef = useRef<Mesh | null>(null);
   const eyeRightRef = useRef<Mesh | null>(null);
 
-  // Store original positions so expression offsets are additive
-  const browOriginalY = useRef<number>(0);
-  const eyeLeftOriginalPos = useRef<Vector3>(new Vector3());
-  const eyeRightOriginalPos = useRef<Vector3>(new Vector3());
-  const eyeLeftOriginalScale = useRef<number>(1);
-  const eyeRightOriginalScale = useRef<number>(1);
+  const usesModel = !!modelUrl;
 
-  const { scene, animations } = useGLTF(modelUrl ?? DEFAULT_GLYPH_URL);
-  const { actions } = useAnimations(animations, scene);
+  // Animation controller — only meaningful when a GLB with animations is loaded.
+  // For procedural geometry there are no baked animations, so we pass an empty map.
+  const actionsMap = useMemo(() => ({} as Record<string, THREE.AnimationAction | undefined>), []);
 
   const { dimensions: emotionDimensions, visualState } = useGlyphEmotion({
     state,
@@ -83,11 +193,6 @@ export function GlyphObject({
     dimensions,
     visualState: directVisualState,
   });
-
-  const actionsMap = useMemo(() => {
-    if (!actions) return {};
-    return Object.fromEntries(Object.entries(actions).map(([key, value]) => [key, value ?? undefined]));
-  }, [actions]);
 
   useGlyphController(state, actionsMap, {
     arousal: emotionDimensions.arousal,
@@ -116,16 +221,15 @@ export function GlyphObject({
   const haloOpacity =
     variant === "sentinel" ? 0.22 : variant === "graph" ? 0.18 : variant === "minimal" ? 0.12 : 0.16;
 
+  // Traverse the scene group (procedural or GLB) to find core/ring/face meshes.
   useLayoutEffect(() => {
-    if (!scene.userData.__glyphFlipped) {
-      scene.rotation.y += Math.PI;
-      scene.userData.__glyphFlipped = true;
-    }
+    const sceneGroup = sceneRef.current;
+    if (!sceneGroup) return;
 
     const coreMaterials: MeshStandardMaterial[] = [];
     const ringMeshes: Mesh[] = [];
 
-    scene.traverse((obj) => {
+    sceneGroup.traverse((obj) => {
       if (!(obj instanceof Mesh)) return;
 
       const mesh = obj;
@@ -135,28 +239,23 @@ export function GlyphObject({
       const meshName = (mesh.name || "").toLowerCase();
       const geometryName = (mesh.geometry?.name || "").toLowerCase();
 
-      // Collect orbital ring meshes (nodes are `ol_glyph_ring_*`, geometry is often `Torus.*`)
+      // Collect orbital ring meshes
       if (meshName.includes("ring") || meshName.includes("torus") || geometryName.includes("torus")) {
         ringMeshes.push(mesh);
       }
 
-      // Collect face meshes for expression animation (ol_glyph_brow, ol_glyph_eye_l, ol_glyph_eye_r)
+      // Collect face meshes for expression animation
       if (meshName.includes("brow")) {
         browRef.current = mesh;
-        browOriginalY.current = mesh.position.y;
         if (mesh.userData.__glyphDeltaY === undefined) mesh.userData.__glyphDeltaY = 0;
       }
       if (meshName.includes("eye_l")) {
         eyeLeftRef.current = mesh;
-        eyeLeftOriginalPos.current.copy(mesh.position);
-        eyeLeftOriginalScale.current = mesh.scale.x; // assume uniform scale
         if (mesh.userData.__glyphDeltaX === undefined) mesh.userData.__glyphDeltaX = 0;
         if (mesh.userData.__glyphScaleMul === undefined) mesh.userData.__glyphScaleMul = 1;
       }
       if (meshName.includes("eye_r")) {
         eyeRightRef.current = mesh;
-        eyeRightOriginalPos.current.copy(mesh.position);
-        eyeRightOriginalScale.current = mesh.scale.x; // assume uniform scale
         if (mesh.userData.__glyphDeltaX === undefined) mesh.userData.__glyphDeltaX = 0;
         if (mesh.userData.__glyphScaleMul === undefined) mesh.userData.__glyphScaleMul = 1;
       }
@@ -210,7 +309,7 @@ export function GlyphObject({
 
     coreMaterialsRef.current = coreMaterials;
     ringMeshesRef.current = ringMeshes;
-  }, [scene, emissiveBoost]);
+  }, [usesModel, emissiveBoost]);
 
   useFrame(({ clock }, delta) => {
     const t = clock.getElapsedTime() + timeOffset.current;
@@ -231,11 +330,10 @@ export function GlyphObject({
     });
 
     // Apply per-ring rotation and tilt from visualState
-    // Integrate ring phase so changes in `ringRotationSpeed` don't cause pops.
     ringPhase.current = (ringPhase.current + delta * visualState.ringRotationSpeed) % (Math.PI * 2);
 
     const ringCount = ringMeshesRef.current.length;
-    const targetTiltRadians = (visualState.ringTilt * Math.PI) / 180; // degrees -> radians
+    const targetTiltRadians = (visualState.ringTilt * Math.PI) / 180;
     const tiltLerpT = 1 - Math.exp(-delta * 10);
     ringTiltRadiansRef.current = lerp(ringTiltRadiansRef.current, targetTiltRadians, tiltLerpT);
     const tiltRadians = ringTiltRadiansRef.current;
@@ -253,7 +351,6 @@ export function GlyphObject({
     // Face expressions: drive eye/brow meshes from AVO dimensions
     const { arousal, valence, openness } = emotionDimensions;
 
-    // Brow Y: low valence -> down, high valence -> up
     if (browRef.current) {
       const browDeltaY = lerp(-0.05, 0.05, valence);
       const prevDeltaY = (browRef.current.userData.__glyphDeltaY as number | undefined) ?? 0;
@@ -262,8 +359,6 @@ export function GlyphObject({
       browRef.current.userData.__glyphDeltaY = browDeltaY;
     }
 
-    // Eye scale: low arousal -> smaller, high arousal -> wider
-    // Eye X: low openness -> converge inward, high openness -> look outward
     if (eyeLeftRef.current) {
       const scaleMul = lerp(0.9, 1.1, arousal);
       const prevScaleMul = (eyeLeftRef.current.userData.__glyphScaleMul as number | undefined) ?? 1;
@@ -317,13 +412,13 @@ export function GlyphObject({
     return positions;
   }, []);
 
-  // Animate particles: radial flow based on openness, velocity based on arousal
+  // Animate particles
   useFrame(() => {
     if (!showParticles || !particlesRef.current) return;
 
     const posAttr = particlesRef.current.geometry.attributes.position;
     const positions = posAttr.array as Float32Array;
-    const flowDir = visualState.particleFlowDirection; // -1 inward -> +1 outward
+    const flowDir = visualState.particleFlowDirection;
     const velocity = visualState.particleVelocity;
     const activeCount = visualState.particleCount;
 
@@ -387,7 +482,15 @@ export function GlyphObject({
         color={glowColor}
       />
 
-      <primitive object={scene} />
+      <group ref={sceneRef}>
+        {modelUrl ? (
+          <Suspense fallback={<ProceduralGlyphGeometry />}>
+            <GLBModel url={modelUrl} />
+          </Suspense>
+        ) : (
+          <ProceduralGlyphGeometry />
+        )}
+      </group>
 
       <mesh scale={1.08 * visualState.auraExpansion}>
         <sphereGeometry args={[1, 64, 32]} />
@@ -418,5 +521,3 @@ export function GlyphObject({
     </group>
   );
 }
-
-useGLTF.preload(DEFAULT_GLYPH_URL);

@@ -150,7 +150,7 @@ function FocusNodeMesh({
           center
           style={{ pointerEvents: "none" }}
         >
-          <div className="bg-black/90 px-2 py-1 rounded text-xs font-mono whitespace-nowrap">
+          <div className="bg-[rgba(2,4,10,0.85)] backdrop-blur-xl border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] px-2 py-1 rounded text-xs font-mono whitespace-nowrap">
             <div style={{ color: FOCUS_NODE_COLORS[node.kind] }}>
               {node.label}
             </div>
@@ -159,7 +159,7 @@ function FocusNodeMesh({
                 {node.description}
               </div>
             )}
-            <div className="text-white/30 text-[10px]">{node.kind}</div>
+            <div className="text-white/30 text-[10px] uppercase tracking-wider">{node.kind}</div>
           </div>
         </Html>
       )}

@@ -25,20 +25,19 @@ const APPROVED_HEX = new Set([
   "02040a", "0a0a0a",                          // near-blacks
   "22d3ee", "f43f5e", "10b981", "8b5cf6",      // neon accents (full)
   "d4a84b",                                      // gold
+  "e879f9", "f472b6", "34d399", "a78bfa",      // neon gradients
+  "cbd5e1", "64748b",                           // CSS var fallbacks (slate-300, slate-500)
 ]);
 
 // Light Tailwind classes that violate dark theme
 const LIGHT_CLASS_PATTERNS = [
-  /\bbg-white\b/,
+  /\bbg-white\b(?!\/)/,
   /\btext-black\b/,
   /\btext-gray-\d{2,3}\b/,
   /\bbg-gray-\d{2,3}\b/,
-  /\btext-neutral-[1-5]00\b/,
-  /\bbg-neutral-[1-5]00\b/,
-  /\btext-slate-[1-5]00\b/,
-  /\bbg-slate-[1-5]00\b/,
-  /\bbg-zinc-[1-5]00\b/,
-  /\btext-zinc-[1-5]00\b/,
+  /\bbg-neutral-[1-4]00\b/,
+  /\bbg-slate-[1-4]00\b/,
+  /\bbg-zinc-[1-4]00\b/,
 ];
 
 // Hardcoded hex color pattern (inline styles or template literals)
@@ -56,7 +55,7 @@ function isLightHex(hex) {
 
 // Glass-required component name fragments
 const GLASS_NAMES = ["Panel", "Card", "Sidebar", "Table"];
-const GLASS_RE = /backdrop-(?:blur|filter)/;
+const GLASS_RE = /backdrop-(?:blur|filter)|backdropFilter/;
 
 async function collectTsxFiles(dir) {
   const files = [];

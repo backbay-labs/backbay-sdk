@@ -40,10 +40,10 @@ const thumbVariants = cva(
 // Accent color map
 // ---------------------------------------------------------------------------
 
-const accentMap = {
+const accentFillMap = {
   default: undefined, // uses theme token fill
-  accent: "rgba(139, 92, 246, 0.6)",
-  success: "rgba(16, 185, 129, 0.6)",
+  accent: "linear-gradient(90deg, #8B5CF6, #a78bfa)",
+  success: "linear-gradient(90deg, #10B981, #34d399)",
 } as const;
 
 const accentThumbMap = {
@@ -56,6 +56,18 @@ const accentShadowMap = {
   default: undefined,
   accent: "0 0 8px rgba(139, 92, 246, 0.5)",
   success: "0 0 8px rgba(16, 185, 129, 0.5)",
+} as const;
+
+const accentHoverShadowMap = {
+  default: "0 0 12px rgba(34,211,238,0.5)",
+  accent: "0 0 12px rgba(139, 92, 246, 0.6)",
+  success: "0 0 12px rgba(16, 185, 129, 0.6)",
+} as const;
+
+const accentFocusShadowMap = {
+  default: "0 0 16px rgba(34,211,238,0.7), 0 0 4px rgba(34,211,238,0.3)",
+  accent: "0 0 16px rgba(139, 92, 246, 0.7), 0 0 4px rgba(139, 92, 246, 0.3)",
+  success: "0 0 16px rgba(16, 185, 129, 0.7), 0 0 4px rgba(16, 185, 129, 0.3)",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -116,9 +128,12 @@ export function GlassSlider({
     [props.onValueChange]
   );
 
-  const fillColor = accentMap[variant] ?? controls.slider.fill;
+  const fillGradient = accentFillMap[variant];
+  const fillColor = fillGradient ?? controls.slider.fill;
   const thumbBg = accentThumbMap[variant] ?? controls.slider.thumb.bg;
   const thumbShadow = accentShadowMap[variant] ?? controls.slider.thumb.shadow;
+  const thumbHoverShadow = accentHoverShadowMap[variant];
+  const thumbFocusShadow = accentFocusShadowMap[variant];
 
   const min = props.min ?? 0;
   const max = props.max ?? 100;
@@ -170,14 +185,18 @@ export function GlassSlider({
         <SliderPrimitive.Track
           className={cn(trackVariants({ size }))}
           style={{
-            background: controls.slider.track.bg,
-            border: `1px solid ${controls.slider.track.border}`,
+            background: "rgba(2, 4, 10, 0.6)",
+            border: `1px solid rgba(255, 255, 255, 0.06)`,
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
           }}
         >
           {/* Fill (Range) */}
           <SliderPrimitive.Range
             className="absolute h-full rounded-full"
-            style={{ background: fillColor }}
+            style={{
+              background: fillGradient ?? fillColor,
+              boxShadow: "0 0 6px rgba(34,211,238,0.3)",
+            }}
           />
         </SliderPrimitive.Track>
 
@@ -189,15 +208,30 @@ export function GlassSlider({
               style={{
                 background: thumbBg,
                 boxShadow: thumbShadow,
+                border: "1px solid rgba(255,255,255,0.1)",
+                transition: "box-shadow 0.2s ease",
               }}
               whileHover={
                 shouldAnimate
-                  ? { scale: 1.15, transition: { duration: motionTokens.fast.duration } }
+                  ? {
+                      scale: 1.15,
+                      boxShadow: thumbHoverShadow,
+                      transition: { duration: motionTokens.fast.duration },
+                    }
                   : undefined
               }
               whileTap={
                 shouldAnimate
-                  ? { scale: 0.95, transition: { duration: motionTokens.fast.duration } }
+                  ? {
+                      scale: 0.95,
+                      boxShadow: thumbFocusShadow,
+                      transition: { duration: motionTokens.fast.duration },
+                    }
+                  : undefined
+              }
+              whileFocus={
+                shouldAnimate
+                  ? { boxShadow: thumbFocusShadow }
                   : undefined
               }
               onPointerDown={() => setActiveThumb(i)}

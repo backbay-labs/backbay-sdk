@@ -29,15 +29,15 @@ function MessageBubble({ message, onEntityClick }: MessageBubbleProps) {
       className={`
         max-w-[85%] px-3 py-2 rounded-lg text-sm font-mono
         ${isAgent
-          ? "bg-indigo-500/20 text-indigo-100 self-start border border-indigo-500/30"
+          ? "bg-cyan-500/10 text-cyan-50 self-start border border-cyan-500/[0.12] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]"
           : isSystem
-            ? "bg-amber-500/20 text-amber-100 self-center border border-amber-500/30 text-xs"
-            : "bg-white/10 text-white/90 self-end border border-white/20"
+            ? "bg-amber-500/10 text-amber-100 self-center border border-amber-500/[0.12] text-xs shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]"
+            : "bg-white/[0.06] text-white/90 self-end border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]"
         }
       `}
     >
       {/* Role indicator */}
-      <div className={`text-xs mb-1 ${isAgent ? "text-indigo-400" : isSystem ? "text-amber-400" : "text-white/50"}`}>
+      <div className={`text-xs mb-1 uppercase tracking-wider ${isAgent ? "text-cyan-400" : isSystem ? "text-amber-400" : "text-white/50"}`}>
         {message.role.toUpperCase()}
       </div>
 
@@ -105,12 +105,12 @@ function MessageBubble({ message, onEntityClick }: MessageBubbleProps) {
 
 function TypingIndicator() {
   return (
-    <div className="flex items-center gap-1 px-3 py-2 bg-indigo-500/20 rounded-lg self-start border border-indigo-500/30">
-      <div className="text-xs text-indigo-400 mr-2">AGENT</div>
+    <div className="flex items-center gap-1 px-3 py-2 bg-cyan-500/10 rounded-lg self-start border border-cyan-500/[0.12]">
+      <div className="text-xs text-cyan-400 mr-2 uppercase tracking-wider">AGENT</div>
       <div className="flex gap-1">
-        <span className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-        <span className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-        <span className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+        <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+        <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+        <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
       </div>
     </div>
   );
@@ -147,9 +147,9 @@ function ChatInput({ placeholder, onSubmit }: ChatInputProps) {
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
         className="
-          flex-1 px-3 py-2 bg-white/5 border border-white/20 rounded-lg
+          flex-1 px-3 py-2 bg-white/[0.03] border border-white/[0.06] rounded-lg
           text-white text-sm font-mono placeholder:text-white/30
-          focus:outline-none focus:border-indigo-500/50 focus:bg-white/10
+          focus:outline-none focus:border-cyan-500/40 focus:shadow-[0_0_12px_rgba(34,211,238,0.15)]
           transition-colors
         "
       />
@@ -157,10 +157,11 @@ function ChatInput({ placeholder, onSubmit }: ChatInputProps) {
         type="submit"
         disabled={!value.trim()}
         className="
-          px-4 py-2 bg-indigo-500/30 border border-indigo-500/50 rounded-lg
-          text-indigo-200 text-sm font-mono
-          hover:bg-indigo-500/40 disabled:opacity-30 disabled:cursor-not-allowed
-          transition-colors
+          px-4 py-2 bg-cyan-500/15 border border-cyan-500/20 rounded-lg
+          text-cyan-200 text-sm font-mono uppercase tracking-wider
+          hover:bg-cyan-500/25 hover:shadow-[0_0_12px_rgba(34,211,238,0.2)]
+          disabled:opacity-30 disabled:cursor-not-allowed
+          transition-all
         "
       >
         Send
@@ -204,7 +205,7 @@ export function ConsoleChat({
         width: "320px",
       }}
     >
-      <div className="bg-black/80 backdrop-blur-sm rounded-lg border border-white/10 overflow-hidden">
+      <div className="bg-[rgba(2,4,10,0.85)] backdrop-blur-xl rounded-lg border border-white/[0.06] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
         {/* Messages container */}
         <div
           ref={scrollRef}
@@ -228,7 +229,7 @@ export function ConsoleChat({
         </div>
 
         {/* Input */}
-        <div className="border-t border-white/10 p-3">
+        <div className="border-t border-white/[0.06] p-3">
           <ChatInput placeholder={placeholder} onSubmit={onSubmit} />
         </div>
       </div>

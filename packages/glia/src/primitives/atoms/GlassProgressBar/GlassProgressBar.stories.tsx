@@ -179,3 +179,54 @@ export const Animated: Story = {
     );
   },
 };
+
+export const ZeroAndFull: Story = {
+  decorators: [
+    (Story) => (
+      <div className="w-80 space-y-6">
+        <Story />
+      </div>
+    ),
+  ],
+  render: () => (
+    <>
+      <GlassProgressBar value={0} theme="cyan" label="Empty" showValue size="lg" />
+      <GlassProgressBar value={0.5} theme="cyan" label="Half" showValue size="lg" />
+      <GlassProgressBar value={1} theme="cyan" label="Complete" showValue size="lg" glow />
+    </>
+  ),
+};
+
+export const GlowComparison: Story = {
+  decorators: [
+    (Story) => (
+      <div className="w-80 space-y-6">
+        <Story />
+      </div>
+    ),
+  ],
+  render: () => (
+    <>
+      <GlassProgressBar value={0.7} theme="cyan" label="Leading edge glow (default)" showValue size="lg" />
+      <GlassProgressBar value={0.7} theme="cyan" label="Full neon glow" showValue size="lg" glow />
+    </>
+  ),
+};
+
+export const MultipleInline: Story = {
+  decorators: [
+    (Story) => (
+      <div className="w-96 space-y-3">
+        <Story />
+      </div>
+    ),
+  ],
+  render: () => (
+    <>
+      <GlassProgressBar value={0.92} theme="emerald" label="Memory" labelPosition="inline" showValue size="sm" />
+      <GlassProgressBar value={0.45} theme="cyan" label="CPU" labelPosition="inline" showValue size="sm" />
+      <GlassProgressBar value={0.78} theme="magenta" label="GPU" labelPosition="inline" showValue size="sm" />
+      <GlassProgressBar value={0.31} theme="rainbow" label="Network" labelPosition="inline" showValue size="sm" />
+    </>
+  ),
+};

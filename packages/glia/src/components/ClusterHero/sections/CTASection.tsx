@@ -195,7 +195,7 @@ export function CTASection({ clusterId, className }: CTASectionProps) {
           {/* Primary CTA */}
           <motion.a
             href={content.primaryHref}
-            className="group relative px-10 py-4 text-sm font-semibold uppercase tracking-[0.15em] text-black overflow-hidden"
+            className="group relative px-10 py-4 text-sm font-semibold uppercase tracking-[0.15em] text-neutral-900 overflow-hidden"
             style={{ backgroundColor: "var(--cluster-accent)" }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}

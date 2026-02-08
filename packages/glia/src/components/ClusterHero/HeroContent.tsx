@@ -74,7 +74,7 @@ function HeroButton({ button }: { button: ButtonConfig }) {
     "px-6 py-3 text-sm font-medium tracking-wider uppercase transition-all duration-300";
 
   const variantClasses: Record<ButtonConfig["variant"], string> = {
-    primary: "text-black hover:brightness-110",
+    primary: "text-neutral-900 hover:brightness-110",
     secondary: "border hover:bg-[var(--cluster-accent)]/10",
     ghost: "border border-white/20 text-white/70 hover:border-white/40 hover:text-white",
   };

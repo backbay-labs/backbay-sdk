@@ -111,8 +111,8 @@ function TrustRing({
           center
           style={{ pointerEvents: "none" }}
         >
-          <div className={`text-xs font-mono px-2 py-1 rounded ${
-            isCurrent ? "bg-black/80" : "bg-black/60"
+          <div className={`text-xs font-mono px-2 py-1 rounded border border-white/[0.06] backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] ${
+            isCurrent ? "bg-[rgba(2,4,10,0.85)]" : "bg-[rgba(2,4,10,0.7)]"
           }`}>
             <span style={{ color: config.color }} className="font-bold">
               {tier.toUpperCase()}

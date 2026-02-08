@@ -166,3 +166,113 @@ export const Controlled: Story = {
     );
   },
 };
+
+export const AllVariants: Story = {
+  decorators: [
+    (Story) => (
+      <div style={{ width: 400, padding: 32 }}>
+        <Story />
+      </div>
+    ),
+  ],
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <div>
+        <p className="text-xs text-neutral-500 mb-2 uppercase tracking-wider">Default</p>
+        <GlassAccordion defaultValue="item-1">
+          <GlassAccordionItem value="item-1" trigger="Default variant item">
+            Glass card style with individual backdrop-blur and inset highlight.
+          </GlassAccordionItem>
+          <GlassAccordionItem value="item-2" trigger="Second item">
+            Each item is a separate glass card with subtle borders.
+          </GlassAccordionItem>
+        </GlassAccordion>
+      </div>
+      <div>
+        <p className="text-xs text-neutral-500 mb-2 uppercase tracking-wider">Card</p>
+        <GlassAccordion variant="card" defaultValue="item-1">
+          <GlassAccordionItem value="item-1" trigger="Card variant item">
+            Contained within a single glass panel with shared backdrop-blur.
+          </GlassAccordionItem>
+          <GlassAccordionItem value="item-2" trigger="Second item">
+            Items separated by glass border dividers.
+          </GlassAccordionItem>
+        </GlassAccordion>
+      </div>
+      <div>
+        <p className="text-xs text-neutral-500 mb-2 uppercase tracking-wider">Flush</p>
+        <GlassAccordion variant="flush" defaultValue="item-1">
+          <GlassAccordionItem value="item-1" trigger="Flush variant item">
+            Borderless, edge-to-edge layout for embedded usage.
+          </GlassAccordionItem>
+          <GlassAccordionItem value="item-2" trigger="Second item">
+            Minimal chrome, just dividers between items.
+          </GlassAccordionItem>
+        </GlassAccordion>
+      </div>
+    </div>
+  ),
+};
+
+export const AllClosed: Story = {
+  render: () => (
+    <GlassAccordion>
+      <GlassAccordionItem
+        value="item-1"
+        trigger="All items start closed"
+        icon={<Settings className="h-4 w-4" />}
+      >
+        Content is hidden until the user interacts.
+      </GlassAccordionItem>
+      <GlassAccordionItem
+        value="item-2"
+        trigger="Click to expand"
+        icon={<Shield className="h-4 w-4" />}
+      >
+        Chevron rotates to cyan on open state.
+      </GlassAccordionItem>
+      <GlassAccordionItem
+        value="item-3"
+        trigger="Hover for highlight"
+        icon={<Zap className="h-4 w-4" />}
+      >
+        Subtle white highlight on trigger hover.
+      </GlassAccordionItem>
+    </GlassAccordion>
+  ),
+};
+
+export const CardWithIcons: Story = {
+  render: () => (
+    <GlassAccordion variant="card" defaultValue="settings">
+      <GlassAccordionItem
+        value="settings"
+        trigger="General Settings"
+        icon={<Settings className="h-4 w-4" />}
+      >
+        Configure your general application preferences and defaults.
+      </GlassAccordionItem>
+      <GlassAccordionItem
+        value="security"
+        trigger="Security"
+        icon={<Shield className="h-4 w-4" />}
+      >
+        Manage authentication, permissions, and security policies.
+      </GlassAccordionItem>
+      <GlassAccordionItem
+        value="notifications"
+        trigger="Notifications"
+        icon={<Bell className="h-4 w-4" />}
+      >
+        Configure alert thresholds and notification channels.
+      </GlassAccordionItem>
+      <GlassAccordionItem
+        value="profile"
+        trigger="Profile"
+        icon={<User className="h-4 w-4" />}
+      >
+        Update your display name, avatar, and bio information.
+      </GlassAccordionItem>
+    </GlassAccordion>
+  ),
+};

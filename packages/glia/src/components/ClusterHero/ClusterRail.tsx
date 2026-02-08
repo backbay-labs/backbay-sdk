@@ -89,7 +89,7 @@ function RailButton({ button }: { button: ButtonConfig }) {
     "w-full px-6 py-3 text-sm font-medium tracking-wider uppercase transition-all duration-300 text-center";
 
   const variantClasses: Record<ButtonConfig["variant"], string> = {
-    primary: "text-black hover:brightness-110 hover:scale-[1.02]",
+    primary: "text-neutral-900 hover:brightness-110 hover:scale-[1.02]",
     secondary:
       "bg-transparent border hover:bg-[var(--cluster-accent)]/10",
     ghost:

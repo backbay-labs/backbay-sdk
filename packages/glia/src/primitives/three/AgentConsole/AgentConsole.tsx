@@ -173,22 +173,30 @@ export function AgentConsole({
       </Canvas>
 
       {/* State indicator overlay */}
-      <div className="absolute top-4 right-4 bg-black/60 text-white/60 text-xs font-mono p-2 rounded">
+      <div className="absolute top-4 right-4 bg-[rgba(2,4,10,0.85)] backdrop-blur-xl border border-white/[0.06] text-white/60 text-xs font-mono p-2 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
         <div className="flex items-center gap-2">
           <span
             className="w-2 h-2 rounded-full"
             style={{
               backgroundColor:
-                agentState === "idle" ? "#6366f1" :
-                agentState === "listening" ? "#22c55e" :
+                agentState === "idle" ? "#22D3EE" :
+                agentState === "listening" ? "#10B981" :
                 agentState === "thinking" ? "#eab308" :
-                agentState === "responding" ? "#3b82f6" :
-                "#ef4444",
+                agentState === "responding" ? "#22D3EE" :
+                "#F43F5E",
+              boxShadow:
+                `0 0 6px ${
+                  agentState === "idle" ? "#22D3EE" :
+                  agentState === "listening" ? "#10B981" :
+                  agentState === "thinking" ? "#eab308" :
+                  agentState === "responding" ? "#22D3EE" :
+                  "#F43F5E"
+                }`,
             }}
           />
-          <span>{agentState.toUpperCase()}</span>
+          <span className="uppercase tracking-wider">{agentState.toUpperCase()}</span>
         </div>
-        <div className="text-white/40 mt-1">{agentMode}</div>
+        <div className="text-white/40 mt-1 uppercase tracking-wider">{agentMode}</div>
       </div>
     </div>
   );

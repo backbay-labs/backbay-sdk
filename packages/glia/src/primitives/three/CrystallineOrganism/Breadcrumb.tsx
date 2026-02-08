@@ -23,7 +23,7 @@ export function Breadcrumb({ stack, labels, onNavigate }: BreadcrumbProps) {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-1 bg-black/80 backdrop-blur-md rounded-lg px-3 py-1.5 border border-white/10"
+        className="flex items-center gap-1 bg-[rgba(2,4,10,0.85)] backdrop-blur-xl rounded-lg px-3 py-1.5 border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]"
       >
         {items.map((item, i) => (
           <div key={i} className="flex items-center">
@@ -36,7 +36,7 @@ export function Breadcrumb({ stack, labels, onNavigate }: BreadcrumbProps) {
                 text-xs font-mono uppercase tracking-wider
                 transition-colors duration-150
                 ${i === items.length - 1
-                  ? "text-cyan-400 cursor-default"
+                  ? "text-[#22D3EE] cursor-default"
                   : "text-white/60 hover:text-white cursor-pointer"
                 }
               `}

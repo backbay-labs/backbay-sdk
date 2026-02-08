@@ -34,8 +34,8 @@ export function LiveStrip({
   return (
     <div
       className={cn(
-        "group flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white/5 backdrop-blur-sm",
-        "transition-colors duration-200 hover:bg-white/10 cursor-pointer",
+        "group flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white/[0.05] backdrop-blur-sm",
+        "transition-colors duration-200 hover:bg-white/[0.10] cursor-pointer",
         className
       )}
     >

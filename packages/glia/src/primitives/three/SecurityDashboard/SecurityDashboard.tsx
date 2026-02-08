@@ -181,13 +181,14 @@ function StatusHUD({
     <Html position={position} center>
       <div
         style={{
-          background: "rgba(0, 4, 8, 0.95)",
-          border: `2px solid ${statusColor}`,
+          background: "rgba(2, 4, 10, 0.85)",
+          backdropFilter: "blur(24px)",
+          border: `1px solid rgba(255,255,255,0.06)`,
           borderRadius: "8px",
           padding: "16px 24px",
           fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
           minWidth: "200px",
-          boxShadow: `0 0 30px ${statusColor}40, inset 0 0 20px ${statusColor}15`,
+          boxShadow: `0 0 30px ${statusColor}40, inset 0 1px 0 rgba(255,255,255,0.02)`,
         }}
       >
         {/* Status Header */}
@@ -196,7 +197,7 @@ function StatusHUD({
             textAlign: "center",
             marginBottom: "12px",
             paddingBottom: "10px",
-            borderBottom: `1px solid ${statusColor}50`,
+            borderBottom: `1px solid rgba(255,255,255,0.06)`,
           }}
         >
           <div
@@ -282,7 +283,7 @@ function StatusHUD({
           style={{
             marginTop: "12px",
             paddingTop: "10px",
-            borderTop: `1px solid ${statusColor}30`,
+            borderTop: `1px solid rgba(255,255,255,0.06)`,
           }}
         >
           <div

@@ -9,3 +9,5 @@ export * from "./GlassTimeline";
 export * from "./BentoGrid";
 export * from "./ChatThread";
 export * from "./GlassModal";
+export * from "./GlassDashboard";
+export * from "./GlassCodeEditor";

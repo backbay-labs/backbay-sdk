@@ -145,10 +145,12 @@ function PermissionCell({
       {(hovered || showLabels) && (
         <Html position={[0, baseHeight + 0.4, 0]} center distanceFactor={8}>
           <div
-            className="bg-black/95 text-xs font-mono px-3 py-2 rounded-md border whitespace-nowrap shadow-lg backdrop-blur-sm"
+            className="text-xs font-mono px-3 py-2 rounded-md border whitespace-nowrap shadow-lg"
             style={{
-              borderColor: color,
-              boxShadow: `0 0 12px ${color}40`,
+              background: "rgba(2, 4, 10, 0.85)",
+              backdropFilter: "blur(24px)",
+              borderColor: "rgba(255,255,255,0.06)",
+              boxShadow: `0 0 12px ${color}40, inset 0 1px 0 rgba(255,255,255,0.02)`,
             }}
           >
             <div style={{ color }} className="font-bold text-[11px] mb-1">
@@ -269,7 +271,7 @@ export function PermissionMatrix({
           center
           distanceFactor={10}
         >
-          <div className="bg-black/90 text-white text-[11px] font-mono px-3 py-1.5 rounded border border-white/20 whitespace-nowrap shadow-lg">
+          <div className="bg-[rgba(2,4,10,0.85)] backdrop-blur-xl text-white text-[11px] font-mono px-3 py-1.5 rounded border border-white/[0.06] whitespace-nowrap shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
             {group.name}
           </div>
         </Html>
@@ -284,7 +286,7 @@ export function PermissionMatrix({
           distanceFactor={10}
         >
           <div
-            className="bg-black/70 text-white/70 text-[9px] font-mono px-2 py-1 rounded whitespace-nowrap"
+            className="bg-[rgba(2,4,10,0.85)] backdrop-blur-xl border border-white/[0.06] text-white/70 text-[9px] font-mono px-2 py-1 rounded whitespace-nowrap"
             style={{ transform: "rotate(-35deg)", transformOrigin: "center" }}
           >
             {resource}
@@ -336,7 +338,7 @@ export function PermissionMatrix({
         center
         distanceFactor={12}
       >
-        <div className="bg-black/90 text-[10px] font-mono p-3 rounded-lg border border-white/10 flex gap-4 shadow-xl backdrop-blur-sm">
+        <div className="bg-[rgba(2,4,10,0.85)] backdrop-blur-xl text-[10px] font-mono p-3 rounded-lg border border-white/[0.06] flex gap-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
           {Object.entries(ACTION_COLORS).map(([action, actionColor]) => (
             <div key={action} className="flex items-center gap-1.5">
               <div
@@ -358,7 +360,7 @@ export function PermissionMatrix({
         center
         distanceFactor={12}
       >
-        <div className="bg-black/80 text-[9px] font-mono p-2 rounded border border-white/5 flex gap-4">
+        <div className="bg-[rgba(2,4,10,0.85)] backdrop-blur-xl text-[9px] font-mono p-2 rounded border border-white/[0.06] flex gap-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
           <div className="flex items-center gap-1.5">
             <div className="w-4 h-3 rounded-sm bg-gradient-to-t from-emerald-600 to-emerald-400" />
             <span className="text-white/50">granted</span>

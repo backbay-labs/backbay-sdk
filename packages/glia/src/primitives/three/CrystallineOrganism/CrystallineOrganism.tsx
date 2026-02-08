@@ -183,10 +183,10 @@ export function CrystallineOrganism({
               style={{
                 padding: "4px 8px",
                 borderRadius: "9999px",
-                border: "1px solid rgba(255,255,255,0.25)",
-                backdropFilter: "blur(8px)",
-                backgroundColor: "rgba(0,0,0,0.8)",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                backdropFilter: "blur(24px)",
+                backgroundColor: "rgba(2,4,10,0.85)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
               }}
             >
               <div
@@ -212,11 +212,11 @@ export function CrystallineOrganism({
                 marginTop: "4px",
                 padding: "1px 6px",
                 borderRadius: "4px",
-                border: `1px solid ${typeColor}33`,
-                backgroundColor: "rgba(0,0,0,0.4)",
-                backdropFilter: "blur(4px)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                backgroundColor: "rgba(2,4,10,0.85)",
+                backdropFilter: "blur(24px)",
                 color: typeColor,
-                boxShadow: `0 0 6px ${typeColor}22`,
+                boxShadow: `0 0 6px ${typeColor}22, inset 0 1px 0 rgba(255,255,255,0.02)`,
               }}
             >
               {type}
@@ -228,14 +228,15 @@ export function CrystallineOrganism({
                 style={{
                   fontSize: "6px",
                   textTransform: "uppercase",
-                  letterSpacing: "0.1em",
+                  letterSpacing: "0.12em",
                   marginTop: "2px",
                   padding: "1px 4px",
                   borderRadius: "2px",
-                  backgroundColor: "rgba(0,0,0,0.6)",
-                  color: state === "error" ? "#ff0055" :
+                  backgroundColor: "rgba(2,4,10,0.85)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  color: state === "error" ? "#F43F5E" :
                          state === "busy" ? "#ffaa00" :
-                         state === "thinking" ? "#00f0ff" :
+                         state === "thinking" ? "#22D3EE" :
                          "rgba(255,255,255,0.6)",
                 }}
               >
@@ -259,7 +260,9 @@ export function CrystallineOrganism({
               fontSize: "8px",
               fontFamily: "monospace",
               color: "rgba(255,255,255,0.5)",
-              backgroundColor: "rgba(0,0,0,0.4)",
+              backgroundColor: "rgba(2,4,10,0.85)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              backdropFilter: "blur(24px)",
               padding: "0 4px",
               borderRadius: "4px",
             }}

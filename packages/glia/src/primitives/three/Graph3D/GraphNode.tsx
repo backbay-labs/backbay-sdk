@@ -203,10 +203,10 @@ export const GraphNode = ({
           >
             <div
               className={`
-                px-2 py-1 rounded-full border backdrop-blur-md transition-colors duration-300
+                px-2 py-1 rounded-full border backdrop-blur-xl transition-colors duration-300
                 ${
                   isHighlighted
-                    ? "bg-black/80 border-white/25 shadow-[0_0_12px_rgba(0,0,0,0.5)]"
+                    ? "bg-[rgba(2,4,10,0.85)] border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]"
                     : "bg-transparent border-transparent"
                 }
               `}
@@ -221,7 +221,7 @@ export const GraphNode = ({
             {/* Category Chip */}
             {isHighlighted && node.category && (
               <div
-                className="text-[7px] uppercase tracking-[0.18em] font-bold mt-1 px-1.5 py-px rounded border bg-black/40 backdrop-blur-sm"
+                className="text-[7px] uppercase tracking-[0.18em] font-bold mt-1 px-1.5 py-px rounded border border-white/[0.06] bg-[rgba(2,4,10,0.85)] backdrop-blur-xl"
                 style={{
                   color: color,
                   borderColor: `${color}33`,

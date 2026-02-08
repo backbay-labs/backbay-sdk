@@ -49,5 +49,8 @@ export * from "./SecurityDashboard";
 // Export as namespace to avoid STATUS_COLORS conflict with SecurityShield
 export * as CrystallineOrganism from "./CrystallineOrganism";
 
+// MetricsGalaxy - 3D metrics monitoring galaxy visualization
+export * from "./MetricsGalaxy";
+
 // ThreeErrorBoundary - R3F/WebGL-specific error boundary with context-loss detection
 export * from "./ThreeErrorBoundary";

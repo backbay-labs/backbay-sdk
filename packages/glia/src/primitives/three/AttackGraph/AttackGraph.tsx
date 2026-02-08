@@ -187,7 +187,7 @@ function TechniqueNode({
 
       {(isSelected || hovered || showMitreIds) && (
         <Html distanceFactor={10} position={[0, 0.7, 0]}>
-          <div className="rounded-md border border-white/10 bg-slate-950/85 px-2 py-1 text-[10px] uppercase text-white/80">
+          <div className="rounded-md border border-white/[0.06] bg-[rgba(2,4,10,0.85)] backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] px-2 py-1 text-[10px] uppercase tracking-wider text-white/80">
             <div className="font-semibold">
               {showMitreIds ? technique.id : "Technique"}
             </div>
@@ -285,7 +285,7 @@ export function AttackGraph({
             distanceFactor={15}
             position={[(index - (ATTACK_TACTIC_ORDER.length - 1) / 2) * labelSpacing, 2.6, -1]}
           >
-            <div className="rounded bg-slate-900/70 px-2 py-1 text-[9px] font-semibold uppercase text-white/70">
+            <div className="rounded bg-[rgba(2,4,10,0.85)] backdrop-blur-xl border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] px-2 py-1 text-[9px] font-semibold uppercase tracking-wider text-white/70">
               {ATTACK_TACTIC_LABELS[tactic]}
             </div>
           </Html>

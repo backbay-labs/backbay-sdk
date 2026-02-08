@@ -98,6 +98,9 @@ export function GlassAccordionItem({
             background: glass.cardBg,
             border: `1px solid ${glass.cardBorder}`,
             borderRadius: 8,
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
           };
 
   return (
@@ -115,11 +118,12 @@ export function GlassAccordionItem({
         <AccordionPrimitive.Trigger
           className={cn(
             "flex flex-1 items-center gap-3 py-3 px-4 text-sm font-medium transition-colors cursor-pointer",
+            "rounded-[inherit]",
             "group"
           )}
           style={{ color: colors.text.primary }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.background = glass.hoverBg;
+            (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.03)";
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLElement).style.background = "transparent";
@@ -133,18 +137,19 @@ export function GlassAccordionItem({
               {icon}
             </span>
           )}
-          <span className="flex-1 text-left">{trigger}</span>
+          <span className="flex-1 text-left text-[var(--glia-color-text-primary,#CBD5E1)]">{trigger}</span>
           {shouldAnimate ? (
             <motion.span
-              className="flex-shrink-0"
+              className="flex-shrink-0 transition-colors duration-200 group-data-[state=open]:text-cyan-400"
               style={{ color: colors.text.soft }}
-              // Chevron rotation is CSS-driven via data-state
-              // but we add a motion wrapper for smooth interpolation
             >
               <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
             </motion.span>
           ) : (
-            <span style={{ color: colors.text.soft }}>
+            <span
+              className="transition-colors duration-200 group-data-[state=open]:text-cyan-400"
+              style={{ color: colors.text.soft }}
+            >
               <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
             </span>
           )}
@@ -155,7 +160,7 @@ export function GlassAccordionItem({
         className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
       >
         <div
-          className="px-4 pb-3 text-sm"
+          className="px-4 pb-3 text-sm text-[var(--glia-color-text-soft,#64748B)]"
           style={{ color: colors.text.muted }}
         >
           {children}
@@ -189,6 +194,9 @@ export function GlassAccordion({
           border: `1px solid ${glass.cardBorder}`,
           borderRadius: 12,
           overflow: "hidden",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
         }
       : {};
 

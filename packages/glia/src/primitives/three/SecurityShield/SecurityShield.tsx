@@ -389,10 +389,12 @@ export function SecurityShield({
       {showStats && (
         <Html position={[0, radius + 0.5, 0]} center>
           <div
-            className="bg-black/85 text-xs font-mono px-3 py-2 rounded-md border backdrop-blur-sm"
+            className="text-xs font-mono px-3 py-2 rounded-md border"
             style={{
-              borderColor: statusConfig.primary,
-              boxShadow: `0 0 20px ${statusConfig.primary}40, inset 0 0 10px ${statusConfig.primary}20`,
+              background: "rgba(2, 4, 10, 0.85)",
+              backdropFilter: "blur(24px)",
+              borderColor: "rgba(255,255,255,0.06)",
+              boxShadow: `0 0 20px ${statusConfig.primary}40, inset 0 1px 0 rgba(255,255,255,0.02)`,
               minWidth: "90px",
             }}
           >

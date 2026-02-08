@@ -119,7 +119,7 @@ function RuleSegment({
 
       {showLabel && (
         <Html distanceFactor={10} position={[0, size[1] * 0.8, 0]}>
-          <div className="rounded bg-slate-950/80 px-2 py-1 text-[9px] uppercase text-white/80">
+          <div className="rounded bg-[rgba(2,4,10,0.85)] backdrop-blur-xl border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] px-2 py-1 text-[9px] uppercase tracking-wider text-white/80">
             <div className="font-semibold">{rule.name}</div>
             <div className="text-[8px] opacity-70">
               {rule.action.toUpperCase()} • {rule.protocol.toUpperCase()}

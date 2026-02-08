@@ -304,6 +304,8 @@ export function ToolCallCard({
       style={{
         background: glass.cardBg,
         border: `1px solid ${glass.cardBorder}`,
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
         transition: shouldAnimate ? `border-color ${motion.fast.duration}s ease` : undefined,
         ...style,
       }}

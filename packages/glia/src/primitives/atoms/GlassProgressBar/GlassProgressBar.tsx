@@ -39,26 +39,40 @@ const sizeMap = {
 function getThemeGradient(theme: NonNullable<GlassProgressBarProps["theme"]>) {
   switch (theme) {
     case "cyan":
-      return "linear-gradient(90deg, hsl(var(--cyan-neon)), hsl(var(--cyan-neon) / 0.8))";
+      return "linear-gradient(90deg, #22d3ee, #34d399)";
     case "magenta":
-      return "linear-gradient(90deg, hsl(var(--magenta-neon)), hsl(var(--magenta-neon) / 0.8))";
+      return "linear-gradient(90deg, #e879f9, #f472b6)";
     case "emerald":
-      return "linear-gradient(90deg, hsl(var(--emerald-neon)), hsl(var(--emerald-neon) / 0.8))";
+      return "linear-gradient(90deg, #34d399, #22d3ee)";
     case "rainbow":
-      return "linear-gradient(90deg, hsl(var(--cyan-neon)), hsl(var(--magenta-neon)), hsl(var(--emerald-neon)))";
+      return "linear-gradient(90deg, #22d3ee, #e879f9, #34d399)";
   }
 }
 
 function getGlowShadow(theme: NonNullable<GlassProgressBarProps["theme"]>) {
   switch (theme) {
     case "cyan":
-      return "0 0 8px hsl(var(--cyan-neon) / 0.6), 0 0 20px hsl(var(--cyan-neon) / 0.3)";
+      return "0 0 8px rgba(34,211,238,0.6), 0 0 20px rgba(34,211,238,0.3)";
     case "magenta":
-      return "0 0 8px hsl(var(--magenta-neon) / 0.6), 0 0 20px hsl(var(--magenta-neon) / 0.3)";
+      return "0 0 8px rgba(232,121,249,0.6), 0 0 20px rgba(232,121,249,0.3)";
     case "emerald":
-      return "0 0 8px hsl(var(--emerald-neon) / 0.6), 0 0 20px hsl(var(--emerald-neon) / 0.3)";
+      return "0 0 8px rgba(52,211,153,0.6), 0 0 20px rgba(52,211,153,0.3)";
     case "rainbow":
-      return "0 0 8px hsl(var(--cyan-neon) / 0.6), 0 0 20px hsl(var(--magenta-neon) / 0.3)";
+      return "0 0 8px rgba(34,211,238,0.6), 0 0 20px rgba(232,121,249,0.3)";
+  }
+}
+
+/** Subtle leading-edge glow for the fill bar (always on) */
+function getLeadingEdgeGlow(theme: NonNullable<GlassProgressBarProps["theme"]>) {
+  switch (theme) {
+    case "cyan":
+      return "0 0 8px rgba(34,211,238,0.4)";
+    case "magenta":
+      return "0 0 8px rgba(232,121,249,0.4)";
+    case "emerald":
+      return "0 0 8px rgba(52,211,153,0.4)";
+    case "rainbow":
+      return "0 0 8px rgba(34,211,238,0.4)";
   }
 }
 
@@ -91,7 +105,7 @@ export function GlassProgressBar({
 
   const displayPercent = Math.round(clampedValue * 100);
   const gradient = getThemeGradient(theme);
-  const glowShadow = glow ? getGlowShadow(theme) : undefined;
+  const glowShadow = glow ? getGlowShadow(theme) : getLeadingEdgeGlow(theme);
 
   const isInline = labelPosition === "inline";
 
@@ -102,8 +116,9 @@ export function GlassProgressBar({
         sizeMap[size]
       )}
       style={{
-        background: "rgba(255, 255, 255, 0.08)",
+        background: "rgba(2, 4, 10, 0.6)",
         border: "1px solid rgba(255, 255, 255, 0.06)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
       }}
     >
       {isIndeterminate ? (
@@ -137,6 +152,7 @@ export function GlassProgressBar({
           style={{
             background: gradient,
             boxShadow: glowShadow,
+            transition: "box-shadow 0.5s ease",
             ...(striped
               ? { backgroundImage: STRIPE_BG, backgroundSize: "16px 16px" }
               : {}),

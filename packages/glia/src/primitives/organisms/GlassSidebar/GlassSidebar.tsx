@@ -261,7 +261,7 @@ export function GlassSidebarItem({
       onClick={onClick}
       className={cn(
         "flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-sm transition-colors",
-        "text-[var(--glia-color-text-primary,#E2E8F0)]",
+        "text-[var(--glia-color-text-primary,#CBD5E1)]",
         collapsed && "justify-center px-0",
         className,
       )}

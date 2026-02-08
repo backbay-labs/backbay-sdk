@@ -253,15 +253,16 @@ function EventNode({
         <Html position={[0.25, 0.15, 0]} center={false}>
           <div
             style={{
-              background: "rgba(0, 0, 0, 0.92)",
-              border: `1px solid ${isHovered ? severityColor.getStyle() : themeColors.primary}`,
+              background: "rgba(2, 4, 10, 0.85)",
+              backdropFilter: "blur(24px)",
+              border: "1px solid rgba(255,255,255,0.06)",
               borderRadius: "4px",
               padding: isHovered ? "10px 14px" : "4px 8px",
               fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
               fontSize: isHovered ? "11px" : "9px",
               color: "#ffffff",
               minWidth: isHovered ? "200px" : "auto",
-              boxShadow: `0 0 20px ${severityColor.getStyle()}30`,
+              boxShadow: `0 0 20px ${severityColor.getStyle()}30, inset 0 1px 0 rgba(255,255,255,0.02)`,
               transition: "all 0.15s ease",
             }}
           >
@@ -533,14 +534,15 @@ export function AuditTrail({
         >
           <div
             style={{
-              background: "rgba(0, 8, 12, 0.95)",
-              border: `1px solid ${themeColors.primary}50`,
+              background: "rgba(2, 4, 10, 0.85)",
+              backdropFilter: "blur(24px)",
+              border: "1px solid rgba(255,255,255,0.06)",
               borderRadius: "5px",
               padding: "10px 14px",
               fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
               fontSize: "10px",
               color: themeColors.primary,
-              boxShadow: `0 0 20px ${themeColors.glow}, inset 0 0 15px ${themeColors.glow}`,
+              boxShadow: `0 0 20px ${themeColors.glow}, inset 0 1px 0 rgba(255,255,255,0.02)`,
               minWidth: "110px",
             }}
           >

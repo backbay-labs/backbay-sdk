@@ -60,14 +60,15 @@ function PanelFrame({ panel, selected, theme, onSelect, children }: PanelFramePr
 
       <Html position={[0, panel.size[1] / 2 + 0.2, 0.14]} center>
         <div
-          className="rounded border bg-slate-950/80 px-3 py-2 text-[12px] uppercase tracking-[0.2em]"
+          className="rounded border px-3 py-2 text-[12px] uppercase tracking-[0.2em]"
           style={{
+            background: "rgba(2, 4, 10, 0.85)",
             color: isHighlighted ? themeColors.glow : "rgba(226, 232, 240, 0.7)",
-            borderColor: isHighlighted ? `${themeColors.glow}66` : "rgba(148, 163, 184, 0.2)",
+            borderColor: isHighlighted ? `${themeColors.glow}33` : "rgba(255, 255, 255, 0.06)",
             boxShadow: isHighlighted
-              ? `0 0 14px ${themeColors.glow}55`
-              : `0 0 8px ${themeColors.glow}22`,
-            backdropFilter: "blur(6px)",
+              ? `0 0 14px ${themeColors.glow}55, inset 0 1px 0 rgba(255,255,255,0.02)`
+              : `inset 0 1px 0 rgba(255,255,255,0.02)`,
+            backdropFilter: "blur(24px)",
           }}
         >
           {panel.label}
@@ -231,12 +232,12 @@ export function SOCCommandCenter({
           <div
             className="rounded-lg border px-4 py-2 text-[11px] uppercase tracking-[0.3em]"
             style={{
-              borderColor: `${statusColor}80`,
-              background: "rgba(2, 6, 23, 0.85)",
+              borderColor: "rgba(255, 255, 255, 0.06)",
+              background: "rgba(2, 4, 10, 0.85)",
               color: statusColor,
-              boxShadow: `0 0 18px ${statusColor}40`,
+              boxShadow: `0 0 18px ${statusColor}40, inset 0 1px 0 rgba(255,255,255,0.02)`,
               fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
-              backdropFilter: "blur(8px)",
+              backdropFilter: "blur(24px)",
             }}
           >
             SOC STATUS • {globalStatus}

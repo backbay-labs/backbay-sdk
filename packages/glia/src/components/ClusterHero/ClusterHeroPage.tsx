@@ -93,7 +93,7 @@ function FeatureCard({
       <h3 className="font-serif text-2xl text-white mb-3 tracking-wide">
         {title}
       </h3>
-      <p className="text-zinc-400 leading-relaxed">
+      <p className="text-neutral-400 leading-relaxed">
         {description}
       </p>
     </motion.article>
@@ -218,7 +218,7 @@ function StatBlock({
       >
         {value}
       </div>
-      <div className="text-zinc-500 uppercase tracking-[0.15em] text-sm">
+      <div className="text-neutral-400 uppercase tracking-[0.15em] text-sm">
         {label}
       </div>
     </motion.div>
@@ -322,12 +322,12 @@ export function CTASection({ clusterId, config }: SectionProps) {
         <h2 className="font-serif text-6xl md:text-7xl text-white tracking-wide mb-8 leading-[1.1]">
           {cta.headline}
         </h2>
-        <p className="text-xl text-zinc-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xl text-neutral-400 mb-12 max-w-2xl mx-auto leading-relaxed">
           {cta.subtext}
         </p>
         <a
           href={`/clusters/${clusterId}`}
-          className="inline-block px-12 py-5 text-lg font-medium tracking-wider uppercase text-black transition-all duration-300 hover:brightness-110 hover:scale-105"
+          className="inline-block px-12 py-5 text-lg font-medium tracking-wider uppercase text-neutral-900 transition-all duration-300 hover:brightness-110 hover:scale-105"
           style={{ backgroundColor: config.accentColor }}
         >
           {cta.buttonLabel}

@@ -187,7 +187,7 @@ interface StatusTooltipProps {
 function StatusTooltip({ counts, total }: StatusTooltipProps) {
   return (
     <Html center style={{ pointerEvents: "none" }}>
-      <div className="bg-black/90 text-white text-xs px-3 py-2 rounded font-mono whitespace-nowrap border border-white/10">
+      <div className="bg-[rgba(2,4,10,0.85)] backdrop-blur-xl text-white text-xs px-3 py-2 rounded font-mono whitespace-nowrap border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
         <div className="text-white/60 mb-1 text-center">
           {total} receipt{total !== 1 ? "s" : ""}
         </div>

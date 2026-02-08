@@ -19,3 +19,6 @@ export * from "./StreamingText";
 export * from "./CodeBlock";
 export * from "./GliaErrorBoundary";
 export * from "./HUDLoader";
+export * from "./GlassAvatar";
+export * from "./GlassBadge";
+export * from "./GlassTextarea";

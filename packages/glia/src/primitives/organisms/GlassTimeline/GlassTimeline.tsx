@@ -109,7 +109,7 @@ function TimelineEventCard({
             {formattedTime}
           </time>
         )}
-        <h4 className="text-sm font-semibold text-[var(--glia-color-text-primary,#E2E8F0)] leading-snug">
+        <h4 className="text-sm font-semibold text-[var(--glia-color-text-primary,#CBD5E1)] leading-snug">
           {event.title}
         </h4>
         {event.description && (

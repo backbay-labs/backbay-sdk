@@ -105,3 +105,57 @@ export const Steps: Story = {
     label: "Step: 10",
   },
 };
+
+export const AllVariants: Story = {
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <GlassSlider variant="default" defaultValue={[60]} label="Default (Cyan)" showValue showRange />
+      <GlassSlider variant="accent" defaultValue={[45]} label="Accent (Violet)" showValue showRange />
+      <GlassSlider variant="success" defaultValue={[80]} label="Success (Emerald)" showValue showRange />
+    </div>
+  ),
+};
+
+export const GlowDemo: Story = {
+  render: () => (
+    <div className="flex flex-col gap-6">
+      <p className="text-xs text-neutral-500">Hover/drag thumbs to see neon glow rings</p>
+      <GlassSlider variant="default" defaultValue={[50]} label="Hover for cyan glow" showValue size="lg" />
+      <GlassSlider variant="accent" defaultValue={[50]} label="Hover for violet glow" showValue size="lg" />
+      <GlassSlider variant="success" defaultValue={[50]} label="Hover for emerald glow" showValue size="lg" />
+    </div>
+  ),
+};
+
+export const RangeWithVariants: Story = {
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <GlassSlider
+        variant="default"
+        defaultValue={[20, 80]}
+        label="Default Range"
+        showValue
+        showRange
+        formatValue={(v: number) => `${v}%`}
+      />
+      <GlassSlider
+        variant="accent"
+        defaultValue={[30, 70]}
+        label="Accent Range"
+        showValue
+        showRange
+        formatValue={(v: number) => `${v}%`}
+      />
+    </div>
+  ),
+};
+
+export const WithTooltipAllSizes: Story = {
+  render: () => (
+    <div className="flex flex-col gap-10">
+      <GlassSlider size="sm" defaultValue={[30]} label="Small + Tooltip" showTooltip />
+      <GlassSlider size="default" defaultValue={[50]} label="Default + Tooltip" showTooltip />
+      <GlassSlider size="lg" defaultValue={[70]} label="Large + Tooltip" showTooltip />
+    </div>
+  ),
+};

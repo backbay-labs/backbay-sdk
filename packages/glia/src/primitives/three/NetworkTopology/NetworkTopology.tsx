@@ -228,11 +228,13 @@ function NodeMesh({
       {showLabels && (
         <Html distanceFactor={10} position={[0, baseSize * 1.4, 0]}>
           <div
-            className="rounded-md border bg-slate-950/80 px-2 py-1 text-[10px] uppercase text-white/80 shadow-lg"
+            className="rounded-md border px-2 py-1 text-[10px] uppercase text-white/80 shadow-lg"
             style={{
+              background: "rgba(2, 4, 10, 0.85)",
+              backdropFilter: "blur(24px)",
               color: statusColors.text,
-              borderColor: `${themeColors.glow}55`,
-              boxShadow: `0 0 12px ${themeColors.glow}22`,
+              borderColor: "rgba(255,255,255,0.06)",
+              boxShadow: `0 0 12px ${themeColors.glow}22, inset 0 1px 0 rgba(255,255,255,0.02)`,
             }}
           >
             <div className="font-semibold">{node.hostname}</div>
@@ -245,7 +247,7 @@ function NodeMesh({
 
       {node.vulnerabilities && node.vulnerabilities > 0 && (
         <Html distanceFactor={12} position={[0.5, baseSize * 1.2, 0]}>
-          <div className="rounded-full bg-red-500/80 px-2 py-0.5 text-[9px] font-semibold text-white">
+          <div className="rounded-full bg-rose-500/60 backdrop-blur-xl border border-rose-500/20 px-2 py-0.5 text-[9px] font-semibold text-white shadow-[0_0_8px_rgba(244,63,94,0.3)]">
             {node.vulnerabilities}
           </div>
         </Html>

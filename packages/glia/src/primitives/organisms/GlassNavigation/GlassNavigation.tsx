@@ -84,8 +84,8 @@ export function GlassNavigation({
                 "relative flex items-center gap-2 px-3 h-full text-sm transition-colors",
                 "font-mono uppercase tracking-[0.06em] text-[11px]",
                 isActive
-                  ? "text-[var(--glia-color-text-primary,#E2E8F0)]"
-                  : "text-[var(--glia-color-text-soft,#64748B)] hover:text-[var(--glia-color-text-primary,#E2E8F0)]",
+                  ? "text-[var(--glia-color-text-primary,#CBD5E1)]"
+                  : "text-[var(--glia-color-text-soft,#64748B)] hover:text-[var(--glia-color-text-primary,#CBD5E1)]",
               )}
               style={{
                 background: isActive ? undefined : undefined,

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 import { Graph3D } from "./Graph3D";
 import type { GraphSnapshot, GraphNode, GraphEdge } from "./types";
 
@@ -25,8 +26,11 @@ const meta: Meta<typeof Graph3D> = {
   },
   decorators: [
     (Story) => (
-      <div style={{ width: "100%", height: "600px" }}>
+      <div style={{ width: "100%", height: "600px", background: "#050812" }}>
         <Canvas camera={{ position: [0, 2, 8], fov: 50 }}>
+          <ambientLight intensity={0.4} />
+          <directionalLight position={[10, 10, 5]} intensity={0.6} />
+          <OrbitControls autoRotate autoRotateSpeed={0.5} />
           <Story />
         </Canvas>
       </div>

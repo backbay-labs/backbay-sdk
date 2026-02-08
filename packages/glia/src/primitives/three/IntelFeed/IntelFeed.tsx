@@ -107,7 +107,7 @@ function IntelCard({
           }}
         >
           <div className="flex items-center justify-between gap-2 uppercase">
-            <span className="rounded bg-slate-900/80 px-1 py-0.5 text-[7px] font-semibold text-white/70">
+            <span className="rounded bg-[rgba(2,4,10,0.7)] backdrop-blur-xl border border-white/[0.06] px-1 py-0.5 text-[7px] font-semibold text-white/70 tracking-wider">
               {INTEL_TYPE_LABELS[item.type]}
             </span>
             <span className="text-[7px] opacity-60">{item.source}</span>
@@ -121,7 +121,7 @@ function IntelCard({
 
       {item.actionRequired && (
         <Html distanceFactor={12} position={[0.92, 0.28, 0.12]}>
-          <div className="rounded bg-red-500/75 px-1.5 py-0.5 text-[7px] font-semibold text-white/90 uppercase tracking-[0.08em]">
+          <div className="rounded bg-rose-500/40 backdrop-blur-xl border border-rose-500/20 px-1.5 py-0.5 text-[7px] font-semibold text-white/90 uppercase tracking-[0.12em] shadow-[0_0_8px_rgba(244,63,94,0.3)]">
             ACTION
           </div>
         </Html>
@@ -258,7 +258,7 @@ export function IntelFeed({
                 0,
               ]}
             >
-              <div className="rounded bg-slate-950/70 px-2 py-1 text-[8px] uppercase tracking-[0.18em] text-white/55">
+              <div className="rounded bg-[rgba(2,4,10,0.85)] backdrop-blur-xl border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] px-2 py-1 text-[8px] uppercase tracking-[0.18em] text-white/55">
                 {source.name} • {Math.round(source.reliability * 100)}%
               </div>
             </Html>

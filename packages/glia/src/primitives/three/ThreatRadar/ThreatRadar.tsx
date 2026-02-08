@@ -176,16 +176,19 @@ function ThreatDot({
           <div
             className="whitespace-nowrap select-none"
             style={{
-              background: "rgba(0, 0, 0, 0.85)",
-              border: `1px solid ${finalColor.getStyle()}`,
+              background: "rgba(2, 4, 10, 0.85)",
+              backdropFilter: "blur(24px)",
+              border: "1px solid rgba(255,255,255,0.06)",
               color: finalColor.getStyle(),
               fontSize: "10px",
               fontFamily: "monospace",
               fontWeight: 600,
               padding: "2px 6px",
               borderRadius: "3px",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
               textShadow: `0 0 4px ${finalColor.getStyle()}`,
-              boxShadow: `0 0 8px ${finalColor.getStyle()}40`,
+              boxShadow: `0 0 8px ${finalColor.getStyle()}40, inset 0 1px 0 rgba(255,255,255,0.02)`,
             }}
           >
             {THREAT_TYPE_LABELS[threat.type]}
@@ -443,6 +446,7 @@ export function ThreatRadar({
                 fontFamily: "monospace",
                 fontWeight: 700,
                 opacity: 0.5,
+                letterSpacing: "0.12em",
                 textShadow: `0 0 4px ${gridColor}`,
               }}
             >
@@ -457,17 +461,17 @@ export function ThreatRadar({
         <Html position={[0, 0.95, 0]} center style={{ pointerEvents: "none" }}>
           <div
             style={{
-              background: "rgba(2, 8, 6, 0.85)",
-              border: `1px solid ${gridColor}50`,
+              background: "rgba(2, 4, 10, 0.85)",
+              border: "1px solid rgba(255,255,255,0.06)",
               color: gridColor,
               fontSize: "10px",
               fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
               lineHeight: "1.5",
               padding: "10px 16px",
               borderRadius: "6px",
-              boxShadow: `0 0 16px ${gridColor}18, inset 0 0 14px ${gridColor}0f`,
+              boxShadow: `0 0 16px ${gridColor}18, inset 0 1px 0 rgba(255,255,255,0.02)`,
               minWidth: "156px",
-              backdropFilter: "blur(6px)",
+              backdropFilter: "blur(24px)",
             }}
           >
             <div

@@ -35,7 +35,7 @@ const commandPaletteVariants = cva("fixed inset-0 z-50 flex items-start justify-
     variant: {
       default: "bg-black/50 backdrop-blur-sm",
       dark: "bg-black/80 backdrop-blur-md",
-      light: "bg-white/80 backdrop-blur-sm",
+      light: "bg-[rgba(2,4,10,0.85)] backdrop-blur-sm",
     },
   },
   defaultVariants: {
