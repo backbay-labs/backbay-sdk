@@ -1,6 +1,6 @@
 {
   "name": "@backbay/glia-three",
-  "version": "0.2.0-alpha.2",
+  "version": "0.2.0-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@backbay/contract": "0.1.0-alpha.1",
-    "@backbay/glia-agent": "workspace:*",
+    "@backbay/glia-agent": "^0.1.0",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.3.0"
   },
