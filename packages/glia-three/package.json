@@ -1,6 +1,6 @@
 {
   "name": "@backbay/glia-three",
-  "version": "0.2.0-alpha.3",
+  "version": "0.2.0-alpha.4",
   "publishConfig": {
     "access": "public"
   },
@@ -12,6 +12,9 @@
     "./three": { "types": "./dist/three/index.d.ts", "import": "./dist/three/index.js" },
     "./environment": { "types": "./dist/environment/index.d.ts", "import": "./dist/environment/index.js" }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"

@@ -1,6 +1,6 @@
 {
   "name": "@backbay/glia-desktop",
-  "version": "0.2.0-alpha.1",
+  "version": "0.2.0-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -12,6 +12,9 @@
     "./core": { "types": "./dist/core/index.d.ts", "import": "./dist/core/index.js" },
     "./themes": { "types": "./dist/themes/index.d.ts", "import": "./dist/themes/index.js" }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
