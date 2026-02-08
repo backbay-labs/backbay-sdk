@@ -1,6 +1,9 @@
 {
   "name": "@backbay/glia-agent",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Emotion, cognition, and audio systems for AI agents",
   "type": "module",
   "main": "dist/index.js",

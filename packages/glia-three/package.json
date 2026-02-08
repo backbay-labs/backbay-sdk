@@ -1,6 +1,9 @@
 {
   "name": "@backbay/glia-three",
   "version": "0.2.0-alpha.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -1,6 +1,9 @@
 {
   "name": "@backbay/raymond",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "2D ray tracer engine — geometry, optics, and lighting models",
   "type": "module",
   "main": "dist/index.js",
