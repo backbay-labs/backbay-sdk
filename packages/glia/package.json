@@ -1,6 +1,6 @@
 {
   "name": "@backbay/glia",
-  "version": "0.2.0-alpha.6",
+  "version": "0.2.0-alpha.7",
   "description": "Reactive primitives for agent affect and thought",
   "publishConfig": {
     "access": "public"
@@ -112,7 +112,7 @@
     "@backbay/contract": "0.1.0-alpha.1",
     "@backbay/glia-agent": "^0.1.0",
     "@backbay/glia-desktop": "^0.2.0-alpha.2",
-    "@backbay/glia-three": "^0.2.0-alpha.4",
+    "@backbay/glia-three": "^0.2.0-alpha.5",
     "@backbay/raymond": "^0.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

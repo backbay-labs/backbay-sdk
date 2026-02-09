@@ -52,5 +52,9 @@ export * as CrystallineOrganism from "./CrystallineOrganism";
 // MetricsGalaxy - 3D metrics monitoring galaxy visualization
 export * from "./MetricsGalaxy";
 
+// RiverView - forensic action-river timeline visualization
+// Export as namespace to avoid FlowParticles/FlowParticlesProps collision with AuditTrail
+export * as RiverView from "./RiverView";
+
 // ThreeErrorBoundary - R3F/WebGL-specific error boundary with context-loss detection
 export * from "./ThreeErrorBoundary";
