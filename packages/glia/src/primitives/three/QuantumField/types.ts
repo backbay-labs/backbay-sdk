@@ -280,65 +280,129 @@ export interface FieldConfig {
   crtStrength: number;
   /** Copper/trace layer strength (0-1, lower = less "PCB demo" feel) */
   copperStrength: number;
+  /** Ambient reveal level (0-1, default 0). When > 0, lattice/iridescence are permanently visible without interaction. */
+  ambientReveal: number;
 }
 
 /** Default configuration */
 export const DEFAULT_FIELD_CONFIG: FieldConfig = {
+  // -- Rendering ---------------------------------------------------------------
+  /** Visual style preset */
   style: "constellation",
+  /** Performance tier: "low" | "medium" | "high" */
   performance: "high",
+  /** Enable post-processing effects */
   enablePost: true,
+  /** Enable particle trails */
   enableTrails: true,
+
+  // -- Particle System ---------------------------------------------------------
+  /** Max concurrent impulse animations */
   maxImpulses: 24,
+  /** Max anchor points for field interaction */
   maxAnchors: 8,
+  /** Impulse fade-out duration in ms */
   impulseDecayMs: 1200,
+  /** Probe hover radius in UV space */
   probeRadius: 0.08,
+  /** Etch trail decay rate per frame (0-1) */
   etchDecay: 0.02,
+  /** Default burst click amplitude */
   burstAmplitude: 0.8,
+  /** Canvas device-pixel-ratio range [min, max] */
   dpr: [1, 2],
+  /** Render-to-texture resolution for trails/water */
   rttResolution: 512,
+  /** Point count for particle field */
   pointsCount: 6000,
-  // PCB debug defaults - use normal blending and show both layers
+
+  // -- PCB Plane ---------------------------------------------------------------
+  /** Show the PCB circuit-board plane */
   showPcbPlane: true,
+  /** Show directional arrow overlay */
   showArrows: true,
+  /** Arrow blending mode */
   arrowsBlending: "normal",
+  /** Max arrow point size in px */
   arrowsMaxPointSize: 8,
-  // Ultra-Fine Lattice defaults
+
+  // -- Micro-Grid Lattice ------------------------------------------------------
+  /** Primary micro-grid line count */
   microGrid1: 60,
+  /** Secondary micro-grid line count */
   microGrid2: 200,
+  /** Micro-grid visibility strength (0-1) */
   microGridStrength: 0.8,
+
+  // -- Reveal & Etch -----------------------------------------------------------
+  /** Cursor reveal effect strength (0-1) */
   revealStrength: 1.0,
-  baseVisibility: 0.05, // Low default for reveal-based UX, increase for always-visible background
+  /** Background lattice visibility when not revealed (0-1) */
+  baseVisibility: 0.05,
+  /** Micro-warp distortion amplitude */
   microWarp: 0.015,
-  // Etch Inscription defaults
+  /** Etch line distortion amount */
   etchDistortion: 0.008,
+  /** Etch stroke radius in UV space */
   etchRadius: 0.008,
+  /** Etch stroke intensity */
   etchStrength: 0.9,
+  /** Freeze etch decay (strokes persist indefinitely) */
   etchFreeze: false,
-  // Scribble mode off by default
+  /** Enable scribble mode: pointer-down = continuous etch */
   scribbleMode: false,
-  // Phase Lens defaults
+
+  // -- Phase Lens --------------------------------------------------------------
+  /** Enable the magnification lens effect */
   lensEnabled: true,
+  /** Lens radius as fraction of viewport */
   lensRadius: 0.12,
+  /** Lens magnification factor */
   lensMagnification: 1.0,
+  /** Chromatic aberration strength at lens edge */
   lensChromatic: 0.35,
+  /** Lens inertia/smoothing (0-1, higher = more lag) */
   lensInertia: 0.18,
+  /** Velocity-driven lens brightness boost (0-1) */
   lensVelocityBoost: 0.6,
-  // Lattice topology
+
+  // -- Lattice Topology --------------------------------------------------------
+  /** Lattice geometry: "rect" | "hex" | "tri" */
   latticeMode: "rect",
-  // Etch velocity taper
+
+  // -- Etch Velocity Taper -----------------------------------------------------
+  /** Minimum etch radius at high velocity */
   etchRadiusMin: 0.004,
+  /** Maximum etch radius at low velocity */
   etchRadiusMax: 0.015,
+  /** How much velocity affects etch radius (0-1) */
   etchVelocityScale: 0.5,
-  // Palette / Atmosphere defaults (museum-grade out of the box)
+
+  // -- Color & Atmosphere ------------------------------------------------------
+  /** Color palette preset */
   paletteMode: "orchid",
+  /** Accent color intensity multiplier */
   accentIntensity: 1.1,
+  /** Iridescence rainbow strength (0-1) */
   iridescenceStrength: 0.35,
+  /** Iridescence interference scale (1-40) */
   iridescenceScale: 14,
+
+  // -- Post-Processing ---------------------------------------------------------
+  /** Exposure compensation (1.0 = neutral) */
   exposure: 1.0,
+  /** Filmic tone-mapping strength (0-1) */
   filmic: 0.85,
+  /** Film grain strength */
   grainStrength: 0.015,
+  /** CRT scanline effect strength */
   crtStrength: 0.25,
+  /** Copper-tone overlay strength */
   copperStrength: 0.15,
+
+  // -- Misc --------------------------------------------------------------------
+  /** Ambient reveal level (0-1). When > 0, lattice is permanently visible without interaction. */
+  ambientReveal: 0,
 };
 
 /** Get config for performance level */

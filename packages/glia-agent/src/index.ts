@@ -11,7 +11,12 @@
 // Emotion — re-export everything (no conflicts within emotion)
 export * from './emotion/index.js';
 
-// Cognition — namespace to avoid clashes with audio's EvidenceRef and clamp01
+// audio and cognition BOTH export EvidenceRef and clamp01.
+// Do NOT change these to `export *` — use selective re-exports to avoid collision.
+// The cognition versions are re-exported here; consumers needing audio's
+// EvidenceRef should import from '@backbay/glia-agent/audio'.
+
+// Cognition — selective re-export (see collision guard above)
 export {
   type CognitiveMode,
   type CognitiveSubmode,
@@ -42,7 +47,7 @@ export {
   type UseCognitionResult,
 } from './cognition/index.js';
 
-// Audio — namespace to avoid clashes with cognition's EvidenceRef and clamp01
+// Audio — selective re-export (see collision guard above)
 export {
   type AudioFormat,
   type VoiceLicenseCategory,

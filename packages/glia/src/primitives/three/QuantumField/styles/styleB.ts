@@ -68,6 +68,7 @@ uniform float uFilmic;          // 0-1
 uniform float uGrainStrength;   // 0-0.08
 uniform float uCrtStrength;     // 0-1
 uniform float uCopperStrength;  // 0-1
+uniform float uAmbientReveal;  // 0-1, permanent interaction-free reveal
 
 varying vec2 vUv;
 varying vec3 vPosition;
@@ -212,10 +213,25 @@ vec2 computeLensDistortedUv(vec2 uv, vec2 lensCenter, float lensRadius, float ma
   return uv - distortDir * distortionStrength * lensDist;
 }
 
-// Domain warping for organic feel - returns warped UV
+// Domain warping — layered sine (Gerstner-style)
+// Clean, tiling interference loops instead of noisy turbulence
 vec2 warpUV(vec2 uv, float amount, float time) {
-  // Use curl noise for divergence-free warping (feels more natural)
-  vec2 warp = curlNoise(uv * 5.0 + time * 0.05);
+  float t = time * 0.05;
+  // Three sine waves at different directions and frequencies
+  // dir1: horizontal, dir2: 60°, dir3: 120° — hexagonal symmetry
+  vec2 dir2 = vec2(0.866, 0.5);   // cos60, sin60
+  vec2 dir3 = vec2(-0.866, 0.5);  // cos120, sin120
+
+  vec2 warp = vec2(0.0);
+  // Primary wave — horizontal flow
+  warp += vec2(sin(uv.y * 4.0 + t), cos(uv.x * 4.0 + t * 1.1)) * 0.50;
+  // Secondary wave — 60° diagonal, higher freq
+  float phase2 = dot(uv, dir2) * 6.0 + t * 0.9;
+  warp += vec2(sin(phase2), cos(phase2)) * 0.30;
+  // Tertiary wave — 120° diagonal, subtle
+  float phase3 = dot(uv, dir3) * 5.0 + t * 1.3;
+  warp += vec2(cos(phase3), sin(phase3)) * 0.20;
+
   return uv + warp * amount;
 }
 
@@ -243,7 +259,7 @@ vec3 paletteBase(int mode) {
   // All modes start near-black for scarcity
   if (mode == 0) return vec3(0.003, 0.012, 0.010); // glia-cyan: deep teal-black
   if (mode == 1) return vec3(0.008, 0.005, 0.015); // orchid: deep purple-black
-  if (mode == 2) return vec3(0.012, 0.008, 0.003); // amber: warm black
+  if (mode == 2) return vec3(0.014, 0.010, 0.003); // amber: warm black (luxury gold base)
   if (mode == 3) return vec3(0.008, 0.012, 0.008); // mono: green-black
   if (mode == 4) return vec3(0.005, 0.010, 0.018); // ice: cold blue-black
   // Techno-Gothic themes
@@ -264,9 +280,9 @@ vec3 paletteLattice(int mode, float reveal) {
   } else if (mode == 1) { // orchid
     dim = vec3(0.04, 0.02, 0.06);
     bright = vec3(0.25, 0.12, 0.45);
-  } else if (mode == 2) { // amber
-    dim = vec3(0.06, 0.04, 0.02);
-    bright = vec3(0.45, 0.30, 0.08);
+  } else if (mode == 2) { // amber — luxury gold
+    dim = vec3(0.10, 0.07, 0.02);
+    bright = vec3(0.72, 0.55, 0.12);
   } else if (mode == 3) { // mono
     dim = vec3(0.02, 0.05, 0.02);
     bright = vec3(0.08, 0.35, 0.12);
@@ -297,7 +313,7 @@ vec3 paletteLattice(int mode, float reveal) {
 vec3 paletteAccent(int mode) {
   if (mode == 0) return vec3(0.15, 1.0, 0.7);   // glia-cyan: neon mint
   if (mode == 1) return vec3(0.4, 0.9, 1.0);    // orchid: cyan fringe
-  if (mode == 2) return vec3(0.2, 0.8, 0.7);    // amber: teal edge
+  if (mode == 2) return vec3(1.0, 0.85, 0.25);   // amber: luxury gold highlight
   if (mode == 3) return vec3(0.3, 1.0, 0.4);    // mono: bright green
   if (mode == 4) return vec3(0.6, 0.85, 1.0);   // ice: pale blue-white
   // Techno-Gothic accents
@@ -312,7 +328,7 @@ vec3 paletteAccent(int mode) {
 vec3 paletteCopper(int mode) {
   if (mode == 0) return vec3(0.06, 0.15, 0.12); // glia-cyan: dark teal
   if (mode == 1) return vec3(0.12, 0.06, 0.18); // orchid: dark purple
-  if (mode == 2) return vec3(0.18, 0.12, 0.04); // amber: dark gold
+  if (mode == 2) return vec3(0.28, 0.20, 0.06); // amber: rich gold trace
   if (mode == 3) return vec3(0.06, 0.12, 0.06); // mono: dark green
   if (mode == 4) return vec3(0.08, 0.12, 0.18); // ice: dark blue
   // Techno-Gothic copper/trace colors
@@ -495,6 +511,9 @@ void main() {
 
   // Etched areas (trails) are always revealed
   reveal = max(reveal, trailIntensity * 1.5);
+
+  // Ambient reveal: permanent interaction-free visibility
+  reveal = max(reveal, uAmbientReveal);
   reveal = clamp(reveal, 0.0, 1.0);
 
   // ========================================================================
@@ -527,22 +546,22 @@ void main() {
   // Two-frequency micro-grid using selected lattice mode
   float microGrid1 = latticeLines(warpedUv, uMicroGrid1, 0.02, uLatticeMode);
   float microGrid2 = latticeLines(warpedUv, uMicroGrid2, 0.015, uLatticeMode);
-  
+
   // Lens-magnified versions (higher detail inside lens)
   float microGrid1Lens = latticeLines(warpedLensUv, uMicroGrid1 * 1.3, 0.018, uLatticeMode);
   float microGrid2Lens = latticeLines(warpedLensUv, uMicroGrid2 * 1.2, 0.012, uLatticeMode);
-  
+
   // Blend between normal and lens-magnified based on lens mask
   float effectiveMicroGrid1 = mix(microGrid1, microGrid1Lens, lensMask);
   float effectiveMicroGrid2 = mix(microGrid2, microGrid2Lens, lensMask);
-  
+
   // Combine grids with different weights
   float microLattice = max(effectiveMicroGrid1 * 0.7, effectiveMicroGrid2 * 0.4);
-  
+
   // Lens boosts reveal effect (magnification = amplified visibility)
   float lensRevealBoost = lensMask * 0.6;
   float effectiveReveal = min(reveal + lensRevealBoost, 1.0);
-  
+
   // Base visibility can be set via uBaseVisibility; reveal increases it to full
   // COLOR SCARCITY: Use baseVisibility for always-on backgrounds, low for reveal-based UX
   float latticeVis = uMicroGridStrength * (uBaseVisibility + effectiveReveal * (1.0 - uBaseVisibility));
@@ -552,22 +571,23 @@ void main() {
   // without hover when baseVisibility is high (for always-on backgrounds)
   float latticeColorMix = max(uBaseVisibility, effectiveReveal);
   vec3 baseLatticeColor = paletteLattice(uPaletteMode, latticeColorMix);
-  
+
+  // Ambient iridescence on base lattice when ambientReveal is active
+  vec3 ambientIri = iridescence(warpedUv, uTime, uIridescenceScale, uIridescenceStrength);
+  baseLatticeColor += ambientIri * uAmbientReveal * 0.3;
+
   // Inside lens: boost saturation + add iridescence
   vec3 lensLatticeColor = baseLatticeColor * 1.3;
   vec3 iridescentShift = iridescence(warpedLensUv, uTime, uIridescenceScale, uIridescenceStrength);
   lensLatticeColor += iridescentShift * lensMask * 0.4;
-  
+
   vec3 latticeColor = mix(baseLatticeColor, lensLatticeColor, lensMask);
-  
+
   // Base energy from baseVisibility + boost from reveal/lens
   float latticeEnergy = max(uBaseVisibility * 0.5, max(effectiveReveal, lensMask * 0.6));
   // When baseVisibility is high, don't penalize - scale from 0.7 to 1.0
   float baseMult = 0.7 + uBaseVisibility * 0.3;
   color += latticeColor * microLattice * latticeVis * (baseMult + latticeEnergy * 0.3);
-  
-  // Energy nodes at grid intersections - DISABLED for cleaner look
-  // (uncomment to re-enable pulsing intersection dots)
   
   // ========================================================================
   // Phase Lens Rim Effect (iridescent + chromatic fringe)
@@ -969,7 +989,7 @@ varying vec2 vArrowDir;
 vec3 arrowColorDim(int mode) {
   if (mode == 0) return vec3(0.03, 0.12, 0.10); // glia-cyan
   if (mode == 1) return vec3(0.08, 0.04, 0.12); // orchid
-  if (mode == 2) return vec3(0.12, 0.08, 0.03); // amber
+  if (mode == 2) return vec3(0.18, 0.13, 0.04); // amber: gold dim
   if (mode == 3) return vec3(0.04, 0.10, 0.04); // mono
   if (mode == 4) return vec3(0.05, 0.10, 0.15); // ice
   // Techno-Gothic arrow dims
@@ -983,7 +1003,7 @@ vec3 arrowColorDim(int mode) {
 vec3 arrowColorBright(int mode) {
   if (mode == 0) return vec3(0.08, 0.35, 0.30); // glia-cyan
   if (mode == 1) return vec3(0.20, 0.15, 0.35); // orchid
-  if (mode == 2) return vec3(0.30, 0.22, 0.08); // amber
+  if (mode == 2) return vec3(0.50, 0.38, 0.10); // amber: gold bright
   if (mode == 3) return vec3(0.10, 0.30, 0.12); // mono
   if (mode == 4) return vec3(0.12, 0.28, 0.40); // ice
   // Techno-Gothic arrow brights
@@ -1074,6 +1094,7 @@ export interface PcbUniforms {
   uGrainStrength: { value: number }; // 0-0.08
   uCrtStrength: { value: number }; // 0-1
   uCopperStrength: { value: number }; // 0-1
+  uAmbientReveal: { value: number }; // 0-1
 }
 
 export function createPcbUniforms(): PcbUniforms {
@@ -1127,6 +1148,7 @@ export function createPcbUniforms(): PcbUniforms {
     uGrainStrength: { value: 0.015 },
     uCrtStrength: { value: 0.25 },
     uCopperStrength: { value: 0.15 },
+    uAmbientReveal: { value: 0 },
   };
 }
 

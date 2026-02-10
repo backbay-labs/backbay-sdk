@@ -26,10 +26,17 @@ const EAS_CONTRACTS = {
 };
 
 // Herodotus Facts Registry on Starknet
-const FACTS_REGISTRY = {
-  mainnet: "0x...", // TODO: Add mainnet address
+const FACTS_REGISTRY: Record<string, Hex> = {
   sepolia: "0x07d7f7ec0c3e3fef56cf4e5a8badb9ba0d3a13a0c4c3d6c5b8c7d6e5f4a3b2c1",
 };
+
+function getFactsRegistry(chain: string): Hex {
+  const addr = FACTS_REGISTRY[chain];
+  if (!addr) {
+    throw new Error(`Herodotus Facts Registry address not configured for chain "${chain}". Only sepolia is currently supported.`);
+  }
+  return addr;
+}
 
 /**
  * Storage proof for cross-chain verification
@@ -284,9 +291,11 @@ export function formatProofForStarknet(proof: StorageProof): {
 /**
  * Get the Facts Registry address for a Starknet network
  */
-export function getFactsRegistryAddress(network: "mainnet" | "sepolia"): string {
-  return FACTS_REGISTRY[network];
+export function getFactsRegistryAddress(network: string): Hex {
+  return getFactsRegistry(network);
 }
+
+export type VerificationErrorCode = "NOT_FOUND" | "NETWORK_ERROR" | "INVALID_CONFIG" | "UNKNOWN";
 
 /**
  * Verify an attestation exists using Herodotus
@@ -308,6 +317,7 @@ export async function verifyAttestationCrossChain(
   verified: boolean;
   proof?: ReturnType<typeof formatProofForStarknet>;
   error?: string;
+  errorCode?: VerificationErrorCode;
 }> {
   try {
     const proof = await generateProof(
@@ -324,6 +334,7 @@ export async function verifyAttestationCrossChain(
       return {
         verified: false,
         error: "Attestation not found in storage",
+        errorCode: "NOT_FOUND",
       };
     }
 
@@ -335,6 +346,7 @@ export async function verifyAttestationCrossChain(
     return {
       verified: false,
       error: error instanceof Error ? error.message : "Unknown error",
+      errorCode: "NETWORK_ERROR",
     };
   }
 }

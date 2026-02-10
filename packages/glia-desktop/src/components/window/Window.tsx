@@ -48,6 +48,10 @@ const RESTORE_TRANSITION: Transition = {
   mass: 0.8,
 };
 
+const DEFAULT_WINDOW_POSITION = { x: 100, y: 100 } as const;
+const DEFAULT_WINDOW_SIZE = { width: 640, height: 480 } as const;
+const DEFAULT_WINDOW_MIN_SIZE = { width: 320, height: 240 } as const;
+
 /**
  * Get animation config based on window variant
  */
@@ -404,9 +408,9 @@ function WindowInner({
     ? {
         id,
         title: titleProp ?? 'Window',
-        position: positionProp ?? { x: 100, y: 100 },
-        size: sizeProp ?? { width: 640, height: 480 },
-        minSize: minSizeProp ?? { width: 320, height: 240 },
+        position: positionProp ?? DEFAULT_WINDOW_POSITION,
+        size: sizeProp ?? DEFAULT_WINDOW_SIZE,
+        minSize: minSizeProp ?? DEFAULT_WINDOW_MIN_SIZE,
         maxSize: maxSizeProp,
         zIndex: zIndexProp ?? 1,
         isMinimized: isMinimizedProp ?? false,
@@ -508,8 +512,8 @@ function WindowInner({
   const animations = useMemo(() => getWindowAnimations(variant), [variant]);
 
   const minimizeVariants = useMemo(() => {
-    const pos = resolvedWindow.position ?? { x: 100, y: 100 };
-    const sz = resolvedWindow.size ?? { width: 640, height: 480 };
+    const pos = resolvedWindow.position ?? DEFAULT_WINDOW_POSITION;
+    const sz = resolvedWindow.size ?? DEFAULT_WINDOW_SIZE;
     return getMinimizeRestoreVariants(
       { x: pos.x, y: pos.y, width: sz.width, height: sz.height },
       minimizeTarget
@@ -585,9 +589,9 @@ function WindowInner({
   if (!isVisible) return null;
 
   const hasGroup = !!group && group.windowIds.length > 1;
-  const pos = resolvedWindow.position ?? { x: 100, y: 100 };
-  const sz = resolvedWindow.size ?? { width: 640, height: 480 };
-  const minSz = resolvedWindow.minSize ?? { width: 320, height: 240 };
+  const pos = resolvedWindow.position ?? DEFAULT_WINDOW_POSITION;
+  const sz = resolvedWindow.size ?? DEFAULT_WINDOW_SIZE;
+  const minSz = resolvedWindow.minSize ?? DEFAULT_WINDOW_MIN_SIZE;
   const title = resolvedWindow.title ?? titleProp ?? 'Window';
 
   // Disable dragging for maximized/fullscreen windows

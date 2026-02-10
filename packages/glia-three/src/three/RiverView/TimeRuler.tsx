@@ -30,6 +30,32 @@ function formatTickTime(ms: number): string {
 // TICK MARK
 // =============================================================================
 
+const TICK_STYLE_BASE: React.CSSProperties = {
+  fontFamily: "ui-monospace, monospace",
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  whiteSpace: "nowrap",
+  background: "rgba(2,4,10,0.7)",
+  borderRadius: "3px",
+  padding: "1px 4px",
+};
+
+const TICK_STYLE_CURRENT: React.CSSProperties = {
+  ...TICK_STYLE_BASE,
+  fontSize: "10px",
+  color: "#22D3EE",
+  border: "1px solid rgba(34,211,238,0.3)",
+  textShadow: "0 0 6px rgba(34,211,238,0.5)",
+};
+
+const TICK_STYLE_DEFAULT: React.CSSProperties = {
+  ...TICK_STYLE_BASE,
+  fontSize: "8px",
+  color: "#64748B",
+  border: "1px solid rgba(255,255,255,0.04)",
+  textShadow: "none",
+};
+
 function TickMark({
   position,
   label,
@@ -58,23 +84,7 @@ function TickMark({
         distanceFactor={8}
         style={{ pointerEvents: "none" }}
       >
-        <span
-          style={{
-            fontFamily: "ui-monospace, monospace",
-            fontSize: isCurrent ? "10px" : "8px",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            whiteSpace: "nowrap",
-            color: isCurrent ? "#22D3EE" : "#64748B",
-            background: "rgba(2,4,10,0.7)",
-            borderRadius: "3px",
-            padding: "1px 4px",
-            border: isCurrent
-              ? "1px solid rgba(34,211,238,0.3)"
-              : "1px solid rgba(255,255,255,0.04)",
-            textShadow: isCurrent ? "0 0 6px rgba(34,211,238,0.5)" : "none",
-          }}
-        >
+        <span style={isCurrent ? TICK_STYLE_CURRENT : TICK_STYLE_DEFAULT}>
           {label}
         </span>
       </Html>
@@ -110,7 +120,8 @@ export function TimeRuler({
       const pos = new THREE.Vector3(point.x, point.y - 0.4, point.z);
       items.push({
         position: pos,
-        label: formatTickTime(time),
+        // Render labels as elapsed time within the active range.
+        label: formatTickTime(time - start),
         isCurrent: false,
       });
     }
@@ -126,7 +137,8 @@ export function TimeRuler({
     const pos = new THREE.Vector3(point.x, point.y - 0.4, point.z);
     return {
       position: pos,
-      label: formatTickTime(currentTime),
+      // Render labels as elapsed time within the active range.
+      label: formatTickTime(currentTime - start),
       isCurrent: true,
     };
   }, [curve, currentTime, start, duration]);

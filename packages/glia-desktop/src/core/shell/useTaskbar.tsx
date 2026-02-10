@@ -6,7 +6,7 @@
  */
 
 import { useMemo, createContext, useContext, useState, type ReactNode } from 'react';
-import { create, createStore, useStore } from 'zustand';
+import { create, createStore, useStore, type StoreApi } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import type { WindowId } from '../window/types';
 import type {
@@ -55,7 +55,7 @@ interface TaskbarStore {
 // Store Factory
 // ═══════════════════════════════════════════════════════════════════════════
 
-function createTaskbarStoreImpl(set: any, get: any): TaskbarStore {
+function createTaskbarStoreImpl(set: StoreApi<TaskbarStore>["setState"], get: StoreApi<TaskbarStore>["getState"]): TaskbarStore {
   return {
     buttonPositions: new Map(),
     previewState: null,
@@ -205,7 +205,17 @@ export const useTaskbarStore = create<TaskbarStore>((set, get) => createTaskbarS
 // Context-aware store resolver
 // ═══════════════════════════════════════════════════════════════════════════
 
-/** Returns the context-provided store if available, otherwise the singleton. */
+/**
+ * Context-aware store resolver.
+ *
+ * Checks for a <TaskbarStoreProvider> ancestor first. If none is found,
+ * falls back to the module-level singleton. This lets consumers choose:
+ *
+ *   - **Provider mode** (isolated): wrap a subtree in <TaskbarStoreProvider>
+ *   - **Singleton mode** (shared): import useTaskbar directly, no provider needed
+ *
+ * SSR: the singleton persists across requests. Use Provider mode in SSR.
+ */
 function useResolvedTaskbarStore(): import('zustand').StoreApi<TaskbarStore> {
   const contextStore = useContext(TaskbarStoreContext);
   return contextStore ?? useTaskbarStore;

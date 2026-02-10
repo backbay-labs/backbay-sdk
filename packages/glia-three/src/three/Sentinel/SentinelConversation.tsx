@@ -349,6 +349,8 @@ const VoiceCaptions: React.FC<VoiceCaptionsProps> = ({ text, onComplete }) => {
   const [isComplete, setIsComplete] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lingerTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   // Check for reduced motion preference
   const prefersReducedMotion =
@@ -371,7 +373,7 @@ const VoiceCaptions: React.FC<VoiceCaptionsProps> = ({ text, onComplete }) => {
       setVisibleWords(words);
       setIsComplete(true);
       lingerTimeoutRef.current = setTimeout(() => {
-        onComplete?.();
+        onCompleteRef.current?.();
       }, 2000);
       return;
     }
@@ -386,7 +388,7 @@ const VoiceCaptions: React.FC<VoiceCaptionsProps> = ({ text, onComplete }) => {
         if (index === words.length - 1) {
           setIsComplete(true);
           lingerTimeoutRef.current = setTimeout(() => {
-            onComplete?.();
+            onCompleteRef.current?.();
           }, 2000);
         }
       }, index * wordDelay);
@@ -396,7 +398,7 @@ const VoiceCaptions: React.FC<VoiceCaptionsProps> = ({ text, onComplete }) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (lingerTimeoutRef.current) clearTimeout(lingerTimeoutRef.current);
     };
-  }, [text, onComplete, prefersReducedMotion]);
+  }, [text, prefersReducedMotion]);
 
   if (!text || visibleWords.length === 0) return null;
 
@@ -694,7 +696,11 @@ const TextSigil: React.FC<TextSigilProps> = ({
 // Main Component
 // =============================================================================
 
-export const SentinelConversation: React.FC = () => {
+interface SentinelConversationProps {
+  onSend?: (message: string) => void;
+}
+
+export const SentinelConversation: React.FC<SentinelConversationProps> = ({ onSend }) => {
   const conversationState = useSentinelStore((s) => s.conversationState);
   const isTextInputEnabled = useSentinelStore((s) => s.isTextInputEnabled);
   const isMuted = useSentinelStore((s) => s.isMuted);
@@ -717,10 +723,9 @@ export const SentinelConversation: React.FC = () => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
-    // TODO: Send message to agent
-    console.log('Sending message:', inputValue);
+    onSend?.(inputValue.trim());
     setInputValue('');
-  }, [inputValue]);
+  }, [inputValue, onSend]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {

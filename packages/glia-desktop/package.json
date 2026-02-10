@@ -15,12 +15,14 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "zustand": "^5.0.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.3.0"
@@ -28,13 +30,30 @@
   "peerDependencies": {
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19",
-    "framer-motion": "^12"
+    "framer-motion": "^12",
+    "zustand": "^5"
+  },
+  "peerDependenciesMeta": {
+    "zustand": { "optional": false }
   },
   "optionalDependencies": {
     "react-rnd": "^10.4.13"
   },
   "devDependencies": {
+    "happy-dom": "^15.0.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.8.3"
-  }
+    "typescript": "^5.9.3",
+    "vitest": "^2.0.0"
+  },
+  "author": "Backbay <dev@backbay.industries>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backbay/backbay-sdk.git",
+    "directory": "packages/glia-desktop"
+  },
+  "bugs": {
+    "url": "https://github.com/backbay/backbay-sdk/issues"
+  },
+  "homepage": "https://github.com/backbay/backbay-sdk/tree/main/packages/glia-desktop#readme"
 }

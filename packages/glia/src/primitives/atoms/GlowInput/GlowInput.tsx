@@ -77,126 +77,134 @@ export interface GlowInputProps
   containerClassName?: string;
 }
 
-export function GlowInput({
-  className,
-  containerClassName,
-  variant,
-  size,
-  label,
-  description,
-  error,
-  leftIcon,
-  rightIcon,
-  disableAnimations = false,
-  id,
-  ...props
-}: GlowInputProps) {
-  const inputId = useId();
-  const finalId = id || inputId;
-  const descriptionId = `${finalId}-description`;
-  const errorId = `${finalId}-error`;
+export const GlowInput = React.forwardRef<HTMLInputElement, GlowInputProps>(
+  function GlowInput(
+    {
+      className,
+      containerClassName,
+      variant,
+      size,
+      label,
+      description,
+      error,
+      leftIcon,
+      rightIcon,
+      disableAnimations = false,
+      id,
+      ...props
+    },
+    ref
+  ) {
+    const inputId = useId();
+    const finalId = id || inputId;
+    const descriptionId = `${finalId}-description`;
+    const errorId = `${finalId}-error`;
 
-  const reducedMotion = prefersReducedMotion();
-  const shouldAnimate = !disableAnimations && !reducedMotion;
+    const reducedMotion = prefersReducedMotion();
+    const shouldAnimate = !disableAnimations && !reducedMotion;
 
-  // Use error variant if error is present
-  const finalVariant = error ? "error" : variant;
+    // Use error variant if error is present
+    const finalVariant = error ? "error" : variant;
 
-  return (
-    <div className={cn(containerVariants({ size }), containerClassName)}>
-      {/* Label */}
-      {label && (
-        <motion.label
-          htmlFor={finalId}
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          initial={shouldAnimate ? { opacity: 0, y: -5 } : {}}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          {label}
-        </motion.label>
-      )}
-
-      {/* Input container */}
-      <div className="relative">
-        {/* Left icon */}
-        {leftIcon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-            {leftIcon}
-          </div>
+    return (
+      <div className={cn(containerVariants({ size }), containerClassName)}>
+        {/* Label */}
+        {label && (
+          <motion.label
+            htmlFor={finalId}
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            initial={shouldAnimate ? { opacity: 0, y: -5 } : {}}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {label}
+          </motion.label>
         )}
 
-        {/* Input field */}
-        <motion.input
-          id={finalId}
-          className={cn(
-            glowInputVariants({ variant: finalVariant, size }),
-            leftIcon && "pl-10",
-            rightIcon && "pr-10",
-            className
+        {/* Input container */}
+        <div className="relative">
+          {/* Left icon */}
+          {leftIcon && (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              {leftIcon}
+            </div>
           )}
-          aria-describedby={
-            description || error
-              ? `${description ? descriptionId : ""} ${error ? errorId : ""}`.trim()
-              : undefined
-          }
-          aria-invalid={error ? "true" : undefined}
-          initial={shouldAnimate ? { opacity: 0, scale: 0.98 } : {}}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.2, delay: 0.1 }}
-          whileFocus={
-            shouldAnimate
-              ? {
-                  scale: 1.01,
-                  transition: { duration: 0.1 },
-                }
-              : {}
-          }
-          {...props}
-        />
 
-        {/* Right icon or error icon */}
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-          {error ? (
-            <motion.div
-              initial={shouldAnimate ? { opacity: 0, scale: 0.8 } : {}}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.2 }}
-            >
-              <AlertCircle className="h-4 w-4 text-destructive" />
-            </motion.div>
-          ) : (
-            rightIcon
-          )}
+          {/* Input field */}
+          <motion.input
+            ref={ref}
+            id={finalId}
+            className={cn(
+              glowInputVariants({ variant: finalVariant, size }),
+              leftIcon && "pl-10",
+              rightIcon && "pr-10",
+              className
+            )}
+            aria-describedby={
+              description || error
+                ? `${description ? descriptionId : ""} ${error ? errorId : ""}`.trim()
+                : undefined
+            }
+            aria-invalid={error ? "true" : undefined}
+            initial={shouldAnimate ? { opacity: 0, scale: 0.98 } : {}}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2, delay: 0.1 }}
+            whileFocus={
+              shouldAnimate
+                ? {
+                    scale: 1.01,
+                    transition: { duration: 0.1 },
+                  }
+                : {}
+            }
+            {...props}
+          />
+
+          {/* Right icon or error icon */}
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+            {error ? (
+              <motion.div
+                initial={shouldAnimate ? { opacity: 0, scale: 0.8 } : {}}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                <AlertCircle className="h-4 w-4 text-destructive" />
+              </motion.div>
+            ) : (
+              rightIcon
+            )}
+          </div>
         </div>
+
+        {/* Description */}
+        {description && !error && (
+          <motion.p
+            id={descriptionId}
+            className="text-sm text-muted-foreground"
+            initial={shouldAnimate ? { opacity: 0, y: 5 } : {}}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.2 }}
+          >
+            {description}
+          </motion.p>
+        )}
+
+        {/* Error message */}
+        {error && (
+          <motion.p
+            id={errorId}
+            className="text-sm text-destructive flex items-center gap-1"
+            initial={shouldAnimate ? { opacity: 0, y: 5 } : {}}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.2 }}
+          >
+            <AlertCircle className="h-3 w-3" />
+            {error}
+          </motion.p>
+        )}
       </div>
+    );
+  }
+);
 
-      {/* Description */}
-      {description && !error && (
-        <motion.p
-          id={descriptionId}
-          className="text-sm text-muted-foreground"
-          initial={shouldAnimate ? { opacity: 0, y: 5 } : {}}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, delay: 0.2 }}
-        >
-          {description}
-        </motion.p>
-      )}
-
-      {/* Error message */}
-      {error && (
-        <motion.p
-          id={errorId}
-          className="text-sm text-destructive flex items-center gap-1"
-          initial={shouldAnimate ? { opacity: 0, y: 5 } : {}}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, delay: 0.2 }}
-        >
-          <AlertCircle className="h-3 w-3" />
-          {error}
-        </motion.p>
-      )}
-    </div>
-  );
-}
+GlowInput.displayName = "GlowInput";
