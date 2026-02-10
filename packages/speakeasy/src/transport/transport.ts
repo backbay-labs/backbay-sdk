@@ -54,6 +54,7 @@ export function createTransport(config: NodeConfig = {}): Transport {
   let state: ConnectionState = 'disconnected';
   const peers = new Map<string, KnownPeer>();
   const subscriptions = new Set<string>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- heterogeneous handler sets keyed by event name
   const eventHandlers = new Map<keyof NetworkEvents, Set<NetworkEventHandler<any>>>();
 
   // Event emitter helpers
@@ -71,7 +72,7 @@ export function createTransport(config: NodeConfig = {}): Transport {
 
   // Build transport configuration
   function buildTransports() {
-    const transports = [];
+    const transports: Array<ReturnType<typeof webSockets> | ReturnType<typeof webRTC> | ReturnType<typeof circuitRelayTransport>> = [];
 
     if (mergedConfig.enableWebSocket) {
       transports.push(webSockets());

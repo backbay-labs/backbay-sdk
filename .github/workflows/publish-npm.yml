@@ -1,9 +1,6 @@
-name: Publish to npm
+name: Publish to npm (manual)
 
 on:
-  push:
-    tags:
-      - "v*"
   workflow_dispatch:
     inputs:
       package:

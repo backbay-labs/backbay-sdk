@@ -52,87 +52,95 @@ export interface GlowButtonProps
   disableAnimations?: boolean;
 }
 
-export function GlowButton({
-  className,
-  variant,
-  size,
-  glow,
-  loading = false,
-  disabled,
-  disableAnimations = false,
-  children,
-  ...props
-}: GlowButtonProps) {
-  const reducedMotion = prefersReducedMotion();
-  const shouldAnimate = !disableAnimations && !reducedMotion;
+export const GlowButton = React.forwardRef<HTMLButtonElement, GlowButtonProps>(
+  function GlowButton(
+    {
+      className,
+      variant,
+      size,
+      glow,
+      loading = false,
+      disabled,
+      disableAnimations = false,
+      children,
+      ...props
+    },
+    ref
+  ) {
+    const reducedMotion = prefersReducedMotion();
+    const shouldAnimate = !disableAnimations && !reducedMotion;
 
-  const isDisabled = disabled || loading;
+    const isDisabled = disabled || loading;
 
-  return (
-    <motion.button
-      className={cn(
-        glowButtonVariants({
-          variant,
-          size,
-          glow: shouldAnimate ? glow : "none",
-        }),
-        className
-      )}
-      disabled={isDisabled}
-      whileHover={
-        shouldAnimate && !isDisabled
-          ? {
-              scale: 1.02,
-              transition: { duration: 0.1 },
-            }
-          : {}
-      }
-      whileTap={
-        shouldAnimate && !isDisabled
-          ? {
-              scale: 0.98,
-              transition: { duration: 0.1 },
-            }
-          : {}
-      }
-      {...props}
-    >
-      {/* Background glow effect */}
-      {shouldAnimate && glow !== "none" && (
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-cyan-neon/20 via-magenta-neon/20 to-emerald-neon/20 opacity-0 rounded-md"
-          animate={{
-            opacity: [0, 0.3, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      )}
-
-      {/* Content */}
-      <div className="relative z-10 flex items-center justify-center gap-2">
-        {loading && (
+    return (
+      <motion.button
+        ref={ref}
+        className={cn(
+          glowButtonVariants({
+            variant,
+            size,
+            glow: shouldAnimate ? glow : "none",
+          }),
+          className
+        )}
+        disabled={isDisabled}
+        whileHover={
+          shouldAnimate && !isDisabled
+            ? {
+                scale: 1.02,
+                transition: { duration: 0.1 },
+              }
+            : {}
+        }
+        whileTap={
+          shouldAnimate && !isDisabled
+            ? {
+                scale: 0.98,
+                transition: { duration: 0.1 },
+              }
+            : {}
+        }
+        {...props}
+      >
+        {/* Background glow effect */}
+        {shouldAnimate && glow !== "none" && (
           <motion.div
-            initial={shouldAnimate ? { opacity: 0, scale: 0.8 } : {}}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Loader2 className="h-4 w-4 animate-spin" />
-          </motion.div>
+            className="absolute inset-0 bg-gradient-to-r from-cyan-neon/20 via-magenta-neon/20 to-emerald-neon/20 opacity-0 rounded-md"
+            animate={{
+              opacity: [0, 0.3, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
         )}
-        {children && (
-          <motion.span
-            initial={shouldAnimate && loading ? { opacity: 0, x: -10 } : {}}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.2, delay: loading ? 0.1 : 0 }}
-          >
-            {children}
-          </motion.span>
-        )}
-      </div>
-    </motion.button>
-  );
-}
+
+        {/* Content */}
+        <div className="relative z-10 flex items-center justify-center gap-2">
+          {loading && (
+            <motion.div
+              initial={shouldAnimate ? { opacity: 0, scale: 0.8 } : {}}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Loader2 className="h-4 w-4 animate-spin" />
+            </motion.div>
+          )}
+          {children && (
+            <motion.span
+              initial={shouldAnimate && loading ? { opacity: 0, x: -10 } : {}}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.2, delay: loading ? 0.1 : 0 }}
+            >
+              {children}
+            </motion.span>
+          )}
+        </div>
+      </motion.button>
+    );
+  }
+);
+
+GlowButton.displayName = "GlowButton";

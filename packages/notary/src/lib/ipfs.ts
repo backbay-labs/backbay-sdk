@@ -104,10 +104,10 @@ export async function setupAuthentication(email: string): Promise<void> {
   const { create } = await import("@web3-storage/w3up-client");
   const client = await create();
 
-  console.log(`Sending verification email to ${email}...`);
+  console.info(`Sending verification email to ${email}...`);
   await client.login(email as `${string}@${string}`);
-  console.log("Email sent! Check your inbox and click the verification link.");
-  console.log("After verifying, run 'notary setup' again to complete setup.");
+  console.info("Email sent! Check your inbox and click the verification link.");
+  console.info("After verifying, run 'notary setup' again to complete setup.");
 }
 
 /**

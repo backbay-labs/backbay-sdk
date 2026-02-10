@@ -214,7 +214,7 @@ export function initializeComponentBindings(): void {
       registerComponent("popover-content", PopoverContent as unknown as AnyComponent);
     }),
   ]).then(() => {
-    console.log("[AG-UI] Component bindings initialized");
+    console.info("[AG-UI] Component bindings initialized");
   });
 }
 
@@ -224,7 +224,7 @@ export function initializeComponentBindings(): void {
  */
 export function initializeComponentBindingsSync(): void {
   // This would require static imports - use only if async init isn't possible
-  console.log("[AG-UI] Sync component bindings not yet implemented");
+  console.info("[AG-UI] Sync component bindings not yet implemented");
 }
 
 /**
@@ -239,7 +239,7 @@ export async function loadThreeComponents(): Promise<void> {
   registerComponent("graph-3d", Graph3D as unknown as AnyComponent);
   registerComponent("particle-field", ParticleField as unknown as AnyComponent);
 
-  console.log("[AG-UI] Three.js components loaded");
+  console.info("[AG-UI] Three.js components loaded");
 }
 
 /**

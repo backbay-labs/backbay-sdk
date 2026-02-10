@@ -15,12 +15,15 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@backbay/contract": "0.1.0-alpha.1",
+    "@backbay/contract": "^0.1.0-alpha.1",
     "@backbay/glia-agent": "^0.1.0",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.3.0"
@@ -37,10 +40,23 @@
     "styled-components": "^6"
   },
   "devDependencies": {
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.3",
     "styled-components": "^6.3.8",
     "tsup": "^8.5.1",
     "@types/three": "^0.170.0",
-    "@types/react": "^19.0.0"
-  }
+    "@types/react": "^19.0.0",
+    "happy-dom": "^15.0.0",
+    "vitest": "^2.0.0"
+  },
+  "author": "Backbay <dev@backbay.industries>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backbay/backbay-sdk.git",
+    "directory": "packages/glia-three"
+  },
+  "bugs": {
+    "url": "https://github.com/backbay/backbay-sdk/issues"
+  },
+  "homepage": "https://github.com/backbay/backbay-sdk/tree/main/packages/glia-three#readme"
 }

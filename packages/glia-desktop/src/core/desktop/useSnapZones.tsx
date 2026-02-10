@@ -5,7 +5,7 @@
  * Detects when windows are dragged to screen edges/corners.
  */
 
-import { create, createStore, useStore } from 'zustand';
+import { create, createStore, useStore, type StoreApi } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { WindowId } from '../window/types';
@@ -41,7 +41,7 @@ interface SnapZoneStore {
 // Store Factory
 // ═══════════════════════════════════════════════════════════════════════════
 
-function createSnapZoneStoreImpl(set: any, get: any): SnapZoneStore {
+function createSnapZoneStoreImpl(set: StoreApi<SnapZoneStore>["setState"], get: StoreApi<SnapZoneStore>["getState"]): SnapZoneStore {
   return {
     activeZone: null,
     draggingWindowId: null,

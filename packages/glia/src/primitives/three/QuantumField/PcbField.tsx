@@ -10,6 +10,12 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+
+function shallowEqual(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
+  const keysA = Object.keys(a);
+  if (keysA.length !== Object.keys(b).length) return false;
+  return keysA.every(k => a[k] === b[k]);
+}
 import type { FieldBus } from "./FieldBus";
 import { clientToNdc } from "./domMapping";
 import {
@@ -109,76 +115,56 @@ export function PcbField({ bus, config, worldPlaneSize }: PcbFieldProps) {
     return { width: 20, height: 15 };
   }, [camera, size, worldPlaneSize]);
 
+  // Stabilize config reference via shallow comparison
+  const configRef = useRef(config);
+  if (!shallowEqual(configRef.current as unknown as Record<string, unknown>, config as unknown as Record<string, unknown>)) {
+    configRef.current = config;
+  }
+  const stableConfig = configRef.current;
+
   // Create uniforms
   const uniforms = useMemo(() => {
     const u = createPcbUniforms();
     u.uResolution.value.set(size.width, size.height);
-    u.uProbeRadius.value = config.probeRadius;
+    u.uProbeRadius.value = stableConfig.probeRadius;
     // FIX: Set plane size for correct UV normalization in arrows shader
     u.uPlaneSize.value.set(planeSize.width, planeSize.height);
     // FIX: Set max point size from config to prevent blowout
-    u.uMaxPointSize.value = config.arrowsMaxPointSize;
+    u.uMaxPointSize.value = stableConfig.arrowsMaxPointSize;
     // === Ultra-Fine Lattice Uniforms ===
-    u.uMicroGrid1.value = config.microGrid1;
-    u.uMicroGrid2.value = config.microGrid2;
-    u.uMicroGridStrength.value = config.microGridStrength;
-    u.uRevealStrength.value = config.revealStrength;
-    u.uBaseVisibility.value = config.baseVisibility;
-    u.uMicroWarp.value = config.microWarp;
-    u.uEtchDistortion.value = config.etchDistortion;
+    u.uMicroGrid1.value = stableConfig.microGrid1;
+    u.uMicroGrid2.value = stableConfig.microGrid2;
+    u.uMicroGridStrength.value = stableConfig.microGridStrength;
+    u.uRevealStrength.value = stableConfig.revealStrength;
+    u.uBaseVisibility.value = stableConfig.baseVisibility;
+    u.uMicroWarp.value = stableConfig.microWarp;
+    u.uEtchDistortion.value = stableConfig.etchDistortion;
     // === Phase Lens Uniforms ===
-    u.uLensEnabled.value = config.lensEnabled ? 1 : 0;
-    u.uLens.value.set(0.5, 0.5, config.lensRadius, config.lensMagnification);
-    u.uLensChromatic.value = config.lensChromatic;
+    u.uLensEnabled.value = stableConfig.lensEnabled ? 1 : 0;
+    u.uLens.value.set(0.5, 0.5, stableConfig.lensRadius, stableConfig.lensMagnification);
+    u.uLensChromatic.value = stableConfig.lensChromatic;
     // === Lattice Mode Uniform ===
     const latticeModeMap = { rect: 0, hex: 1, tri: 2 };
-    u.uLatticeMode.value = latticeModeMap[config.latticeMode] ?? 0;
+    u.uLatticeMode.value = latticeModeMap[stableConfig.latticeMode] ?? 0;
     // === Palette / Atmosphere Uniforms ===
     const paletteModeMap: Record<string, number> = {
       "glia-cyan": 0, orchid: 1, amber: 2, mono: 3, ice: 4,
       // Techno-Gothic themes
       "gothic-cathedral": 5, "gothic-void": 6, "gothic-sanctum": 7, "gothic-rose": 8,
     };
-    u.uPaletteMode.value = paletteModeMap[config.paletteMode] ?? 1;
-    u.uAccentIntensity.value = config.accentIntensity;
-    u.uIridescenceStrength.value = config.iridescenceStrength;
-    u.uIridescenceScale.value = config.iridescenceScale;
-    u.uExposure.value = config.exposure;
-    u.uFilmic.value = config.filmic;
-    u.uGrainStrength.value = config.grainStrength;
-    u.uCrtStrength.value = config.crtStrength;
-    u.uCopperStrength.value = config.copperStrength;
+    u.uPaletteMode.value = paletteModeMap[stableConfig.paletteMode] ?? 1;
+    u.uAccentIntensity.value = stableConfig.accentIntensity;
+    u.uIridescenceStrength.value = stableConfig.iridescenceStrength;
+    u.uIridescenceScale.value = stableConfig.iridescenceScale;
+    u.uExposure.value = stableConfig.exposure;
+    u.uFilmic.value = stableConfig.filmic;
+    u.uGrainStrength.value = stableConfig.grainStrength;
+    u.uCrtStrength.value = stableConfig.crtStrength;
+    u.uCopperStrength.value = stableConfig.copperStrength;
+    u.uAmbientReveal.value = stableConfig.ambientReveal;
     uniformsRef.current = u;
     return u;
-  }, [
-    size.width,
-    size.height,
-    config.probeRadius,
-    planeSize.width,
-    planeSize.height,
-    config.arrowsMaxPointSize,
-    config.microGrid1,
-    config.microGrid2,
-    config.microGridStrength,
-    config.revealStrength,
-    config.baseVisibility,
-    config.microWarp,
-    config.etchDistortion,
-    config.lensEnabled,
-    config.lensRadius,
-    config.lensMagnification,
-    config.lensChromatic,
-    config.latticeMode,
-    config.paletteMode,
-    config.accentIntensity,
-    config.iridescenceStrength,
-    config.iridescenceScale,
-    config.exposure,
-    config.filmic,
-    config.grainStrength,
-    config.crtStrength,
-    config.copperStrength,
-  ]);
+  }, [size.width, size.height, planeSize.width, planeSize.height, stableConfig]);
 
   // Create plane material
   const planeMaterial = useMemo(() => {

@@ -23,6 +23,8 @@
     "test": "node scripts/vitest.mjs run --workspace vitest.workspace.ts",
     "clean": "rm -rf packages/*/dist packages/*/.turbo node_modules/.cache .turbo",
     "docs:api": "typedoc",
+    "changeset": "changeset",
+    "release": "changeset publish",
     "prepare": "husky || true"
   },
   "devDependencies": {

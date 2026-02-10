@@ -1,14 +1,15 @@
 /**
- * bb-ui - Agent-native web UI standard and component library
+ * @backbay/glia -- full re-export of the entire SDK.
  *
- * Three pillars:
- * - bb-protocol: Discovery and execution layer for agent-native websites
- * - bb-components: React primitives for building agentic UIs
- * - bb-workspace: Agent-composable UI specification runtime
+ * Importing from this root entry pulls ALL sub-packages.
+ * For smaller bundles, prefer sub-path imports:
  *
- * Plus:
- * - primitives: UI components (atoms, molecules, organisms)
- * - theme: Design system with multiple themes
+ *   import { GlassButton } from '@backbay/glia/primitives';
+ *   import { useCognition } from '@backbay/glia/cognition';
+ *   import { useWindowManager } from '@backbay/glia/desktop';
+ *
+ * @see package.json "exports" for all available sub-paths.
+ * @packageDocumentation
  */
 
 // =============================================================================

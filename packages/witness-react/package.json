@@ -18,6 +18,7 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -27,7 +28,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@backbay/witness": "0.1.0-alpha.1"
+    "@backbay/witness": "^0.1.0-alpha.1"
   },
   "peerDependencies": {
     "react": "^18.0.0"
@@ -37,8 +38,8 @@
     "@types/react": "19.2.8",
     "react": "^18.2.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.3.0",
-    "vitest": "^1.2.0"
+    "typescript": "^5.9.3",
+    "vitest": "^2.0.0"
   },
   "keywords": [
     "backbay",
@@ -47,5 +48,15 @@
     "react",
     "hooks"
   ],
-  "license": "MIT"
+  "author": "Backbay <dev@backbay.industries>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backbay/backbay-sdk.git",
+    "directory": "packages/witness-react"
+  },
+  "bugs": {
+    "url": "https://github.com/backbay/backbay-sdk/issues"
+  },
+  "homepage": "https://github.com/backbay/backbay-sdk/tree/main/packages/witness-react#readme"
 }

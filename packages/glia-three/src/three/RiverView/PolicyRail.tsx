@@ -139,6 +139,8 @@ function SegmentWall({ segment, curve, riverWidth, side }: SegmentWallProps) {
   const color = POLICY_SEGMENT_COLORS[segment.type];
   const isHardDeny = segment.type === "hard-deny";
 
+  const needsWallGeometry = !segment.coverageGap && segment.type !== "record-only";
+
   const edgePoints = React.useMemo(
     () => sampleCurveEdge(curve, segment.startT, segment.endT, side, riverWidth, CURVE_SAMPLES),
     [curve, segment.startT, segment.endT, side, riverWidth],
@@ -150,6 +152,37 @@ function SegmentWall({ segment, curve, riverWidth, side }: SegmentWallProps) {
     const mat = wallRef.current.material as THREE.MeshPhysicalMaterial;
     mat.emissiveIntensity = 0.5 + 0.3 * Math.sin(state.clock.elapsedTime * 3);
   });
+
+  const geometry = React.useMemo(() => {
+    if (!needsWallGeometry) return null;
+
+    const positions: number[] = [];
+    const indices: number[] = [];
+
+    for (let i = 0; i < edgePoints.length; i++) {
+      const p = edgePoints[i];
+      // Bottom vertex
+      positions.push(p.x, p.y, p.z);
+      // Top vertex
+      positions.push(p.x, p.y + WALL_HEIGHT, p.z);
+    }
+
+    for (let i = 0; i < edgePoints.length - 1; i++) {
+      const bl = i * 2;
+      const tl = i * 2 + 1;
+      const br = (i + 1) * 2;
+      const tr = (i + 1) * 2 + 1;
+      // Two triangles per quad
+      indices.push(bl, br, tl);
+      indices.push(tl, br, tr);
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    geo.setIndex(indices);
+    geo.computeVertexNormals();
+    return geo;
+  }, [edgePoints, needsWallGeometry]);
 
   // Coverage gap: render small warning markers instead of a wall
   if (segment.coverageGap) {
@@ -197,35 +230,6 @@ function SegmentWall({ segment, curve, riverWidth, side }: SegmentWallProps) {
   // Hard-deny or soft: glass wall with meshPhysicalMaterial + wireframe + arc
   const wallOpacity = isHardDeny ? 0.6 : 0.25;
 
-  const geometry = React.useMemo(() => {
-    const positions: number[] = [];
-    const indices: number[] = [];
-
-    for (let i = 0; i < edgePoints.length; i++) {
-      const p = edgePoints[i];
-      // Bottom vertex
-      positions.push(p.x, p.y, p.z);
-      // Top vertex
-      positions.push(p.x, p.y + WALL_HEIGHT, p.z);
-    }
-
-    for (let i = 0; i < edgePoints.length - 1; i++) {
-      const bl = i * 2;
-      const tl = i * 2 + 1;
-      const br = (i + 1) * 2;
-      const tr = (i + 1) * 2 + 1;
-      // Two triangles per quad
-      indices.push(bl, br, tl);
-      indices.push(tl, br, tr);
-    }
-
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-    geo.setIndex(indices);
-    geo.computeVertexNormals();
-    return geo;
-  }, [edgePoints]);
-
   // Label position at midpoint of segment
   const midIdx = Math.floor(edgePoints.length / 2);
   const midPt = edgePoints[midIdx];
@@ -237,7 +241,7 @@ function SegmentWall({ segment, curve, riverWidth, side }: SegmentWallProps) {
   return (
     <group>
       {/* Glass wall — meshPhysicalMaterial with transmission */}
-      <mesh ref={wallRef} geometry={geometry}>
+      <mesh ref={wallRef} geometry={geometry!}>
         <meshPhysicalMaterial
           color={color}
           emissive={color}
@@ -253,7 +257,7 @@ function SegmentWall({ segment, curve, riverWidth, side }: SegmentWallProps) {
       </mesh>
 
       {/* CrystallineOrganism-style edge wireframe glow */}
-      <EdgeWireframe geometry={geometry} color={color} />
+      <EdgeWireframe geometry={geometry!} color={color} />
 
       {/* ReceiptOrbit-style arc at wall base */}
       {midPt && (

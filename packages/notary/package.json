@@ -20,6 +20,7 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "dev": "bun run --hot src/cli.ts",
     "build": "bun build src/index.ts src/cli.ts --outdir dist --target node && bunx tsc --emitDeclarationOnly --declaration --outDir dist",
@@ -48,7 +49,18 @@
     "@types/bun": "latest",
     "@types/node": "^22.0.0",
     "tsup": "^8.3.5",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "vitest": "^2.0.0"
-  }
+  },
+  "author": "Backbay <dev@backbay.industries>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backbay/backbay-sdk.git",
+    "directory": "packages/notary"
+  },
+  "bugs": {
+    "url": "https://github.com/backbay/backbay-sdk/issues"
+  },
+  "homepage": "https://github.com/backbay/backbay-sdk/tree/main/packages/notary#readme"
 }

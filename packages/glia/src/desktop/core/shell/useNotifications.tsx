@@ -17,7 +17,7 @@
  */
 
 import { useMemo, createContext, useContext, useState, type ReactNode } from 'react';
-import { create, createStore, useStore } from 'zustand';
+import { create, createStore, useStore, type StoreApi } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import type {
   Notification,
@@ -40,7 +40,7 @@ function generateNotificationId(): string {
   return `notif-${Date.now()}-${++notificationIdCounter}`;
 }
 
-function createNotificationStoreImpl(set: any, _get: any): NotificationStore {
+function createNotificationStoreImpl(set: StoreApi<NotificationStore>["setState"], _get: StoreApi<NotificationStore>["getState"]): NotificationStore {
   return {
     notifications: [],
     isPanelOpen: false,

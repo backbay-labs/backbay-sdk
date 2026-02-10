@@ -71,7 +71,7 @@ function WorkspaceScene({
     if (!onCanvasReady) return;
     onCanvasReady(gl.domElement);
   }, [gl, onCanvasReady]);
-  const controlsRef = React.useRef<any>(null);
+  const controlsRef = React.useRef<React.ComponentRef<typeof OrbitControls> | null>(null);
 
   // Extract selected IDs by type
   const selectedJobIds = selection.filter((s) => s.type === "job").map((s) => s.id);

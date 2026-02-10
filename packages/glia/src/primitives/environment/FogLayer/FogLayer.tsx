@@ -43,8 +43,6 @@ export function FogLayer({
     return () => cancelAnimationFrame(frame);
   }, [shouldAnimate, enabled, config.animationSpeed]);
 
-  if (!enabled) return null;
-
   const gradientStyle = React.useMemo(() => {
     const opacity = density * intensity;
 
@@ -80,6 +78,8 @@ export function FogLayer({
         return {};
     }
   }, [type, color, density, intensity, height, offset]);
+
+  if (!enabled) return null;
 
   return (
     <div

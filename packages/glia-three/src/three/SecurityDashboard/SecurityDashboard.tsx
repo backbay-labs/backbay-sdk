@@ -408,7 +408,7 @@ export function SecurityDashboard({
         position={layoutConfig.radar.position}
         radius={layoutConfig.radar.radius}
         scanSpeed={animated ? 0.5 : 0}
-        onThreatClick={onThreatClick as (threat: any) => void}
+        onThreatClick={onThreatClick as (threat: DashboardThreat) => void}
         showLabels={layout !== "compact"}
         showStats={layout !== "compact"}
         sweepColor={

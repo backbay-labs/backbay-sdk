@@ -8,5 +8,9 @@ export default defineConfig({
     // controller.test.ts and identity.test.ts depend on bun:sqlite (Bun runtime only)
     // canonical.test.ts v2 vector depends on missing test-vectors fixture
     exclude: ["test/controller.test.ts", "test/identity.test.ts"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "lcov"],
+    },
   },
 });

@@ -136,29 +136,9 @@ export function WeatherLayer({
   const shouldRender = enabled && !reducedMotion && perfConfig.tier !== 'minimal';
   const useCinematicCanvas = shouldRender && stylePreset === 'cinematic' && perfConfig.useShaders && (type === 'snow' || type === 'leaves');
 
-  if (useCinematicCanvas) {
-    return (
-      <WeatherLayerCinematicCanvas
-        type={type}
-        intensity={intensity}
-        stylePreset={stylePreset}
-        wind={wind}
-        color={color}
-        colors={colors}
-        leafColorPreset={leafColorPreset}
-        opacity={opacity}
-        blur={blur}
-        maxParticles={maxParticles}
-        enabled={enabled}
-        className={className}
-        style={style}
-      />
-    );
-  }
-
-  // Animation loop
+  // Animation loop — must be called unconditionally (rules of hooks)
   React.useEffect(() => {
-    if (!shouldRender || !containerRef.current) {
+    if (useCinematicCanvas || !shouldRender || !containerRef.current) {
       setParticles([]);
       return;
     }
@@ -233,7 +213,27 @@ export function WeatherLayer({
         cancelAnimationFrame(frameRef.current);
       }
     };
-  }, [shouldRender, type, intensity, stylePreset, wind.x, wind.y, maxParticles, config, leafColorPreset, colorsKeyProp]);
+  }, [useCinematicCanvas, shouldRender, type, intensity, stylePreset, wind.x, wind.y, maxParticles, config, leafColorPreset, colorsKeyProp]);
+
+  if (useCinematicCanvas) {
+    return (
+      <WeatherLayerCinematicCanvas
+        type={type}
+        intensity={intensity}
+        stylePreset={stylePreset}
+        wind={wind}
+        color={color}
+        colors={colors}
+        leafColorPreset={leafColorPreset}
+        opacity={opacity}
+        blur={blur}
+        maxParticles={maxParticles}
+        enabled={enabled}
+        className={className}
+        style={style}
+      />
+    );
+  }
 
   if (!shouldRender) {
     return null;

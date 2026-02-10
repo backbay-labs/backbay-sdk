@@ -6,7 +6,7 @@
  */
 
 import { useCallback, useMemo, createContext, useContext, useState, type ReactNode } from 'react';
-import { create, createStore, useStore } from 'zustand';
+import { create, createStore, useStore, type StoreApi } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import type {
   FileItem,
@@ -61,7 +61,7 @@ interface FileBrowserStore {
 // Store Factory
 // ═══════════════════════════════════════════════════════════════════════════
 
-function createFileBrowserStoreImpl(set: any, get: any): FileBrowserStore {
+function createFileBrowserStoreImpl(set: StoreApi<FileBrowserStore>["setState"], get: StoreApi<FileBrowserStore>["getState"]): FileBrowserStore {
   return {
     currentFolderId: null,
     history: [null],

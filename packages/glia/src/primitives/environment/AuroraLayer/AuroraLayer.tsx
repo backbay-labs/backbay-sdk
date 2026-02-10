@@ -51,8 +51,6 @@ export function AuroraLayer({
     return () => cancelAnimationFrame(frame);
   }, [shouldAnimate, enabled, type, stylePreset, config.animationSpeed, speed]);
 
-  if (!enabled) return null;
-
   const lightning = type === 'storm' ? lightningRef.current : 0;
 
   const auroraStyle = React.useMemo((): React.CSSProperties => {
@@ -173,6 +171,8 @@ export function AuroraLayer({
         return {};
     }
   }, [type, colors, intensity, complexity, direction, blend, time, lightning, stylePreset]);
+
+  if (!enabled) return null;
 
   return (
     <div

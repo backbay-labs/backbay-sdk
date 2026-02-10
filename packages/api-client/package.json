@@ -12,6 +12,7 @@
     }
   },
   "files": ["dist"],
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
@@ -22,7 +23,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@backbay/contract": "0.1.0-alpha.1",
+    "@backbay/contract": "^0.1.0-alpha.1",
     "@elysiajs/eden": "^1.0.30"
   },
   "peerDependencies": {
@@ -40,5 +41,16 @@
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^2.0.0"
-  }
+  },
+  "author": "Backbay <dev@backbay.industries>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backbay/backbay-sdk.git",
+    "directory": "packages/api-client"
+  },
+  "bugs": {
+    "url": "https://github.com/backbay/backbay-sdk/issues"
+  },
+  "homepage": "https://github.com/backbay/backbay-sdk/tree/main/packages/api-client#readme"
 }

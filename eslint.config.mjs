@@ -162,14 +162,16 @@ export default [js.configs.recommended, {
     ],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-explicit-any": "error",
+    "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
     "no-unreachable": "warn",
     "react/no-unescaped-entities": "warn",
     "no-case-declarations": "warn",
     "no-redeclare": "warn",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "warn",
     "react/no-children-prop": "warn",
-    "react-hooks/rules-of-hooks": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "react-hooks/refs": "warn",
     "react-hooks/purity": "warn",
     "react-hooks/set-state-in-effect": "warn",
@@ -198,22 +200,36 @@ export default [js.configs.recommended, {
   files: ["**/*.test.{ts,tsx}", "**/test/**/*.{ts,tsx}"],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
+    "no-console": "off",
   },
 }, {
   files: ["**/*.stories.@(js|jsx|ts|tsx)"],
   rules: {
     "react-hooks/rules-of-hooks": "off",
+    "no-console": "off",
   },
 }, {
   files: ["**/*.stories.@(ts|tsx|js|jsx)"],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
     "storybook/no-renderer-packages": "off",
+    "no-console": "off",
   },
 }, {
   files: ["**/utils/ansi.ts"],
   rules: {
     "no-control-regex": "off",
+  },
+}, {
+  files: ["**/scripts/**/*.{ts,tsx,mjs,js}"],
+  rules: {
+    "no-console": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+  },
+}, {
+  files: ["**/cli.ts", "**/cli.js"],
+  rules: {
+    "no-console": "off",
   },
 }, {
   ignores: [

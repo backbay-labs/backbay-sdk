@@ -6,7 +6,7 @@
  */
 
 import { useMemo, createContext, useContext, useState, type ReactNode } from 'react';
-import { create, createStore, useStore } from 'zustand';
+import { create, createStore, useStore, type StoreApi } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import type {
   StartMenuCategory,
@@ -42,7 +42,7 @@ interface StartMenuStore {
 // Store Factory
 // ═══════════════════════════════════════════════════════════════════════════
 
-function createStartMenuStoreImpl(set: any): StartMenuStore {
+function createStartMenuStoreImpl(set: StoreApi<StartMenuStore>["setState"]): StartMenuStore {
   return {
     isOpen: false,
     categories: [],

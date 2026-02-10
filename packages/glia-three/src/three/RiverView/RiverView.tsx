@@ -351,10 +351,45 @@ export function RiverView({
   style,
 }: RiverViewProps) {
   const [start, end] = timeRange;
+  const isEpochRange = start > 1_000_000_000_000 && end > 1_000_000_000_000;
   const [currentTime, setCurrentTime] = React.useState(initialTime ?? start);
   const [playing, setPlaying] = React.useState(autoPlay);
   const [speed, setSpeed] = React.useState(1);
   const [selectedActionId, setSelectedActionId] = React.useState<string | null>(null);
+
+  // When the dataset backing this view changes (e.g. demo -> openclaw live),
+  // `initialTime` may transition from `undefined` to a meaningful value.
+  // Snap the internal clock in that case so actions become visible immediately.
+  const prevInitialTimeRef = React.useRef<number | undefined>(initialTime);
+  React.useEffect(() => {
+    const prev = prevInitialTimeRef.current;
+    prevInitialTimeRef.current = initialTime;
+
+    if (initialTime == null) return;
+    if (prev == null) {
+      setCurrentTime(Math.max(start, Math.min(end, initialTime)));
+      if (autoPlay) setPlaying(true);
+    }
+  }, [autoPlay, end, initialTime, start]);
+
+  // Keep currentTime within the active range as live windows slide forward.
+  React.useEffect(() => {
+    setCurrentTime((prev) => Math.max(start, Math.min(end, prev)));
+  }, [end, start]);
+
+  // Heuristic for live streams: when the range is epoch-based and the caller
+  // didn't provide an explicit `initialTime`, start near the end so actions
+  // appear immediately (storybook stories use non-epoch time ranges).
+  React.useEffect(() => {
+    if (initialTime != null) return;
+    if (!autoPlay || !playing) return;
+    if (!isEpochRange) return;
+
+    setCurrentTime((prev) => {
+      if (prev >= start + 1000 && prev <= end) return prev;
+      return Math.max(start, end - 5000);
+    });
+  }, [autoPlay, end, initialTime, isEpochRange, playing, start]);
 
   // Auto-play animation loop
   const playingRef = React.useRef(playing);
@@ -469,11 +504,27 @@ export function RiverView({
 
   // Incident markers for the replay timeline
   const incidentMarkers = React.useMemo(() => {
-    return incidents.map((inc) => ({
-      time: 0, // Incidents don't have a single timestamp; position at center
-      severity: inc.severity === "critical" || inc.severity === "high" ? "critical" : "warning",
-    }));
-  }, [incidents]);
+    const [rangeStart, rangeEnd] = timeRange;
+    const rangeMid = rangeStart + (rangeEnd - rangeStart) * 0.5;
+
+    const actionTimeById = new Map<string, number>();
+    for (const action of actions) {
+      actionTimeById.set(action.id, action.timestamp);
+    }
+
+    return incidents.map((inc) => {
+      // Prefer the incident's linked action timestamps if present; otherwise
+      // place it at the midpoint so markers stay within the range.
+      const times = inc.actionIds
+        .map((id) => actionTimeById.get(id))
+        .filter((t): t is number => typeof t === "number");
+      const time = times.length > 0 ? times.reduce((sum, t) => sum + t, 0) / times.length : rangeMid;
+      return {
+        time,
+        severity: inc.severity === "critical" || inc.severity === "high" ? "critical" : "warning",
+      };
+    });
+  }, [actions, incidents, timeRange]);
 
   return (
     <div
