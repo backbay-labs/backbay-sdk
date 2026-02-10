@@ -16,7 +16,7 @@
  * ```
  */
 
-import { create, createStore, useStore } from 'zustand';
+import { create, createStore, useStore, type StoreApi } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import { createContext, useContext, useState, type ReactNode } from 'react';
 
@@ -52,7 +52,7 @@ interface SystemTrayStore {
 // Store Factory
 // ═══════════════════════════════════════════════════════════════════════════
 
-function createSystemTrayStoreImpl(set: any): SystemTrayStore {
+function createSystemTrayStoreImpl(set: StoreApi<SystemTrayStore>["setState"]): SystemTrayStore {
   return {
     items: new Map(),
     isExpanded: false,

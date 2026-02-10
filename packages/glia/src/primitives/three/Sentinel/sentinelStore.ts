@@ -5,6 +5,7 @@
  */
 
 import { create, createStore } from 'zustand';
+import type { StoreApi } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import type {
@@ -34,7 +35,7 @@ const defaultVisibleCardinals: string[] = ['console', 'lens', 'vault', 'avatar']
 // Store Factory
 // -----------------------------------------------------------------------------
 
-function createSentinelStoreImpl(set: any, get: any): SentinelState {
+function createSentinelStoreImpl(set: StoreApi<SentinelState>["setState"], get: StoreApi<SentinelState>["getState"]): SentinelState {
   return {
     // Initial state
     phase: 'docked',

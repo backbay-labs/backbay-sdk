@@ -351,10 +351,45 @@ export function RiverView({
   style,
 }: RiverViewProps) {
   const [start, end] = timeRange;
+  const isEpochRange = start > 1_000_000_000_000 && end > 1_000_000_000_000;
   const [currentTime, setCurrentTime] = React.useState(initialTime ?? start);
   const [playing, setPlaying] = React.useState(autoPlay);
   const [speed, setSpeed] = React.useState(1);
   const [selectedActionId, setSelectedActionId] = React.useState<string | null>(null);
+
+  // When the dataset backing this view changes, `initialTime` can transition
+  // from `undefined` to a meaningful value. Snap the internal clock so
+  // actions become visible immediately.
+  const prevInitialTimeRef = React.useRef<number | undefined>(initialTime);
+  React.useEffect(() => {
+    const prev = prevInitialTimeRef.current;
+    prevInitialTimeRef.current = initialTime;
+
+    if (initialTime == null) return;
+    if (prev == null) {
+      setCurrentTime(Math.max(start, Math.min(end, initialTime)));
+      if (autoPlay) setPlaying(true);
+    }
+  }, [autoPlay, end, initialTime, start]);
+
+  // Keep currentTime within the active range as live windows slide forward.
+  React.useEffect(() => {
+    setCurrentTime((prev) => Math.max(start, Math.min(end, prev)));
+  }, [end, start]);
+
+  // Heuristic for live streams: when the range is epoch-based and the caller
+  // didn't provide an explicit `initialTime`, start near the end so actions
+  // appear immediately (storybook stories use non-epoch time ranges).
+  React.useEffect(() => {
+    if (initialTime != null) return;
+    if (!autoPlay || !playing) return;
+    if (!isEpochRange) return;
+
+    setCurrentTime((prev) => {
+      if (prev >= start + 1000 && prev <= end) return prev;
+      return Math.max(start, end - 5000);
+    });
+  }, [autoPlay, end, initialTime, isEpochRange, playing, start]);
 
   // Auto-play animation loop
   const playingRef = React.useRef(playing);

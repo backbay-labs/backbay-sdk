@@ -6,14 +6,16 @@
     "access": "public"
   },
   "type": "module",
-  "homepage": "https://github.com/backbay/glia#readme",
+  "author": "Backbay <dev@backbay.industries>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/backbay/glia.git"
+    "url": "https://github.com/backbay/backbay-sdk.git",
+    "directory": "packages/glia"
   },
   "bugs": {
-    "url": "https://github.com/backbay/glia/issues"
+    "url": "https://github.com/backbay/backbay-sdk/issues"
   },
+  "homepage": "https://github.com/backbay/backbay-sdk/tree/main/packages/glia#readme",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -109,7 +111,7 @@
     "design-drift": "node scripts/design-drift.mjs"
   },
   "dependencies": {
-    "@backbay/contract": "0.1.0-alpha.1",
+    "@backbay/contract": "^0.1.0-alpha.1",
     "@backbay/glia-agent": "^0.1.0",
     "@backbay/glia-desktop": "^0.2.0-alpha.2",
     "@backbay/glia-three": "^0.2.0-alpha.5",
@@ -117,12 +119,15 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.4.0",
-    "zod": "^3.23.0",
-    "zustand": "^5.0.0"
+    "zod": "^3.23.0"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "zustand": "^5"
+  },
+  "peerDependenciesMeta": {
+    "zustand": { "optional": false }
   },
   "optionalDependencies": {
     "@radix-ui/react-accordion": "^1.2.3",
@@ -182,7 +187,7 @@
     "styled-components": "^6.3.8",
     "tailwindcss": "^3.4.17",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vitest": "^2.0.0"
   },

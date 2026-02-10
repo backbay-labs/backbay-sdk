@@ -101,7 +101,7 @@ export function computeSegments(
     shadowRays = [];
 
     if (doLogging) {
-        console.log("Computing segments for eye: ", eye);
+        console.debug("Computing segments for eye: ", eye);
     }
     // Calculate initial rays
     const eyePos = apply(eye.transform, newPoint(0, 0));
@@ -194,8 +194,8 @@ function castRay(
     const data = computeIntersectionData(hit, ray, intersections);
 
     if (doLogging) {
-        console.log("Intersection data:");
-        console.log(data);
+        console.debug("Intersection data:");
+        console.debug(data);
     }
 
     // Shade hit
@@ -239,8 +239,8 @@ function castRay(
     );
 
     if (doLogging) {
-        console.log("reflected color: ", reflectedColor);
-        console.log("refracted color: ", refractedColor);
+        console.debug("reflected color: ", reflectedColor);
+        console.debug("refracted color: ", refractedColor);
     }
 
     let color;
@@ -284,7 +284,7 @@ function lighting(
     const o = toObjectTransform(light.transform);
     const lightPos = newPoint(o.translation.x, o.translation.y);
     if (doLogging) {
-        console.log("lightPos: ", lightPos);
+        console.debug("lightPos: ", lightPos);
     }
     const lightv = vec_normalize(vec_sub(lightPos, data.point));
     const ambient = color_mul(effectiveColor, material.ambient);

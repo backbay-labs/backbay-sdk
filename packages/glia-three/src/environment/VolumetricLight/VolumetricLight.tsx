@@ -41,8 +41,6 @@ export function VolumetricLight({
     return () => cancelAnimationFrame(frame);
   }, [shouldAnimate, enabled]);
 
-  if (!enabled) return null;
-
   const lightStyle = React.useMemo((): React.CSSProperties => {
     const opacity = intensity * config.defaultIntensity;
     const d = Math.max(0, Math.min(1, decay));
@@ -161,6 +159,8 @@ export function VolumetricLight({
         return {};
     }
   }, [type, source, color, intensity, decay, angle, width, time, config]);
+
+  if (!enabled) return null;
 
   return (
     <div

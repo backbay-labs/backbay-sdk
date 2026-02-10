@@ -39,9 +39,11 @@ jobs:
           bunx typedoc \
             --entryPoints packages/contract/src/index.ts \
             --entryPoints packages/api-client/src/index.ts \
-            --entryPoints packages/baychat-core/src/index.ts \
-            --entryPoints packages/baychat-net/src/index.ts \
-            --entryPoints packages/baychat-react/src/index.ts \
+            --entryPoints packages/speakeasy/src/index.ts \
+            --entryPoints packages/glia-agent/src/index.ts \
+            --entryPoints packages/glia-three/src/index.ts \
+            --entryPoints packages/glia-desktop/src/index.ts \
+            --entryPoints packages/raymond/src/index.ts \
             --entryPoints packages/glia/src/index.ts \
             --entryPoints packages/notary/src/index.ts \
             --entryPoints packages/witness/src/index.ts \

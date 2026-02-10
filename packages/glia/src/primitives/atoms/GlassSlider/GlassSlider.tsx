@@ -138,7 +138,8 @@ export function GlassSlider({
   const min = props.min ?? 0;
   const max = props.max ?? 100;
 
-  const labelId = label ? `glass-slider-label-${React.useId()}` : undefined;
+  const id = React.useId();
+  const labelId = label ? `glass-slider-label-${id}` : undefined;
 
   return (
     <div className={cn("w-full", containerClassName)}>

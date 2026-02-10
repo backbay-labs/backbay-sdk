@@ -103,6 +103,8 @@ export function ReplayControls({
   const [start, end] = timeRange;
   const duration = end - start;
   const progress = duration > 0 ? (currentTime - start) / duration : 0;
+  const isEpochRange = start > 1_000_000_000_000 && end > 1_000_000_000_000;
+  const elapsedTime = Math.max(0, currentTime - start);
 
   const trackRef = React.useRef<HTMLDivElement>(null);
 
@@ -186,8 +188,12 @@ export function ReplayControls({
                   "absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full",
                   severityColor(incident.severity),
                 )}
-                style={{ left: `${pos}%` }}
-                title={`${incident.severity} at ${formatTimestamp(incident.time)}`}
+                style={{ left: `${Math.max(0, Math.min(100, pos))}%` }}
+                title={
+                  isEpochRange
+                    ? `${incident.severity} at ${new Date(incident.time).toISOString().replace("T", " ").replace("Z", "")} (+${formatTimestamp(Math.max(0, incident.time - start))})`
+                    : `${incident.severity} at ${formatTimestamp(Math.max(0, incident.time - start))}`
+                }
               />
             );
           })}
@@ -204,8 +210,15 @@ export function ReplayControls({
       <div className="w-px h-6 bg-white/[0.06]" aria-hidden="true" />
 
       {/* Time display */}
-      <span className="font-mono text-xs text-[#E2E8F0] tabular-nums whitespace-nowrap">
-        {formatTimestamp(currentTime)}
+      <span
+        className="font-mono text-xs text-[#E2E8F0] tabular-nums whitespace-nowrap"
+        title={
+          isEpochRange
+            ? new Date(currentTime).toISOString().replace("T", " ").replace("Z", "")
+            : undefined
+        }
+      >
+        {formatTimestamp(elapsedTime)}
       </span>
 
       {/* Divider */}

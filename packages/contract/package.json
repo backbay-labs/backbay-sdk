@@ -12,6 +12,7 @@
     }
   },
   "files": ["dist"],
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
@@ -26,5 +27,16 @@
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^2.0.0"
-  }
+  },
+  "author": "Backbay <dev@backbay.industries>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backbay/backbay-sdk.git",
+    "directory": "packages/contract"
+  },
+  "bugs": {
+    "url": "https://github.com/backbay/backbay-sdk/issues"
+  },
+  "homepage": "https://github.com/backbay/backbay-sdk/tree/main/packages/contract#readme"
 }

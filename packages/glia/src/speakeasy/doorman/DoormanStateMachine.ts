@@ -8,6 +8,7 @@
  */
 
 import { create, createStore } from 'zustand';
+import type { StoreApi } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import {
   DEFAULT_DOORMAN_CONFIG,
@@ -315,7 +316,7 @@ const INITIAL_CONTEXT: DoormanContext = {
   capability: null,
 };
 
-function createDoormanStoreImpl(set: any, get: any): DoormanStore {
+function createDoormanStoreImpl(set: StoreApi<DoormanStore>["setState"], get: StoreApi<DoormanStore>["getState"]): DoormanStore {
   return {
     ...INITIAL_CONTEXT,
     config: DEFAULT_DOORMAN_CONFIG,

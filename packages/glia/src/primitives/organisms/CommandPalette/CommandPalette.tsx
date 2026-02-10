@@ -311,7 +311,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     shortcut: ["⌘", "D"],
     group: "Navigation",
     keywords: ["home", "overview", "progress"],
-    action: () => console.log("Navigate to dashboard"),
+    action: () => {},
   },
   {
     id: "practice",
@@ -321,7 +321,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     shortcut: ["⌘", "P"],
     group: "Actions",
     keywords: ["practice", "questions", "study"],
-    action: () => console.log("Start practice session"),
+    action: () => {},
   },
   {
     id: "tutor",
@@ -331,7 +331,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     shortcut: ["⌘", "T"],
     group: "Actions",
     keywords: ["tutor", "ai", "help", "assistant"],
-    action: () => console.log("Open AI tutor"),
+    action: () => {},
   },
   {
     id: "analytics",
@@ -341,7 +341,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     shortcut: ["⌘", "A"],
     group: "Navigation",
     keywords: ["analytics", "stats", "performance"],
-    action: () => console.log("Navigate to analytics"),
+    action: () => {},
   },
   {
     id: "calendar",
@@ -351,7 +351,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     shortcut: ["⌘", "C"],
     group: "Navigation",
     keywords: ["calendar", "schedule", "planning"],
-    action: () => console.log("Navigate to calendar"),
+    action: () => {},
   },
   {
     id: "achievements",
@@ -361,7 +361,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     shortcut: ["⌘", "B"],
     group: "Navigation",
     keywords: ["achievements", "badges", "awards"],
-    action: () => console.log("Navigate to achievements"),
+    action: () => {},
   },
   {
     id: "settings",
@@ -371,7 +371,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     shortcut: ["⌘", ",", "comma"],
     group: "Navigation",
     keywords: ["settings", "preferences", "config"],
-    action: () => console.log("Navigate to settings"),
+    action: () => {},
   },
   {
     id: "play",
@@ -380,7 +380,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     icon: <Play className="h-4 w-4" />,
     group: "Media",
     keywords: ["play", "audio", "start"],
-    action: () => console.log("Play audio"),
+    action: () => {},
   },
   {
     id: "pause",
@@ -389,7 +389,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     icon: <Pause className="h-4 w-4" />,
     group: "Media",
     keywords: ["pause", "audio", "stop"],
-    action: () => console.log("Pause audio"),
+    action: () => {},
   },
   {
     id: "next",
@@ -398,7 +398,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     icon: <SkipForward className="h-4 w-4" />,
     group: "Navigation",
     keywords: ["next", "skip", "forward"],
-    action: () => console.log("Next item"),
+    action: () => {},
   },
   {
     id: "quick-study",
@@ -407,7 +407,7 @@ export const defaultCommands: CommandPaletteItem[] = [
     icon: <Zap className="h-4 w-4" />,
     group: "Actions",
     keywords: ["quick", "study", "session", "focus"],
-    action: () => console.log("Start quick study session"),
+    action: () => {},
   },
   {
     id: "meditative-mode",
@@ -417,6 +417,6 @@ export const defaultCommands: CommandPaletteItem[] = [
     shortcut: ["⌘", "M"],
     group: "Actions",
     keywords: ["meditative", "calm", "focus", "zen"],
-    action: () => console.log("Enable meditative mode"),
+    action: () => {},
   },
 ];

@@ -27,6 +27,7 @@
     }
   },
   "files": ["dist"],
+  "sideEffects": false,
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -61,7 +62,7 @@
     "@types/bun": "latest",
     "@types/react": "^18.2.0",
     "react": "^18.2.0",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "tsup": "^8.5.1",
     "vitest": "^2.0.0"
   },
@@ -74,5 +75,15 @@
     "encrypted",
     "identity"
   ],
-  "license": "MIT"
+  "author": "Backbay <dev@backbay.industries>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backbay/backbay-sdk.git",
+    "directory": "packages/speakeasy"
+  },
+  "bugs": {
+    "url": "https://github.com/backbay/backbay-sdk/issues"
+  },
+  "homepage": "https://github.com/backbay/backbay-sdk/tree/main/packages/speakeasy#readme"
 }

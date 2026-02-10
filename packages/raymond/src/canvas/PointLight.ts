@@ -13,7 +13,6 @@ export class PointLight {
 
     hitTest(pointWorld: Vec3): boolean {
         const pointLocal = apply(inverse(this.transform), pointWorld);
-        console.log(pointLocal);
         return vec_magnitude(vec_sub(pointLocal, newPoint(0, 0))) < 0.3;
     }
 

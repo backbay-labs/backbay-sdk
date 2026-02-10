@@ -15,9 +15,13 @@
     "noEmit": true
   },
   "references": [
+    { "path": "packages/raymond" },
     { "path": "packages/contract" },
     { "path": "packages/api-client" },
     { "path": "packages/speakeasy" },
+    { "path": "packages/glia-agent" },
+    { "path": "packages/glia-three" },
+    { "path": "packages/glia-desktop" },
     { "path": "packages/glia" },
     { "path": "packages/notary" },
     { "path": "packages/witness" },

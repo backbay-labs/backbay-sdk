@@ -184,19 +184,19 @@ export async function startServer(port?: number) {
 
   // Initialize database
   initDatabase();
-  console.log("  Database initialized");
+  console.info("  Database initialized");
 
   // Set up periodic cleanup (every 5 minutes)
   const cleanupInterval = setInterval(() => {
     const cleaned = cleanupExpiredRecords();
     if (cleaned.sessions > 0 || cleaned.nonces > 0 || cleaned.pending > 0) {
-      console.log(`  Cleanup: ${cleaned.sessions} sessions, ${cleaned.nonces} nonces, ${cleaned.pending} pending`);
+      console.info(`  Cleanup: ${cleaned.sessions} sessions, ${cleaned.nonces} nonces, ${cleaned.pending} pending`);
     }
   }, 5 * 60 * 1000);
 
   // Handle shutdown
   process.on("SIGINT", () => {
-    console.log("\n  Shutting down...");
+    console.info("\n  Shutting down...");
     clearInterval(cleanupInterval);
     closeDatabase();
     process.exit(0);
@@ -210,7 +210,7 @@ export async function startServer(port?: number) {
 
   const app = createApp();
 
-  console.log(`
+  console.info(`
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
 ║   ███╗   ██╗ ██████╗ ████████╗ █████╗ ██████╗ ██╗   ██╗   ║
@@ -304,7 +304,7 @@ export async function startServer(port?: number) {
     fetch: app.fetch,
   });
 
-  console.log(`  Listening on http://localhost:${serverPort}\n`);
+  console.info(`  Listening on http://localhost:${serverPort}\n`);
 
   return server;
 }
