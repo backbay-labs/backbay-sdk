@@ -745,7 +745,7 @@ function QuantumFieldSpawn({ active, targetRef }: {
             ox + c * SPAWN_GRID, oy + r * SPAWN_GRID,
             btnCx, btnCy, halfW, halfH, strength,
           );
-          c === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          if (c === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
         }
         ctx.stroke();
       }
@@ -756,7 +756,7 @@ function QuantumFieldSpawn({ active, targetRef }: {
             ox + c * SPAWN_GRID, oy + r * SPAWN_GRID,
             btnCx, btnCy, halfW, halfH, strength,
           );
-          r === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          if (r === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
         }
         ctx.stroke();
       }
