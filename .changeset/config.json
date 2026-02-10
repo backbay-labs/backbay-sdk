@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "backbay/backbay-sdk" }],
+  "changelog": ["@changesets/changelog-github", { "repo": "backbay-labs/backbay-sdk" }],
   "commit": false,
   "access": "public",
   "baseBranch": "main",

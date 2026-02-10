@@ -26,16 +26,14 @@ const EAS_CONTRACTS = {
 };
 
 // Herodotus Facts Registry on Starknet
-const FACTS_REGISTRY: Record<string, Hex> = {
+export type SupportedFactsNetwork = "sepolia";
+
+const FACTS_REGISTRY: Record<SupportedFactsNetwork, Hex> = {
   sepolia: "0x07d7f7ec0c3e3fef56cf4e5a8badb9ba0d3a13a0c4c3d6c5b8c7d6e5f4a3b2c1",
 };
 
-function getFactsRegistry(chain: string): Hex {
-  const addr = FACTS_REGISTRY[chain];
-  if (!addr) {
-    throw new Error(`Herodotus Facts Registry address not configured for chain "${chain}". Only sepolia is currently supported.`);
-  }
-  return addr;
+function getFactsRegistry(chain: SupportedFactsNetwork): Hex {
+  return FACTS_REGISTRY[chain];
 }
 
 /**
@@ -291,7 +289,7 @@ export function formatProofForStarknet(proof: StorageProof): {
 /**
  * Get the Facts Registry address for a Starknet network
  */
-export function getFactsRegistryAddress(network: string): Hex {
+export function getFactsRegistryAddress(network: SupportedFactsNetwork): Hex {
   return getFactsRegistry(network);
 }
 

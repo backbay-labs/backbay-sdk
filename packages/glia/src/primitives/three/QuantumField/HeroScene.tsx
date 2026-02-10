@@ -64,7 +64,7 @@ export function HeroScene({
         <FieldLayer config={merged} pinToViewport zIndex={0} />
 
         {/* Overlay: Environment atmospheric effects */}
-        {environment && (
+        {(environment || customEnvironment) && (
           <div
             style={{
               position: "fixed",
@@ -74,24 +74,25 @@ export function HeroScene({
             }}
           >
             <EnvironmentLayer
+              preset="deep-space"
               {...environment}
               intensity={
-                (environment.intensity ?? 1) * environmentIntensity
+                (environment?.intensity ?? 1) * environmentIntensity
               }
               weatherOverride={{
-                ...environment.weatherOverride,
+                ...environment?.weatherOverride,
                 ...customEnvironment?.weather,
               }}
               fogOverride={{
-                ...environment.fogOverride,
+                ...environment?.fogOverride,
                 ...customEnvironment?.fog,
               }}
               lightOverride={{
-                ...environment.lightOverride,
+                ...environment?.lightOverride,
                 ...customEnvironment?.light,
               }}
               skyOverride={{
-                ...environment.skyOverride,
+                ...environment?.skyOverride,
                 ...customEnvironment?.sky,
               }}
             />
