@@ -10,7 +10,6 @@
 <br />
 
 <p align="center">
-  <a href="#architecture"><kbd>Architecture</kbd></a>&nbsp;&nbsp;
   <a href="#packages"><kbd>Packages</kbd></a>&nbsp;&nbsp;
   <a href="#quick-start"><kbd>Quick Start</kbd></a>&nbsp;&nbsp;
   <a href="#development"><kbd>Development</kbd></a>&nbsp;&nbsp;
@@ -25,59 +24,35 @@
 
 ---
 
-## Architecture
-
-Backbay SDK is a multi-language monorepo (TypeScript, Python, Cairo) providing everything needed to build AI-agent-native applications: a component library with a desktop-OS shell, P2P encrypted messaging, attestation verification, an onchain world, and the orchestration layer that ties them together.
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Applications                             │
-│   (BackbayOS desktop shell, cluster apps, game clients)         │
-└────────┬──────────┬──────────┬──────────┬──────────┬────────────┘
-         │          │          │          │          │
-┌────────▼───┐ ┌────▼────┐ ┌──▼───┐ ┌────▼────┐ ┌──▼──────────┐
-│   glia     │ │speakeasy│ │notary│ │  cyntra  │ │ api-client  │
-│ UI + Shell │ │ P2P msg │ │ Web3 │ │ Agents   │ │ HTTP client │
-└────────┬───┘ └────┬────┘ └──┬───┘ └────┬────┘ └──┬──────────┘
-         │          │         │          │          │
-┌────────▼──────────▼─────────▼──────────▼──────────▼────────────┐
-│                        contract                                 │
-│              Shared TypeScript types & schemas                   │
-└─────────────────────────────────────────────────────────────────┘
-
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│   witness    │  │witness-react │  │  gameworld   │
-│ WASM verify  │  │ React hooks  │  │ Cairo/Dojo   │
-└──────────────┘  └──────────────┘  └──────────────┘
-```
-
----
-
 ## Packages
 
 ### TypeScript
 
 | Package | Description |
 |---------|-------------|
-| [`@backbay/glia`](packages/glia/README.md) | UI primitives, desktop-OS shell, agent components, emotion system |
-| [`@backbay/contract`](packages/contract/README.md) | Shared types, enums, and API contracts for all packages |
-| [`@backbay/api-client`](packages/api-client/README.md) | Typed HTTP client for Backbay BFF services (Eden/Elysia) |
-| [`@backbay/speakeasy`](packages/speakeasy/README.md) | P2P encrypted messaging with Ed25519 identity and libp2p transport |
-| [`@backbay/notary`](packages/notary/README.md) | Web3 integration: IPFS uploads, EAS attestations, Starknet bridge |
-| [`@backbay/witness`](packages/witness/README.md) | Browser-side attestation verification via WebAssembly |
-| [`@backbay/witness-react`](packages/witness-react/README.md) | React hooks and components for witness verification |
+| [`@backbay/glia`](packages/glia) | Umbrella — re-exports all sub-packages for convenience |
+| [`@backbay/glia-three`](packages/glia-three) | 3D components, environment layers (weather, fog, volumetric light) |
+| [`@backbay/glia-agent`](packages/glia-agent) | Emotion engine, cognition modes, audio/speech hooks |
+| [`@backbay/glia-desktop`](packages/glia-desktop) | Desktop-OS shell: window manager, taskbar, start menu, file browser |
+| [`@backbay/raymond`](packages/raymond) | CPU ray tracer (zero deps) |
+| [`@backbay/contract`](packages/contract) | Shared TypeScript types, enums, and API schemas |
+| [`@backbay/api-client`](packages/api-client) | Typed HTTP client for Backbay BFF services (Eden/Elysia) |
+| [`@backbay/speakeasy`](packages/speakeasy) | P2P encrypted messaging with PBKDF2 identity and domain binding |
+| [`@backbay/notary`](packages/notary) | Web3 integration: IPFS, EAS attestations, Herodotus cross-chain proofs |
+| [`@backbay/witness`](packages/witness) | Browser-side attestation verification via WebAssembly |
+| [`@backbay/witness-react`](packages/witness-react) | React hooks and components for witness verification |
 
 ### Python
 
 | Package | Description |
 |---------|-------------|
-| [`cyntra`](packages/cyntra/README.md) | Agent orchestration framework (DSPy, LangGraph, memory, tools) |
+| [`cyntra`](packages/cyntra) | Agent orchestration framework (DSPy, LangGraph, memory, tools) |
 
 ### Cairo
 
 | Package | Description |
 |---------|-------------|
-| [`cyntra_world`](packages/gameworld/README.md) | Onchain world state and systems on Starknet (Dojo ECS) |
+| [`cyntra_world`](packages/gameworld) | Onchain world state and systems on Starknet (Dojo ECS) |
 
 ---
 
@@ -164,18 +139,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor guide.
 
 ---
 
----
-
----
-
-<br />
-
 <p align="center">
   <img src=".github/assets/slogan.svg" alt="「 Memento, homo… 」" height="40" />
 </p>
-
----
-
----
-
----
