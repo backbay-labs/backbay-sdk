@@ -1,7 +1,7 @@
 /**
  * @backbay/npctv - Channel Manager Tests
  *
- * Verifies chat buffer drain semantics and chat session reset behavior.
+ * Verifies chat/session buffering semantics and teardown behavior.
  */
 
 import { describe, test, expect } from "bun:test";
@@ -86,5 +86,74 @@ describe("ChannelManager", () => {
     expect(manager.hasUnreadChat()).toBe(false);
     expect(manager.unreadChatCount).toBe(0);
     expect((manager as any).lastChatTimestamp).toBeUndefined();
+  });
+
+  test("pollChat advances cursor when only agent messages are returned", async () => {
+    const registration: ChannelRegistration = {
+      channelId: "ch-test",
+      name: "Test Channel",
+      category: "coding",
+      agentId: "agent-1",
+      status: "live",
+    };
+
+    const fakeClient = {
+      isWebSocketConnected: false,
+      getChat: async () => [
+        {
+          id: "a1",
+          author: "agent",
+          content: "status update",
+          timestamp: "2026-02-11T01:00:00.000Z",
+          isAgent: true,
+        },
+      ],
+    };
+
+    const manager = new ChannelManager(fakeClient as any, CHANNEL_CONFIG);
+    (manager as any).registration = registration;
+
+    await (manager as any).pollChat();
+
+    expect((manager as any).lastChatTimestamp).toBe("2026-02-11T01:00:00.000Z");
+    expect(manager.hasUnreadChat()).toBe(false);
+    expect(manager.unreadChatCount).toBe(0);
+  });
+
+  test("endStream drops stale queued events when final flush fails", async () => {
+    const registration: ChannelRegistration = {
+      channelId: "ch-test",
+      name: "Test Channel",
+      category: "coding",
+      agentId: "agent-1",
+      status: "live",
+    };
+    let deregisteredChannel: string | null = null;
+
+    const fakeClient = {
+      isWebSocketConnected: false,
+      pushEvents: async () => {
+        throw new Error("relay unavailable");
+      },
+      deregisterChannel: async (channelId: string) => {
+        deregisteredChannel = channelId;
+      },
+    };
+
+    const manager = new ChannelManager(fakeClient as any, CHANNEL_CONFIG);
+    (manager as any).registration = registration;
+    (manager as any).eventBuffer = [
+      {
+        id: "evt-1",
+        timestamp: "2026-02-11T01:00:00.000Z",
+        type: "info",
+        content: "stale event",
+      },
+    ];
+
+    await manager.endStream();
+
+    expect(deregisteredChannel).toBe("ch-test");
+    expect((manager as any).eventBuffer).toHaveLength(0);
   });
 });

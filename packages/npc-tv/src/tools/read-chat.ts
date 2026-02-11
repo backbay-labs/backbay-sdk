@@ -87,8 +87,9 @@ export function createReadChatTool(
           messages = await relayClient.getChat(reg.channelId, since);
         }
 
-        // Buffered reads are already capped by `limit`; API reads need slicing.
-        const limited = buffered.length > 0 ? messages : messages.slice(-limit);
+        // Buffered reads are already capped by `limit`; API responses are
+        // newest-first, so keep the first N for API fallback reads.
+        const limited = buffered.length > 0 ? messages : messages.slice(0, limit);
 
         // Check if there are still more unread messages buffered
         const hasUnread = channelManager.hasUnreadChat();

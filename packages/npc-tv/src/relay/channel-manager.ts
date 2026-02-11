@@ -120,6 +120,8 @@ export class ChannelManager {
   async endStream(): Promise<void> {
     // Flush any remaining events first
     await this.flush().catch(() => {});
+    // Drop any unsent events so they can't leak into a future stream session.
+    this.eventBuffer = [];
 
     // Tear down WebSocket chat listener
     if (this.wsChatUnsub) {
@@ -284,20 +286,21 @@ export class ChannelManager {
 
     if (messages.length === 0) return;
 
+    // Advance poll cursor from the newest relay message, even when all returned
+    // messages are agent-authored and none are buffered for the tool.
+    // Relay responses are newest-first, so [0] is the latest.
+    const latest = messages[0] as { timestamp?: string; createdAt?: string };
+    const latestTs = latest?.timestamp ?? latest?.createdAt;
+    if (latestTs) {
+      this.lastChatTimestamp = latestTs;
+    }
+
     // Filter out agent messages — we only care about viewer messages
     const viewerMessages = messages.filter((m) => !m.isAgent);
 
     if (viewerMessages.length > 0) {
       for (const m of viewerMessages) {
         this._pushChatMessage(m);
-      }
-
-      // Update the high-water mark to the most recent message timestamp
-      // Messages come back newest-first from the API, so [0] is the latest.
-      const latest = messages[0] as { timestamp?: string; createdAt?: string };
-      const ts = latest?.timestamp ?? latest?.createdAt;
-      if (ts) {
-        this.lastChatTimestamp = ts;
       }
     }
   }
