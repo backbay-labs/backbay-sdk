@@ -104,6 +104,8 @@ export interface ChatMessage {
   content: string;
   /** ISO 8601 timestamp */
   timestamp: string;
+  /** Relay compatibility timestamp field (npctv-relay uses createdAt) */
+  createdAt?: string;
   /** Whether this message was sent by the agent */
   isAgent: boolean;
 }

@@ -49,4 +49,40 @@ describe("npc_read_chat", () => {
     expect(payload.count).toBe(2);
     expect(payload.messages.map((m) => m.content)).toEqual(["newest", "middle"]);
   });
+
+  test("API fallback preserves relay createdAt as timestamp", async () => {
+    const registration: ChannelRegistration = {
+      channelId: "ch-test",
+      name: "Test Channel",
+      category: "coding",
+      agentId: "agent-1",
+      status: "live",
+    };
+
+    const relayClient = {
+      getChat: async () => [
+        {
+          id: "m1",
+          author: "viewer",
+          content: "createdAt-only",
+          createdAt: "2026-02-11T07:00:00Z",
+          isAgent: false,
+        },
+      ],
+    };
+
+    const channelManager = {
+      isLive: () => true,
+      getRegistration: () => registration,
+      drainChatBuffer: (_limit?: number) => [] as ChatMessage[],
+      hasUnreadChat: () => false,
+    };
+
+    const tool = createReadChatTool(relayClient as any, channelManager as any);
+    const response = await tool.execute("tool-1", { limit: 5 });
+    const payload = parseTextResponse(response);
+
+    expect(payload.status).toBe("ok");
+    expect(payload.messages[0]?.timestamp).toBe("2026-02-11T07:00:00Z");
+  });
 });

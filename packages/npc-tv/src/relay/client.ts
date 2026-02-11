@@ -148,7 +148,8 @@ export class NpcTvRelayClient {
           switch (msg.type) {
             case "chat": {
               // Forward incoming viewer chat to listeners
-              const chatMsg = msg.data as ChatMessage;
+              const chatMsg = this.normalizeChatMessage(msg.data);
+              if (!chatMsg) break;
               for (const listener of this.chatListeners) {
                 try {
                   listener(chatMsg);
@@ -302,10 +303,10 @@ export class NpcTvRelayClient {
     const res = await this.get(path, channelId);
     const payload = this.unwrapResponseData<unknown>(res);
     if (Array.isArray(payload)) {
-      return payload as ChatMessage[];
+      return this.normalizeChatMessages(payload);
     }
     if (this.isRecord(payload) && Array.isArray(payload.messages)) {
-      return payload.messages as ChatMessage[];
+      return this.normalizeChatMessages(payload.messages);
     }
     return [];
   }
@@ -454,6 +455,44 @@ export class NpcTvRelayClient {
       return value.data as T;
     }
     return value as T;
+  }
+
+  /**
+   * Normalize chat payloads from different relay shapes:
+   * - npc-tv plugin shape: { timestamp }
+   * - npctv-relay shape: { createdAt }
+   */
+  private normalizeChatMessages(payload: unknown[]): ChatMessage[] {
+    const normalized: ChatMessage[] = [];
+    for (const item of payload) {
+      const msg = this.normalizeChatMessage(item);
+      if (msg) normalized.push(msg);
+    }
+    return normalized;
+  }
+
+  private normalizeChatMessage(value: unknown): ChatMessage | null {
+    if (!this.isRecord(value)) return null;
+
+    const id = this.readString(value, "id");
+    const author = this.readString(value, "author");
+    const content = this.readString(value, "content");
+    const timestamp = this.readString(value, "timestamp") ?? this.readString(value, "createdAt");
+    if (!id || !author || !content || !timestamp) {
+      return null;
+    }
+
+    const isAgentValue = value.isAgent;
+    const isAgent = typeof isAgentValue === "boolean" ? isAgentValue : false;
+
+    return {
+      id,
+      author,
+      content,
+      timestamp,
+      createdAt: this.readString(value, "createdAt"),
+      isAgent,
+    };
   }
 
   private readString(value: Record<string, unknown>, key: string): string | undefined {

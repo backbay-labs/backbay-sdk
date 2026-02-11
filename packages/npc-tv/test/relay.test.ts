@@ -336,6 +336,28 @@ describe("NpcTvRelayClient", () => {
     expect(result[0].author).toBe("viewer");
   });
 
+  test("getChat normalizes relay createdAt to timestamp", async () => {
+    globalThis.fetch = mockFetch({
+      ok: true,
+      data: [
+        {
+          id: "m-1",
+          author: "viewer",
+          content: "hello",
+          createdAt: "2026-02-11T06:30:00Z",
+          isAgent: false,
+        },
+      ],
+    });
+
+    const client = new NpcTvRelayClient({ url: "http://localhost:3000/api/v1/npctv" });
+    const result = await client.getChat("ch-1");
+
+    expect(result).toHaveLength(1);
+    expect(result[0].timestamp).toBe("2026-02-11T06:30:00Z");
+    expect(result[0].createdAt).toBe("2026-02-11T06:30:00Z");
+  });
+
   test("connectWebSocket keeps reconnect enabled after initial connect", () => {
     const originalWebSocket = globalThis.WebSocket;
     const originalSetTimeout = globalThis.setTimeout;
@@ -400,6 +422,45 @@ describe("NpcTvRelayClient", () => {
     } finally {
       globalThis.WebSocket = originalWebSocket;
       globalThis.setTimeout = originalSetTimeout;
+    }
+  });
+
+  test("WebSocket chat payloads with createdAt are normalized", () => {
+    const originalWebSocket = globalThis.WebSocket;
+    MockWebSocket.instances = [];
+
+    globalThis.WebSocket = MockWebSocket as unknown as typeof WebSocket;
+
+    try {
+      const client = new NpcTvRelayClient({ url: "http://localhost:3000/api/v1/npctv" });
+      const received: Array<{ timestamp: string; createdAt?: string }> = [];
+
+      client.onChat((msg) => {
+        received.push({ timestamp: msg.timestamp, createdAt: msg.createdAt });
+      });
+
+      client.connectWebSocket("ch-1");
+      expect(MockWebSocket.instances).toHaveLength(1);
+      const ws = MockWebSocket.instances[0];
+      ws.emit("open");
+      ws.emit("message", {
+        data: JSON.stringify({
+          type: "chat",
+          data: {
+            id: "m-1",
+            author: "viewer",
+            content: "hi",
+            createdAt: "2026-02-11T06:31:00Z",
+            isAgent: false,
+          },
+        }),
+      });
+
+      expect(received).toHaveLength(1);
+      expect(received[0].timestamp).toBe("2026-02-11T06:31:00Z");
+      expect(received[0].createdAt).toBe("2026-02-11T06:31:00Z");
+    } finally {
+      globalThis.WebSocket = originalWebSocket;
     }
   });
 });

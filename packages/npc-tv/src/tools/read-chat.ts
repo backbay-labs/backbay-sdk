@@ -113,7 +113,7 @@ export function createReadChatTool(
         const formatted = limited.map((msg) => ({
           author: msg.author,
           content: msg.content,
-          timestamp: msg.timestamp,
+          timestamp: msg.timestamp || msg.createdAt || "",
           isAgent: msg.isAgent,
         }));
 

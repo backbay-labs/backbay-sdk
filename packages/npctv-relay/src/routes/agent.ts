@@ -31,6 +31,16 @@ const agentSockets = new Map<string, { ws: unknown; pingTimer: Timer }>();
 /** Grace period timers for channels that lost their WS connection */
 const disconnectTimers = new Map<string, Timer>();
 
+/** Helper used by close handling and unit tests. */
+export function isActiveSocketClose(
+  channelId: string,
+  ws: unknown,
+  sockets: ReadonlyMap<string, { ws: unknown }>
+): boolean {
+  const entry = sockets.get(channelId);
+  return Boolean(entry && entry.ws === ws);
+}
+
 export function agentRoutes(
   registry: ChannelRegistry,
   eventFanout: EventFanout,
@@ -171,7 +181,8 @@ export function agentRoutes(
 
       // C6: Only clean up if this socket is still the active one (wasn't replaced)
       const entry = agentSockets.get(channelId);
-      if (entry && entry.ws === ws) {
+      const isCurrentSocketClose = isActiveSocketClose(channelId, ws, agentSockets);
+      if (isCurrentSocketClose && entry) {
         clearInterval(entry.pingTimer);
         agentSockets.delete(channelId);
       }
@@ -182,7 +193,17 @@ export function agentRoutes(
         | undefined;
       if (chatUnsub) chatUnsub();
 
+      // Ignore closes for unauthorized/replaced sockets.
+      // Only the active agent socket should trigger offline grace handling.
+      if (!isCurrentSocketClose) {
+        return;
+      }
+
       // Start grace period — if the agent doesn't reconnect, mark offline
+      const existingTimer = disconnectTimers.get(channelId);
+      if (existingTimer) {
+        clearTimeout(existingTimer);
+      }
       const graceTimer = setTimeout(() => {
         disconnectTimers.delete(channelId);
 

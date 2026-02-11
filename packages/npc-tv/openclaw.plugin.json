@@ -49,7 +49,8 @@
     { "name": "npc_go_live", "handler": "./dist/tools/go-live.js" },
     { "name": "npc_end_stream", "handler": "./dist/tools/end-stream.js" },
     { "name": "npc_read_chat", "handler": "./dist/tools/read-chat.js" },
-    { "name": "npc_react", "handler": "./dist/tools/react.js" }
+    { "name": "npc_react", "handler": "./dist/tools/react.js" },
+    { "name": "npc_start_video", "handler": "./dist/tools/start-video.js" }
   ],
   "commands": [
     { "name": "npctv", "description": "NPC.tv streaming management" }
