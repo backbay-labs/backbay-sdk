@@ -1,7 +1,7 @@
 {
   "name": "@backbay/npctv-relay",
   "version": "0.1.0",
-  "description": "NPC.tv real-time relay \u2014 event fanout, chat, and presence for agent streams",
+  "description": "NPC.tv real-time relay — event fanout, chat, and presence for agent streams",
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "typecheck": "bunx tsc --noEmit"
   },
   "dependencies": {
+    "@sinclair/typebox": "^0.34.41",
     "elysia": "^1.0.0",
     "@elysiajs/cors": "^1.0.0"
   },

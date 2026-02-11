@@ -39,7 +39,7 @@ export interface RelayState {
  * Create a fully wired Elysia app.
  * Returns the app + shared state for shutdown/testing.
  */
-export function createApp(): { app: Elysia; state: RelayState } {
+export function createApp() {
   // Initialize shared state
   const registry = new ChannelRegistry();
   const presence = new PresenceTracker();

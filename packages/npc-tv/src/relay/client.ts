@@ -17,7 +17,7 @@ import type {
   ChatMessage,
   ReactionType,
   AgentEmoteType,
-} from '../types.js';
+} from "../types.js";
 
 /** Options for registering a new channel */
 export interface RegisterChannelOpts {
@@ -40,6 +40,7 @@ export type ChatMessageCallback = (message: ChatMessage) => void;
 export class NpcTvRelayClient {
   private readonly baseUrl: string;
   private readonly apiKey: string | undefined;
+  private readonly channelApiKeys = new Map<string, string>();
 
   /** Active WebSocket connection to the relay (one per channel) */
   private ws: WebSocket | null = null;
@@ -54,7 +55,7 @@ export class NpcTvRelayClient {
 
   constructor(config: RelayConfig) {
     // Strip trailing slash so we can append paths cleanly
-    this.baseUrl = config.url.replace(/\/+$/, '');
+    this.baseUrl = config.url.replace(/\/+$/, "");
     this.apiKey = config.apiKey;
   }
 
@@ -62,7 +63,7 @@ export class NpcTvRelayClient {
   // Channel lifecycle
   // -----------------------------------------------------------------------
 
-  /** Register (create) a new streaming channel. POST /npctv/channels */
+  /** Register (create) a new streaming channel. POST /channels */
   async registerChannel(opts: RegisterChannelOpts): Promise<ChannelRegistration> {
     const body = {
       name: opts.name,
@@ -70,14 +71,33 @@ export class NpcTvRelayClient {
       agentId: opts.agentId ?? `agent-${Date.now()}`,
       title: opts.title,
     };
-    const res = await this.post('/npctv/channels', body);
-    return res as ChannelRegistration;
+    const res = await this.post("/channels", body);
+    const raw = this.unwrapResponseData<Record<string, unknown>>(res);
+
+    const channelId = this.readString(raw, "channelId") ?? this.readString(raw, "id");
+    if (!channelId) {
+      throw new Error("NPC.tv relay registerChannel response missing channel id");
+    }
+
+    const apiKey = this.readString(raw, "apiKey");
+    if (apiKey) {
+      this.channelApiKeys.set(channelId, apiKey);
+    }
+
+    return {
+      channelId,
+      name: this.readString(raw, "name") ?? body.name,
+      category: (this.readString(raw, "category") ?? body.category) as ChannelCategory,
+      agentId: this.readString(raw, "agentId") ?? body.agentId,
+      status: this.readString(raw, "status") === "offline" ? "offline" : "live",
+    };
   }
 
-  /** Deregister (delete) a channel. DELETE /npctv/channels/:id */
+  /** Deregister (delete) a channel. DELETE /channels/:id */
   async deregisterChannel(channelId: string): Promise<void> {
     this.disconnectWebSocket();
-    await this.del(`/npctv/channels/${encodeURIComponent(channelId)}`);
+    await this.del(`/channels/${encodeURIComponent(channelId)}`, channelId);
+    this.channelApiKeys.delete(channelId);
   }
 
   // -----------------------------------------------------------------------
@@ -97,9 +117,9 @@ export class NpcTvRelayClient {
    * @returns The WebSocket instance (or null if connection failed)
    */
   connectWebSocket(channelId: string): WebSocket | null {
+    this.disconnectWebSocket();
     this.wsReconnectDisabled = false;
     this.wsReconnectAttempts = 0;
-    this.disconnectWebSocket();
 
     return this._doConnect(channelId);
   }
@@ -107,29 +127,26 @@ export class NpcTvRelayClient {
   /** Internal: perform WebSocket connection (used for initial + reconnects) */
   private _doConnect(channelId: string): WebSocket | null {
     try {
-      const wsUrl = this.baseUrl
-        .replace(/^http/, 'ws')
-        .replace(/\/+$/, '');
-      const apiKeyParam = this.apiKey
-        ? `?apiKey=${encodeURIComponent(this.apiKey)}`
-        : '';
+      const wsUrl = this.baseUrl.replace(/^http/, "ws").replace(/\/+$/, "");
+      const channelApiKey = this.channelApiKeys.get(channelId) ?? this.apiKey;
+      const apiKeyParam = channelApiKey ? `?apiKey=${encodeURIComponent(channelApiKey)}` : "";
       const url = `${wsUrl}/channels/${encodeURIComponent(channelId)}/agent${apiKeyParam}`;
 
       const ws = new WebSocket(url);
       this.ws = ws;
       this.wsChannelId = channelId;
 
-      ws.addEventListener('open', () => {
+      ws.addEventListener("open", () => {
         this.wsReady = true;
         this.wsReconnectAttempts = 0; // Reset on successful connect
       });
 
-      ws.addEventListener('message', (event) => {
+      ws.addEventListener("message", (event) => {
         try {
-          const msg = JSON.parse(typeof event.data === 'string' ? event.data : '{}');
+          const msg = JSON.parse(typeof event.data === "string" ? event.data : "{}");
 
           switch (msg.type) {
-            case 'chat': {
+            case "chat": {
               // Forward incoming viewer chat to listeners
               const chatMsg = msg.data as ChatMessage;
               for (const listener of this.chatListeners) {
@@ -142,13 +159,13 @@ export class NpcTvRelayClient {
               break;
             }
 
-            case 'ping': {
+            case "ping": {
               // Respond to server ping
-              this.wsSend({ type: 'pong' });
+              this.wsSend({ type: "pong" });
               break;
             }
 
-            case 'connected': {
+            case "connected": {
               // Acknowledgment — connection is fully established
               break;
             }
@@ -158,7 +175,7 @@ export class NpcTvRelayClient {
         }
       });
 
-      ws.addEventListener('close', () => {
+      ws.addEventListener("close", () => {
         this.wsReady = false;
         this.ws = null;
         if (this.wsReconnectDisabled) return;
@@ -173,7 +190,7 @@ export class NpcTvRelayClient {
         }, delay);
       });
 
-      ws.addEventListener('error', () => {
+      ws.addEventListener("error", () => {
         this.wsReady = false;
       });
 
@@ -200,8 +217,8 @@ export class NpcTvRelayClient {
       }
       this.ws = null;
       this.wsReady = false;
-      this.wsChannelId = null;
     }
+    this.wsChannelId = null;
   }
 
   /** Whether the WebSocket is connected and ready */
@@ -231,12 +248,12 @@ export class NpcTvRelayClient {
   async pushEvents(channelId: string, events: StreamEvent[]): Promise<void> {
     // Try WebSocket if connected to the right channel
     if (this.wsReady && this.wsChannelId === channelId) {
-      const sent = this.wsSend({ type: 'events', data: events });
+      const sent = this.wsSend({ type: "events", data: events });
       if (sent) return;
     }
 
     // Fall back to HTTP
-    await this.post(`/npctv/channels/${encodeURIComponent(channelId)}/events`, { events });
+    await this.post(`/channels/${encodeURIComponent(channelId)}/events`, { events }, channelId);
   }
 
   /**
@@ -245,7 +262,7 @@ export class NpcTvRelayClient {
    */
   pushEventsViaWs(events: StreamEvent[]): boolean {
     if (!this.wsReady) return false;
-    return this.wsSend({ type: 'events', data: events });
+    return this.wsSend({ type: "events", data: events });
   }
 
   /**
@@ -254,34 +271,41 @@ export class NpcTvRelayClient {
    */
   pushEventViaWs(event: StreamEvent): boolean {
     if (!this.wsReady) return false;
-    return this.wsSend({ type: 'event', data: event });
+    return this.wsSend({ type: "event", data: event });
   }
 
   // -----------------------------------------------------------------------
   // Heartbeat
   // -----------------------------------------------------------------------
 
-  /** Send a heartbeat to keep the channel alive. POST /npctv/channels/:id/heartbeat */
+  /** Send a heartbeat to keep the channel alive. POST /channels/:id/heartbeat */
   async heartbeat(channelId: string): Promise<void> {
     // WebSocket messages implicitly serve as heartbeats on the relay,
     // but we still send an explicit one for the BFF/persistence layer.
-    await this.post(`/npctv/channels/${encodeURIComponent(channelId)}/heartbeat`, {});
+    await this.post(`/channels/${encodeURIComponent(channelId)}/heartbeat`, {}, channelId);
   }
 
   // -----------------------------------------------------------------------
   // Chat
   // -----------------------------------------------------------------------
 
-  /** Fetch recent chat messages. GET /npctv/channels/:id/chat */
+  /** Fetch recent chat messages. GET /channels/:id/chat */
   async getChat(channelId: string, since?: string): Promise<ChatMessage[]> {
     const params = new URLSearchParams();
     if (since) {
-      params.set('since', since);
+      params.set("since", since);
     }
     const qs = params.toString();
-    const path = `/npctv/channels/${encodeURIComponent(channelId)}/chat${qs ? `?${qs}` : ''}`;
-    const res = await this.get(path);
-    return (res as { messages: ChatMessage[] }).messages ?? (res as ChatMessage[]);
+    const path = `/channels/${encodeURIComponent(channelId)}/chat${qs ? `?${qs}` : ""}`;
+    const res = await this.get(path, channelId);
+    const payload = this.unwrapResponseData<unknown>(res);
+    if (Array.isArray(payload)) {
+      return payload as ChatMessage[];
+    }
+    if (this.isRecord(payload) && Array.isArray(payload.messages)) {
+      return payload.messages as ChatMessage[];
+    }
+    return [];
   }
 
   /**
@@ -290,33 +314,41 @@ export class NpcTvRelayClient {
    */
   async sendAgentChat(channelId: string, content: string): Promise<void> {
     if (this.wsReady && this.wsChannelId === channelId) {
-      const sent = this.wsSend({ type: 'chat', data: { content } });
+      const sent = this.wsSend({ type: "chat", data: { content } });
       if (sent) return;
     }
 
     // Fall back: send via HTTP as an agent message
-    await this.post(`/npctv/channels/${encodeURIComponent(channelId)}/chat`, {
-      author: 'agent',
-      content,
-      isAgent: true,
-    });
+    await this.post(
+      `/channels/${encodeURIComponent(channelId)}/chat`,
+      {
+        author: "agent",
+        content,
+        isAgent: true,
+      },
+      channelId
+    );
   }
 
   // -----------------------------------------------------------------------
   // Reactions / emotes
   // -----------------------------------------------------------------------
 
-  /** Send a viewer-style reaction. POST /npctv/channels/:id/reactions */
+  /** Send a viewer-style reaction. POST /channels/:id/reactions */
   async sendReaction(channelId: string, type: ReactionType): Promise<void> {
-    await this.post(`/npctv/channels/${encodeURIComponent(channelId)}/reactions`, { type });
+    await this.post(`/channels/${encodeURIComponent(channelId)}/reactions`, { type }, channelId);
   }
 
-  /** Send an agent emote. POST /npctv/channels/:id/emotes */
+  /** Send an agent emote. POST /channels/:id/emotes */
   async sendEmote(channelId: string, emoteType: AgentEmoteType, message?: string): Promise<void> {
-    await this.post(`/npctv/channels/${encodeURIComponent(channelId)}/emotes`, {
-      type: emoteType,
-      message,
-    });
+    await this.post(
+      `/channels/${encodeURIComponent(channelId)}/emotes`,
+      {
+        type: emoteType,
+        message,
+      },
+      channelId
+    );
   }
 
   // -----------------------------------------------------------------------
@@ -325,17 +357,18 @@ export class NpcTvRelayClient {
 
   /**
    * Request a publisher LiveKit token for the channel.
-   * POST /npctv/channels/:id/video/publish-token
+   * POST /channels/:id/video/publish-token
    *
    * Requires API key auth (set at construction). The returned token
    * grants publish permissions so the agent can stream video+audio.
    */
   async getPublishToken(channelId: string): Promise<{ url: string; token: string }> {
     const res = await this.post(
-      `/npctv/channels/${encodeURIComponent(channelId)}/video/publish-token`,
+      `/channels/${encodeURIComponent(channelId)}/video/publish-token`,
       {},
+      channelId
     );
-    return res as { url: string; token: string };
+    return this.unwrapResponseData<{ url: string; token: string }>(res);
   }
 
   // -----------------------------------------------------------------------
@@ -356,22 +389,23 @@ export class NpcTvRelayClient {
   // HTTP helpers
   // -----------------------------------------------------------------------
 
-  private headers(): Record<string, string> {
+  private headers(channelId?: string): Record<string, string> {
     const h: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      "Content-Type": "application/json",
+      Accept: "application/json",
     };
-    if (this.apiKey) {
-      h['Authorization'] = `Bearer ${this.apiKey}`;
+    const key = (channelId ? this.channelApiKeys.get(channelId) : undefined) ?? this.apiKey;
+    if (key) {
+      h["Authorization"] = `Bearer ${key}`;
     }
     return h;
   }
 
-  private async post(path: string, body: unknown): Promise<unknown> {
+  private async post(path: string, body: unknown, channelId?: string): Promise<unknown> {
     const url = `${this.baseUrl}${path}`;
     const res = await fetch(url, {
-      method: 'POST',
-      headers: this.headers(),
+      method: "POST",
+      headers: this.headers(channelId),
       body: JSON.stringify(body),
     });
 
@@ -380,18 +414,18 @@ export class NpcTvRelayClient {
       throw new Error(`NPC.tv relay POST ${path} failed (${res.status})`);
     }
 
-    const contentType = res.headers.get('content-type') ?? '';
-    if (contentType.includes('application/json')) {
+    const contentType = res.headers.get("content-type") ?? "";
+    if (contentType.includes("application/json")) {
       return res.json();
     }
     return {};
   }
 
-  private async get(path: string): Promise<unknown> {
+  private async get(path: string, channelId?: string): Promise<unknown> {
     const url = `${this.baseUrl}${path}`;
     const res = await fetch(url, {
-      method: 'GET',
-      headers: this.headers(),
+      method: "GET",
+      headers: this.headers(channelId),
     });
 
     if (!res.ok) {
@@ -401,15 +435,31 @@ export class NpcTvRelayClient {
     return res.json();
   }
 
-  private async del(path: string): Promise<void> {
+  private async del(path: string, channelId?: string): Promise<void> {
     const url = `${this.baseUrl}${path}`;
     const res = await fetch(url, {
-      method: 'DELETE',
-      headers: this.headers(),
+      method: "DELETE",
+      headers: this.headers(channelId),
     });
 
     if (!res.ok) {
       throw new Error(`NPC.tv relay DELETE ${path} failed (${res.status})`);
     }
+  }
+
+  private unwrapResponseData<T>(value: unknown): T {
+    if (this.isRecord(value) && "data" in value) {
+      return value.data as T;
+    }
+    return value as T;
+  }
+
+  private readString(value: Record<string, unknown>, key: string): string | undefined {
+    const field = value[key];
+    return typeof field === "string" ? field : undefined;
+  }
+
+  private isRecord(value: unknown): value is Record<string, unknown> {
+    return value !== null && typeof value === "object";
   }
 }
