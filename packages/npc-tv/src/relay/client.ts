@@ -176,6 +176,8 @@ export class NpcTvRelayClient {
       });
 
       ws.addEventListener("close", () => {
+        // Ignore stale close events from older sockets.
+        if (this.ws !== ws) return;
         this.wsReady = false;
         this.ws = null;
         if (this.wsReconnectDisabled) return;

@@ -34,14 +34,12 @@ const disconnectTimers = new Map<string, Timer>();
 export function agentRoutes(
   registry: ChannelRegistry,
   eventFanout: EventFanout,
-  chatFanout: ChatFanout,
+  chatFanout: ChatFanout
 ) {
   return new Elysia({ name: "agent-routes" }).ws("/channels/:id/agent", {
     open(ws) {
       const channelId = (ws.data as { params: { id: string } }).params.id;
-      const url = new URL(
-        (ws.data as { request: Request }).request.url,
-      );
+      const url = new URL((ws.data as { request: Request }).request.url);
       const apiKey =
         url.searchParams.get("apiKey") ??
         (ws.data as { request: Request }).request.headers.get("x-api-key");
@@ -49,13 +47,7 @@ export function agentRoutes(
       // Validate
       const channel = registry.get(channelId);
       if (!channel || !apiKey || channel.apiKey !== apiKey) {
-        const msg: ServerWsMessage = {
-          type: "connected",
-          data: { channelId: "" },
-        };
-        ws.send(
-          JSON.stringify({ type: "error", error: "Unauthorized" }),
-        );
+        ws.send(JSON.stringify({ type: "error", error: "Unauthorized" }));
         ws.close();
         return;
       }
@@ -75,7 +67,7 @@ export function agentRoutes(
         try {
           (existing.ws as { close: (code?: number, reason?: string) => void }).close(
             1000,
-            "Replaced by new connection",
+            "Replaced by new connection"
           );
         } catch {
           // Already closed
@@ -106,7 +98,7 @@ export function agentRoutes(
               JSON.stringify({
                 type: "chat",
                 data: message,
-              } satisfies ServerWsMessage),
+              } satisfies ServerWsMessage)
             );
           } catch {
             // Connection may have dropped
@@ -122,7 +114,7 @@ export function agentRoutes(
         JSON.stringify({
           type: "connected",
           data: { channelId },
-        } satisfies ServerWsMessage),
+        } satisfies ServerWsMessage)
       );
     },
 
@@ -134,9 +126,7 @@ export function agentRoutes(
       let msg: AgentWsMessage;
       try {
         msg =
-          typeof rawMessage === "string"
-            ? JSON.parse(rawMessage)
-            : (rawMessage as AgentWsMessage);
+          typeof rawMessage === "string" ? JSON.parse(rawMessage) : (rawMessage as AgentWsMessage);
       } catch {
         return; // Invalid JSON — ignore
       }
@@ -187,8 +177,9 @@ export function agentRoutes(
       }
 
       // Clean up chat subscription
-      const chatUnsub = (ws as unknown as Record<string, unknown>)
-        ._chatUnsub as (() => void) | undefined;
+      const chatUnsub = (ws as unknown as Record<string, unknown>)._chatUnsub as
+        | (() => void)
+        | undefined;
       if (chatUnsub) chatUnsub();
 
       // Start grace period — if the agent doesn't reconnect, mark offline

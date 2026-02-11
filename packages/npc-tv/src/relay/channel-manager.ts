@@ -9,13 +9,8 @@
  *  - chat via WebSocket (falls back to polling when WS unavailable)
  */
 
-import type {
-  ChannelConfig,
-  ChannelRegistration,
-  StreamEvent,
-  ChatMessage,
-} from '../types.js';
-import type { NpcTvRelayClient, RegisterChannelOpts } from './client.js';
+import type { ChannelConfig, ChannelRegistration, StreamEvent, ChatMessage } from "../types.js";
+import type { NpcTvRelayClient, RegisterChannelOpts } from "./client.js";
 
 /** How often to send a heartbeat (ms) */
 const HEARTBEAT_INTERVAL_MS = 30_000;
@@ -78,7 +73,8 @@ export class ChannelManager {
 
     const opts: RegisterChannelOpts = {
       name: this.channelConfig.name,
-      category: (overrides?.category ?? this.channelConfig.category) as ChannelRegistration['category'],
+      category: (overrides?.category ??
+        this.channelConfig.category) as ChannelRegistration["category"],
       title: overrides?.title,
     };
 
@@ -144,6 +140,7 @@ export class ChannelManager {
       clearInterval(this.chatPollTimer);
       this.chatPollTimer = null;
     }
+    this.resetChatSession();
 
     // Deregister (also closes the WebSocket inside the client)
     if (this.registration) {
@@ -193,12 +190,15 @@ export class ChannelManager {
   // -----------------------------------------------------------------------
 
   /**
-   * Return all buffered (unread) chat messages and clear the buffer.
-   * The `read-chat` tool calls this first before falling back to the API.
+   * Return up to `limit` buffered (unread) chat messages and remove them
+   * from the buffer in FIFO order. The `read-chat` tool calls this first
+   * before falling back to the API.
    */
-  drainChatBuffer(): ChatMessage[] {
-    const messages = this.chatBuffer.splice(0);
-    return messages;
+  drainChatBuffer(limit?: number): ChatMessage[] {
+    const count = Number.isFinite(limit)
+      ? Math.min(Math.max(Math.floor(limit as number), 1), this.chatBuffer.length)
+      : this.chatBuffer.length;
+    return this.chatBuffer.splice(0, count);
   }
 
   /** Check whether there are unread chat messages in the buffer. */
@@ -247,6 +247,12 @@ export class ChannelManager {
     }
   }
 
+  /** Reset chat-session state so unread messages do not leak across streams. */
+  private resetChatSession(): void {
+    this.chatBuffer = [];
+    this.lastChatTimestamp = undefined;
+  }
+
   /** Flush the event buffer to the relay (WS preferred, HTTP fallback). */
   private async flush(): Promise<void> {
     if (this.eventBuffer.length === 0 || !this.registration) {
@@ -274,10 +280,7 @@ export class ChannelManager {
     // Skip polling when WebSocket is delivering chat in real time
     if (this.client.isWebSocketConnected) return;
 
-    const messages = await this.client.getChat(
-      this.registration.channelId,
-      this.lastChatTimestamp,
-    );
+    const messages = await this.client.getChat(this.registration.channelId, this.lastChatTimestamp);
 
     if (messages.length === 0) return;
 

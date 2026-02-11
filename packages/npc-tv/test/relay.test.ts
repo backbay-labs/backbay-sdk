@@ -366,4 +366,40 @@ describe("NpcTvRelayClient", () => {
       globalThis.setTimeout = originalSetTimeout;
     }
   });
+
+  test("stale WebSocket close events do not reset active socket state", () => {
+    const originalWebSocket = globalThis.WebSocket;
+    const originalSetTimeout = globalThis.setTimeout;
+    MockWebSocket.instances = [];
+    let timeoutCalls = 0;
+
+    globalThis.WebSocket = MockWebSocket as unknown as typeof WebSocket;
+    globalThis.setTimeout = (() => {
+      timeoutCalls += 1;
+      return 1 as unknown as ReturnType<typeof setTimeout>;
+    }) as typeof setTimeout;
+
+    try {
+      const client = new NpcTvRelayClient({ url: "http://localhost:3000/api/v1/npctv" });
+
+      client.connectWebSocket("ch-1");
+      expect(MockWebSocket.instances).toHaveLength(1);
+      const first = MockWebSocket.instances[0];
+      first.emit("open");
+
+      client.connectWebSocket("ch-1");
+      expect(MockWebSocket.instances).toHaveLength(2);
+      const second = MockWebSocket.instances[1];
+      second.emit("open");
+
+      // Simulate delayed close event from the old socket.
+      first.emit("close");
+
+      expect(timeoutCalls).toBe(0);
+      expect(client.isWebSocketConnected).toBe(true);
+    } finally {
+      globalThis.WebSocket = originalWebSocket;
+      globalThis.setTimeout = originalSetTimeout;
+    }
+  });
 });

@@ -4,29 +4,27 @@
  * Verifies the stream-broadcast and persona-inject hooks behave correctly.
  */
 
-import { describe, test, expect, mock, beforeEach } from 'bun:test';
+import { describe, test, expect, mock, beforeEach } from "bun:test";
 import type {
   ToolResultPersistEvent,
   AgentBootstrapEvent,
   NpcTvConfig,
   StreamEvent,
-} from '../src/types.js';
+} from "../src/types.js";
 
 // We need to test the handlers through their module exports.
 // Import them and use their initialize() functions to inject mocks.
 import broadcastHandler, {
   initialize as initBroadcast,
-} from '../src/hooks/stream-broadcast/handler.js';
-import personaHandler, {
-  initialize as initPersona,
-} from '../src/hooks/persona-inject/handler.js';
+} from "../src/hooks/stream-broadcast/handler.js";
+import personaHandler, { initialize as initPersona } from "../src/hooks/persona-inject/handler.js";
 
 /** Create a minimal NpcTvConfig for testing. */
 function createTestConfig(overrides: Partial<NpcTvConfig> = {}): NpcTvConfig {
   return {
-    relay: { url: 'http://localhost:3000/api/v1/npctv' },
-    channel: { name: 'Test Channel', category: 'coding', autoGoLive: true },
-    persona: { template: 'default', commentaryFrequency: 'low' },
+    relay: { url: "http://localhost:3000/api/v1/npctv" },
+    channel: { name: "Test Channel", category: "coding", autoGoLive: true },
+    persona: { template: "default", commentaryFrequency: "low" },
     features: { chat: true, reactions: true, clips: true, commentary: false },
     ...overrides,
   };
@@ -39,19 +37,25 @@ function createMockChannelManager(live = true) {
     isLive: mock(() => live),
     getRegistration: mock(() =>
       live
-        ? { channelId: 'ch-test', name: 'Test', category: 'coding' as const, agentId: 'agent-1', status: 'live' as const }
-        : null,
+        ? {
+            channelId: "ch-test",
+            name: "Test",
+            category: "coding" as const,
+            agentId: "agent-1",
+            status: "live" as const,
+          }
+        : null
     ),
     getEventCount: mock(() => pushedEvents.length),
     pushEvent: mock(async (event: StreamEvent) => {
       pushedEvents.push(event);
     }),
     goLive: mock(async () => ({
-      channelId: 'ch-test',
-      name: 'Test',
-      category: 'coding' as const,
-      agentId: 'agent-1',
-      status: 'live' as const,
+      channelId: "ch-test",
+      name: "Test",
+      category: "coding" as const,
+      agentId: "agent-1",
+      status: "live" as const,
     })),
     endStream: mock(async () => {}),
     _pushedEvents: pushedEvents,
@@ -62,21 +66,21 @@ function createMockChannelManager(live = true) {
 // Stream Broadcast Hook
 // ---------------------------------------------------------------------------
 
-describe('stream-broadcast hook', () => {
-  test('pushes a stream event for a tool_result_persist event', async () => {
+describe("stream-broadcast hook", () => {
+  test("pushes a stream event for a tool_result_persist event", async () => {
     const manager = createMockChannelManager(true);
     const config = createTestConfig();
     initBroadcast(manager as any, config);
 
     const event: ToolResultPersistEvent = {
-      type: 'tool_result_persist',
+      type: "tool_result_persist",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
+        sessionId: "session-1",
         toolResult: {
-          toolName: 'bash',
-          params: { command: 'ls -la' },
-          result: 'file1.ts\nfile2.ts',
+          toolName: "bash",
+          params: { command: "ls -la" },
+          result: "file1.ts\nfile2.ts",
         },
       },
       messages: [],
@@ -88,24 +92,24 @@ describe('stream-broadcast hook', () => {
     expect(manager._pushedEvents.length).toBeGreaterThanOrEqual(1);
 
     const pushed = manager._pushedEvents[0];
-    expect(pushed.type).toBe('command');
-    expect(pushed.content).toContain('bash');
+    expect(pushed.type).toBe("command");
+    expect(pushed.content).toContain("bash");
   });
 
-  test('skips events when channel is not live', async () => {
+  test("skips events when channel is not live", async () => {
     const manager = createMockChannelManager(false);
     const config = createTestConfig();
     initBroadcast(manager as any, config);
 
     const event: ToolResultPersistEvent = {
-      type: 'tool_result_persist',
+      type: "tool_result_persist",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
+        sessionId: "session-1",
         toolResult: {
-          toolName: 'bash',
-          params: { command: 'echo hello' },
-          result: 'hello',
+          toolName: "bash",
+          params: { command: "echo hello" },
+          result: "hello",
         },
       },
       messages: [],
@@ -116,20 +120,20 @@ describe('stream-broadcast hook', () => {
     expect(manager.pushEvent).not.toHaveBeenCalled();
   });
 
-  test('skips NPC.tv own tools to prevent feedback loops', async () => {
+  test("skips NPC.tv own tools to prevent feedback loops", async () => {
     const manager = createMockChannelManager(true);
     const config = createTestConfig();
     initBroadcast(manager as any, config);
 
     const event: ToolResultPersistEvent = {
-      type: 'tool_result_persist',
+      type: "tool_result_persist",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
+        sessionId: "session-1",
         toolResult: {
-          toolName: 'npc_read_chat',
+          toolName: "npc_read_chat",
           params: {},
-          result: '[]',
+          result: "[]",
         },
       },
       messages: [],
@@ -146,15 +150,15 @@ describe('stream-broadcast hook', () => {
     initBroadcast(manager as any, config);
 
     const event: ToolResultPersistEvent = {
-      type: 'tool_result_persist',
+      type: "tool_result_persist",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
+        sessionId: "session-1",
         toolResult: {
-          toolName: 'bash',
-          params: { command: 'invalid-cmd' },
+          toolName: "bash",
+          params: { command: "invalid-cmd" },
           result: null,
-          error: 'command not found',
+          error: "command not found",
         },
       },
       messages: [],
@@ -163,8 +167,8 @@ describe('stream-broadcast hook', () => {
     await broadcastHandler(event);
 
     const pushed = manager._pushedEvents[0];
-    expect(pushed.type).toBe('error');
-    expect(pushed.content).toContain('Error');
+    expect(pushed.type).toBe("error");
+    expect(pushed.content).toContain("Error");
   });
 
   test('maps read/write tools to "info" event type', async () => {
@@ -173,14 +177,14 @@ describe('stream-broadcast hook', () => {
     initBroadcast(manager as any, config);
 
     const event: ToolResultPersistEvent = {
-      type: 'tool_result_persist',
+      type: "tool_result_persist",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
+        sessionId: "session-1",
         toolResult: {
-          toolName: 'file_read',
-          params: { path: '/src/index.ts' },
-          result: 'const x = 1;',
+          toolName: "file_read",
+          params: { path: "/src/index.ts" },
+          result: "const x = 1;",
         },
       },
       messages: [],
@@ -189,20 +193,20 @@ describe('stream-broadcast hook', () => {
     await broadcastHandler(event);
 
     const pushed = manager._pushedEvents[0];
-    expect(pushed.type).toBe('info');
+    expect(pushed.type).toBe("info");
   });
 
-  test('ignores non-tool_result_persist events', async () => {
+  test("ignores non-tool_result_persist events", async () => {
     const manager = createMockChannelManager(true);
     const config = createTestConfig();
     initBroadcast(manager as any, config);
 
     const event = {
-      type: 'agent:bootstrap',
+      type: "agent:bootstrap",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
-        agentId: 'agent-1',
+        sessionId: "session-1",
+        agentId: "agent-1",
         bootstrapFiles: [],
         cfg: {},
       },
@@ -213,20 +217,20 @@ describe('stream-broadcast hook', () => {
     expect(manager.pushEvent).not.toHaveBeenCalled();
   });
 
-  test('truncates very long tool output', async () => {
+  test("truncates very long tool output", async () => {
     const manager = createMockChannelManager(true);
     const config = createTestConfig();
     initBroadcast(manager as any, config);
 
-    const longOutput = 'x'.repeat(2000);
+    const longOutput = "x".repeat(2000);
     const event: ToolResultPersistEvent = {
-      type: 'tool_result_persist',
+      type: "tool_result_persist",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
+        sessionId: "session-1",
         toolResult: {
-          toolName: 'bash',
-          params: { command: 'cat bigfile' },
+          toolName: "bash",
+          params: { command: "cat bigfile" },
           result: longOutput,
         },
       },
@@ -245,18 +249,18 @@ describe('stream-broadcast hook', () => {
 // Persona Inject Hook
 // ---------------------------------------------------------------------------
 
-describe('persona-inject hook', () => {
-  test('injects NPCTV_PERSONA.md into bootstrap files', async () => {
+describe("persona-inject hook", () => {
+  test("injects NPCTV_PERSONA.md into bootstrap files", async () => {
     const manager = createMockChannelManager(true);
     const config = createTestConfig();
     initPersona(manager as any, config);
 
     const event: AgentBootstrapEvent = {
-      type: 'agent:bootstrap',
+      type: "agent:bootstrap",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
-        agentId: 'agent-1',
+        sessionId: "session-1",
+        agentId: "agent-1",
         bootstrapFiles: [],
         cfg: {},
       },
@@ -265,21 +269,21 @@ describe('persona-inject hook', () => {
     await personaHandler(event);
 
     expect(event.context.bootstrapFiles).toHaveLength(1);
-    expect(event.context.bootstrapFiles[0].path).toBe('NPCTV_PERSONA.md');
-    expect(event.context.bootstrapFiles[0].content).toContain('NPC.tv');
+    expect(event.context.bootstrapFiles[0].path).toBe("NPCTV_PERSONA.md");
+    expect(event.context.bootstrapFiles[0].content).toContain("NPC.tv");
   });
 
-  test('persona includes available tool descriptions', async () => {
+  test("persona includes available tool descriptions", async () => {
     const manager = createMockChannelManager(true);
     const config = createTestConfig();
     initPersona(manager as any, config);
 
     const event: AgentBootstrapEvent = {
-      type: 'agent:bootstrap',
+      type: "agent:bootstrap",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
-        agentId: 'agent-1',
+        sessionId: "session-1",
+        agentId: "agent-1",
         bootstrapFiles: [],
         cfg: {},
       },
@@ -288,29 +292,29 @@ describe('persona-inject hook', () => {
     await personaHandler(event);
 
     const content = event.context.bootstrapFiles[0].content;
-    expect(content).toContain('npc_go_live');
-    expect(content).toContain('npc_end_stream');
-    expect(content).toContain('npc_read_chat');
-    expect(content).toContain('npc_react');
+    expect(content).toContain("npc_go_live");
+    expect(content).toContain("npc_end_stream");
+    expect(content).toContain("npc_read_chat");
+    expect(content).toContain("npc_react");
   });
 
-  test('uses custom prompt when provided', async () => {
+  test("uses custom prompt when provided", async () => {
     const manager = createMockChannelManager(true);
     const config = createTestConfig({
       persona: {
-        template: 'default',
-        customPrompt: 'You are a robot. Beep boop.',
-        commentaryFrequency: 'medium',
+        template: "default",
+        customPrompt: "You are a robot. Beep boop.",
+        commentaryFrequency: "medium",
       },
     });
     initPersona(manager as any, config);
 
     const event: AgentBootstrapEvent = {
-      type: 'agent:bootstrap',
+      type: "agent:bootstrap",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
-        agentId: 'agent-1',
+        sessionId: "session-1",
+        agentId: "agent-1",
         bootstrapFiles: [],
         cfg: {},
       },
@@ -319,22 +323,22 @@ describe('persona-inject hook', () => {
     await personaHandler(event);
 
     const content = event.context.bootstrapFiles[0].content;
-    expect(content).toContain('You are a robot. Beep boop.');
+    expect(content).toContain("You are a robot. Beep boop.");
   });
 
-  test('does not inject when autoGoLive is false and channel is offline', async () => {
+  test("does not inject when autoGoLive is false and channel is offline", async () => {
     const manager = createMockChannelManager(false);
     const config = createTestConfig({
-      channel: { name: 'Test', category: 'coding', autoGoLive: false },
+      channel: { name: "Test", category: "coding", autoGoLive: false },
     });
     initPersona(manager as any, config);
 
     const event: AgentBootstrapEvent = {
-      type: 'agent:bootstrap',
+      type: "agent:bootstrap",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
-        agentId: 'agent-1',
+        sessionId: "session-1",
+        agentId: "agent-1",
         bootstrapFiles: [],
         cfg: {},
       },
@@ -345,19 +349,19 @@ describe('persona-inject hook', () => {
     expect(event.context.bootstrapFiles).toHaveLength(0);
   });
 
-  test('injects when autoGoLive is true even if channel is not yet live', async () => {
+  test("injects when autoGoLive is true even if channel is not yet live", async () => {
     const manager = createMockChannelManager(false); // Channel not live yet
     const config = createTestConfig({
-      channel: { name: 'Test', category: 'coding', autoGoLive: true },
+      channel: { name: "Test", category: "coding", autoGoLive: true },
     });
     initPersona(manager as any, config);
 
     const event: AgentBootstrapEvent = {
-      type: 'agent:bootstrap',
+      type: "agent:bootstrap",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
-        agentId: 'agent-1',
+        sessionId: "session-1",
+        agentId: "agent-1",
         bootstrapFiles: [],
         cfg: {},
       },
@@ -369,20 +373,20 @@ describe('persona-inject hook', () => {
     expect(event.context.bootstrapFiles).toHaveLength(1);
   });
 
-  test('ignores non-bootstrap events', async () => {
+  test("ignores non-bootstrap events", async () => {
     const manager = createMockChannelManager(true);
     const config = createTestConfig();
     initPersona(manager as any, config);
 
     const event = {
-      type: 'tool_result_persist',
+      type: "tool_result_persist",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
+        sessionId: "session-1",
         toolResult: {
-          toolName: 'bash',
+          toolName: "bash",
           params: {},
-          result: '',
+          result: "",
         },
       },
       messages: [],
@@ -392,7 +396,7 @@ describe('persona-inject hook', () => {
     await personaHandler(event);
   });
 
-  test('hides chat tool reference when chat feature is disabled', async () => {
+  test("hides chat tool reference when chat feature is disabled", async () => {
     const manager = createMockChannelManager(true);
     const config = createTestConfig({
       features: { chat: false, reactions: true, clips: true, commentary: true },
@@ -400,11 +404,11 @@ describe('persona-inject hook', () => {
     initPersona(manager as any, config);
 
     const event: AgentBootstrapEvent = {
-      type: 'agent:bootstrap',
+      type: "agent:bootstrap",
       timestamp: new Date().toISOString(),
       context: {
-        sessionId: 'session-1',
-        agentId: 'agent-1',
+        sessionId: "session-1",
+        agentId: "agent-1",
         bootstrapFiles: [],
         cfg: {},
       },
@@ -414,9 +418,59 @@ describe('persona-inject hook', () => {
 
     const content = event.context.bootstrapFiles[0].content;
     // npc_read_chat should not be listed when chat is disabled
-    expect(content).not.toContain('npc_read_chat');
+    expect(content).not.toContain("npc_read_chat");
     // But the other tools should still be there
-    expect(content).toContain('npc_go_live');
-    expect(content).toContain('npc_react');
+    expect(content).toContain("npc_go_live");
+    expect(content).toContain("npc_react");
+  });
+
+  test("strips chill-template chat instructions when chat feature is disabled", async () => {
+    const manager = createMockChannelManager(true);
+    const config = createTestConfig({
+      persona: { template: "chill", commentaryFrequency: "low" },
+      features: { chat: false, reactions: true, clips: true, commentary: true },
+    });
+    initPersona(manager as any, config);
+
+    const event: AgentBootstrapEvent = {
+      type: "agent:bootstrap",
+      timestamp: new Date().toISOString(),
+      context: {
+        sessionId: "session-1",
+        agentId: "agent-1",
+        bootstrapFiles: [],
+        cfg: {},
+      },
+    };
+
+    await personaHandler(event);
+
+    const content = event.context.bootstrapFiles[0].content;
+    expect(content).not.toContain("Respond to chat questions warmly");
+  });
+
+  test("strips educational-template chat instructions when chat feature is disabled", async () => {
+    const manager = createMockChannelManager(true);
+    const config = createTestConfig({
+      persona: { template: "educational", commentaryFrequency: "low" },
+      features: { chat: false, reactions: true, clips: true, commentary: true },
+    });
+    initPersona(manager as any, config);
+
+    const event: AgentBootstrapEvent = {
+      type: "agent:bootstrap",
+      timestamp: new Date().toISOString(),
+      context: {
+        sessionId: "session-1",
+        agentId: "agent-1",
+        bootstrapFiles: [],
+        cfg: {},
+      },
+    };
+
+    await personaHandler(event);
+
+    const content = event.context.bootstrapFiles[0].content;
+    expect(content).not.toContain("Answer chat questions thoroughly");
   });
 });
