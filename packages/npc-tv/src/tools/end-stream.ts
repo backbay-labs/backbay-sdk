@@ -7,10 +7,7 @@
 
 import type { ToolDefinition, ToolResponse } from '../types.js';
 import type { ChannelManager } from '../relay/channel-manager.js';
-
-function buildResponse(text: string): ToolResponse {
-  return { content: [{ type: 'text', text }] };
-}
+import { buildTextResponse } from './response.js';
 
 /**
  * Create the npc_end_stream tool definition.
@@ -28,7 +25,7 @@ export function createEndStreamTool(channelManager: ChannelManager): ToolDefinit
     async execute(_id: string, _params: Record<string, unknown>): Promise<ToolResponse> {
       try {
         if (!channelManager.isLive()) {
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify({
               status: 'already_offline',
               message: 'You are not currently streaming.',
@@ -41,7 +38,7 @@ export function createEndStreamTool(channelManager: ChannelManager): ToolDefinit
 
         await channelManager.endStream();
 
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify({
             status: 'offline',
             channel: reg?.name ?? 'unknown',
@@ -51,7 +48,7 @@ export function createEndStreamTool(channelManager: ChannelManager): ToolDefinit
         );
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify({
             status: 'error',
             message: `Failed to end stream: ${message}`,

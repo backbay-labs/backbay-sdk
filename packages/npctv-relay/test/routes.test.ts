@@ -273,6 +273,32 @@ describe("Relay HTTP Routes", () => {
     expect(messages).toHaveLength(2);
   });
 
+  test("GET /channels/:id/chat respects since cursor", async () => {
+    const createRes = await req("POST", "/channels", {
+      body: { name: "Chat Since" },
+    });
+    const data = (createRes.json as Record<string, unknown>).data as Record<string, unknown>;
+
+    const firstRes = await req("POST", `/channels/${data.id}/chat`, {
+      body: { author: "a", content: "first" },
+    });
+    const firstMsg = (firstRes.json as Record<string, unknown>).data as Record<string, unknown>;
+
+    await new Promise((resolve) => setTimeout(resolve, 5));
+
+    await req("POST", `/channels/${data.id}/chat`, {
+      body: { author: "b", content: "second" },
+    });
+
+    const since = encodeURIComponent(firstMsg.createdAt as string);
+    const { status, json } = await req("GET", `/channels/${data.id}/chat?since=${since}`);
+    expect(status).toBe(200);
+
+    const messages = (json as Record<string, unknown>).data as Array<Record<string, unknown>>;
+    expect(messages).toHaveLength(1);
+    expect(messages[0]?.content).toBe("second");
+  });
+
   // ── E2E: Register → Push → Verify SSE ─────────────────────────────────
 
   test("events pushed via HTTP are received by SSE subscribers", async () => {

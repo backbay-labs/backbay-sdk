@@ -4,6 +4,7 @@
 
 import { describe, test, expect } from "bun:test";
 import { createReadChatTool } from "../src/tools/read-chat.js";
+import { ChannelManager } from "../src/relay/channel-manager.js";
 import type { ChannelRegistration, ChatMessage } from "../src/types.js";
 
 function parseTextResponse(response: { content: Array<{ type: "text"; text: string }> }) {
@@ -84,5 +85,52 @@ describe("npc_read_chat", () => {
 
     expect(payload.status).toBe("ok");
     expect(payload.messages[0]?.timestamp).toBe("2026-02-11T07:00:00Z");
+  });
+
+  test("draining buffered messages respects since cursor", async () => {
+    const registration: ChannelRegistration = {
+      channelId: "ch-test",
+      name: "Test Channel",
+      category: "coding",
+      agentId: "agent-1",
+      status: "live",
+    };
+
+    const relayClient = {
+      getChat: async () => [] as ChatMessage[],
+    };
+
+    const channelManager = new ChannelManager({ isWebSocketConnected: false } as any, {
+      name: "Test Channel",
+      category: "coding",
+      autoGoLive: false,
+    });
+
+    (channelManager as any).registration = registration;
+    (channelManager as any)._pushChatMessage({
+      id: "m1",
+      author: "viewer",
+      content: "older",
+      timestamp: "2026-02-11T01:00:00.000Z",
+      isAgent: false,
+    });
+    (channelManager as any)._pushChatMessage({
+      id: "m2",
+      author: "viewer",
+      content: "newer",
+      timestamp: "2026-02-11T02:00:00.000Z",
+      isAgent: false,
+    });
+
+    const tool = createReadChatTool(relayClient as any, channelManager);
+    const response = await tool.execute("tool-1", {
+      since: "2026-02-11T01:30:00.000Z",
+      limit: 10,
+    });
+    const payload = parseTextResponse(response);
+
+    expect(payload.status).toBe("ok");
+    expect(payload.messages.map((m) => m.content)).toEqual(["newer"]);
+    expect(payload.hasUnread).toBe(true);
   });
 });

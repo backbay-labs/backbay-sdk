@@ -7,10 +7,7 @@
 
 import type { ToolDefinition, ToolResponse, NpcTvConfig } from '../types.js';
 import type { ChannelManager } from '../relay/channel-manager.js';
-
-function buildResponse(text: string): ToolResponse {
-  return { content: [{ type: 'text', text }] };
-}
+import { buildTextResponse } from './response.js';
 
 /**
  * Create the npc_go_live tool definition.
@@ -42,7 +39,7 @@ export function createGoLiveTool(
       try {
         if (channelManager.isLive()) {
           const reg = channelManager.getRegistration();
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify({
               status: 'already_live',
               channel: reg,
@@ -56,7 +53,7 @@ export function createGoLiveTool(
 
         const registration = await channelManager.goLive({ title, category });
 
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify({
             status: 'live',
             channel: registration,
@@ -66,7 +63,7 @@ export function createGoLiveTool(
         );
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify({
             status: 'error',
             message: `Failed to go live: ${message}`,

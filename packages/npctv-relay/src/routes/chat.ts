@@ -2,10 +2,11 @@
  * NPC.tv Relay — Chat Routes
  *
  * POST /channels/:id/chat — Send a chat message
- * GET  /channels/:id/chat — Get recent chat (from in-memory buffer)
+ * GET  /channels/:id/chat — Get recent chat (supports limit/since)
  */
 
 import { Elysia, t } from "elysia";
+import { env } from "../env";
 import type { ChannelRegistry } from "../channel/registry";
 import type { EventFanout } from "../fanout/events";
 import type { ChatFanout } from "../fanout/chat";
@@ -79,14 +80,36 @@ export function chatRoutes(
             return { ok: false, error: `Channel ${params.id} not found` };
           }
 
-          const limit = query.limit ? Number(query.limit) : 50;
-          const messages = chatFanout.getRecent(params.id, limit);
+          const requestedLimit = query.limit ? Number(query.limit) : 50;
+          const limit = Number.isFinite(requestedLimit)
+            ? Math.min(Math.max(Math.floor(requestedLimit), 1), env.CHAT_BUFFER_SIZE)
+            : 50;
+
+          const sinceMs = query.since ? Date.parse(query.since) : NaN;
+          const hasSince = Number.isFinite(sinceMs);
+
+          // When `since` is provided, scan the full rolling buffer so polling
+          // can advance by timestamp rather than being capped by default window.
+          const scanLimit = hasSince ? env.CHAT_BUFFER_SIZE : limit;
+          const recent = chatFanout.getRecent(params.id, scanLimit);
+
+          let messages = recent;
+          if (hasSince) {
+            messages = recent.filter((message) => {
+              const createdAtMs = Date.parse(message.createdAt);
+              return Number.isFinite(createdAtMs) && createdAtMs > sinceMs;
+            });
+          }
+
+          // Always apply explicit limit as the final cap.
+          messages = messages.slice(0, limit);
 
           return { ok: true, data: messages };
         },
         {
           query: t.Object({
             limit: t.Optional(t.String()),
+            since: t.Optional(t.String()),
           }),
         }
       )

@@ -9,10 +9,7 @@
 import type { ToolDefinition, ToolResponse } from '../types.js';
 import type { ChannelManager } from '../relay/channel-manager.js';
 import type { NpcTvRelayClient } from '../relay/client.js';
-
-function buildResponse(text: string): ToolResponse {
-  return { content: [{ type: 'text', text }] };
-}
+import { buildTextResponse } from './response.js';
 
 /**
  * Create the npc_start_video tool definition.
@@ -34,7 +31,7 @@ export function createStartVideoTool(
     async execute(_id: string, _params: Record<string, unknown>): Promise<ToolResponse> {
       try {
         if (!channelManager.isLive()) {
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify({
               status: 'error',
               message: 'Channel is not live. Call npc_go_live first.',
@@ -44,7 +41,7 @@ export function createStartVideoTool(
 
         const registration = channelManager.getRegistration();
         if (!registration) {
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify({
               status: 'error',
               message: 'No channel registration found.',
@@ -60,7 +57,7 @@ export function createStartVideoTool(
         // authenticated GET /npctv/channels/:id/video/publish-token.
         await relayClient.getPublishToken(channelId);
 
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify({
             status: 'video_ready',
             room: `npctv-${channelId}`,
@@ -71,7 +68,7 @@ export function createStartVideoTool(
         );
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify({
             status: 'error',
             message: `Failed to start video: ${message}`,

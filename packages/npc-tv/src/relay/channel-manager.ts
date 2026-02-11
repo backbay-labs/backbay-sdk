@@ -193,14 +193,39 @@ export class ChannelManager {
 
   /**
    * Return up to `limit` buffered (unread) chat messages and remove them
-   * from the buffer in FIFO order. The `read-chat` tool calls this first
-   * before falling back to the API.
+   * from the buffer. When `since` is provided, only messages newer than
+   * that timestamp are drained and older buffered messages remain unread.
+   * The `read-chat` tool calls this first before falling back to the API.
    */
-  drainChatBuffer(limit?: number): ChatMessage[] {
+  drainChatBuffer(limit?: number, since?: string): ChatMessage[] {
     const count = Number.isFinite(limit)
       ? Math.min(Math.max(Math.floor(limit as number), 1), this.chatBuffer.length)
       : this.chatBuffer.length;
-    return this.chatBuffer.splice(0, count);
+
+    if (!since) {
+      return this.chatBuffer.splice(0, count);
+    }
+
+    const sinceMs = Date.parse(since);
+    if (!Number.isFinite(sinceMs)) {
+      return this.chatBuffer.splice(0, count);
+    }
+
+    const drained: ChatMessage[] = [];
+    const remaining: ChatMessage[] = [];
+
+    for (const message of this.chatBuffer) {
+      const messageTsMs = this.chatMessageTimestampMs(message);
+      const isAfterSince = messageTsMs !== null && messageTsMs > sinceMs;
+      if (isAfterSince && drained.length < count) {
+        drained.push(message);
+      } else {
+        remaining.push(message);
+      }
+    }
+
+    this.chatBuffer = remaining;
+    return drained;
   }
 
   /** Check whether there are unread chat messages in the buffer. */
@@ -247,6 +272,12 @@ export class ChannelManager {
     if (this.chatBuffer.length > ChannelManager.CHAT_BUFFER_MAX) {
       this.chatBuffer = this.chatBuffer.slice(-ChannelManager.CHAT_BUFFER_MAX);
     }
+  }
+
+  private chatMessageTimestampMs(message: ChatMessage): number | null {
+    const rawTs = message.timestamp || message.createdAt || "";
+    const tsMs = Date.parse(rawTs);
+    return Number.isFinite(tsMs) ? tsMs : null;
   }
 
   /** Reset chat-session state so unread messages do not leak across streams. */

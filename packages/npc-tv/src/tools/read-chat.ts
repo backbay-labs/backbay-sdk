@@ -10,10 +10,7 @@
 import type { ToolDefinition, ToolResponse, ChatMessage } from "../types.js";
 import type { NpcTvRelayClient } from "../relay/client.js";
 import type { ChannelManager } from "../relay/channel-manager.js";
-
-function buildResponse(text: string): ToolResponse {
-  return { content: [{ type: "text", text }] };
-}
+import { buildTextResponse } from "./response.js";
 
 /**
  * Create the npc_read_chat tool definition.
@@ -45,7 +42,7 @@ export function createReadChatTool(
     async execute(_id: string, params: Record<string, unknown>): Promise<ToolResponse> {
       try {
         if (!channelManager.isLive()) {
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify(
               {
                 status: "offline",
@@ -61,7 +58,7 @@ export function createReadChatTool(
 
         const reg = channelManager.getRegistration();
         if (!reg) {
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify(
               { status: "error", hasUnread: false, message: "No channel registration found." },
               null,
@@ -73,9 +70,10 @@ export function createReadChatTool(
         // M6: Guard against NaN — typeof NaN === 'number' is true
         const rawLimit = Number.isFinite(params.limit) ? (params.limit as number) : 10;
         const limit = Math.min(Math.max(rawLimit, 1), 50);
+        const since = typeof params.since === "string" ? params.since : undefined;
 
         // ── 1. Check the internal buffer first ──────────────────────────
-        const buffered = channelManager.drainChatBuffer(limit);
+        const buffered = channelManager.drainChatBuffer(limit, since);
         let messages: ChatMessage[];
 
         if (buffered.length > 0) {
@@ -83,7 +81,6 @@ export function createReadChatTool(
           messages = buffered;
         } else {
           // ── 2. Buffer empty — fall back to API ────────────────────────
-          const since = typeof params.since === "string" ? params.since : undefined;
           messages = await relayClient.getChat(reg.channelId, since);
         }
 
@@ -95,7 +92,7 @@ export function createReadChatTool(
         const hasUnread = channelManager.hasUnreadChat();
 
         if (limited.length === 0) {
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify(
               {
                 status: "ok",
@@ -117,7 +114,7 @@ export function createReadChatTool(
           isAgent: msg.isAgent,
         }));
 
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify(
             {
               status: "ok",
@@ -131,7 +128,7 @@ export function createReadChatTool(
         );
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify(
             {
               status: "error",

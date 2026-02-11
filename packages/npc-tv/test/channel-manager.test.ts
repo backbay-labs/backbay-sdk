@@ -14,12 +14,12 @@ const CHANNEL_CONFIG: ChannelConfig = {
   autoGoLive: false,
 };
 
-function createMessage(id: string, content: string): ChatMessage {
+function createMessage(id: string, content: string, timestamp?: string): ChatMessage {
   return {
     id,
     author: "viewer",
     content,
-    timestamp: new Date().toISOString(),
+    timestamp: timestamp ?? new Date().toISOString(),
     isAgent: false,
   };
 }
@@ -47,6 +47,25 @@ describe("ChannelManager", () => {
     expect(second[0]?.id).toBe("m3");
     expect(manager.hasUnreadChat()).toBe(false);
     expect(manager.unreadChatCount).toBe(0);
+  });
+
+  test("drainChatBuffer(limit, since) returns only newer messages and keeps older ones", () => {
+    const fakeClient = {
+      isWebSocketConnected: false,
+    };
+    const manager = new ChannelManager(fakeClient as any, CHANNEL_CONFIG);
+
+    (manager as any)._pushChatMessage(createMessage("m1", "old", "2026-02-11T01:00:00.000Z"));
+    (manager as any)._pushChatMessage(createMessage("m2", "mid", "2026-02-11T02:00:00.000Z"));
+    (manager as any)._pushChatMessage(createMessage("m3", "new", "2026-02-11T03:00:00.000Z"));
+
+    const drained = manager.drainChatBuffer(2, "2026-02-11T02:00:00.000Z");
+    expect(drained).toHaveLength(1);
+    expect(drained[0]?.id).toBe("m3");
+
+    // Older/non-matching buffered messages remain unread.
+    expect(manager.hasUnreadChat()).toBe(true);
+    expect(manager.unreadChatCount).toBe(2);
   });
 
   test("endStream clears chat session state", async () => {

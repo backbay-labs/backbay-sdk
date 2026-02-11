@@ -8,6 +8,7 @@
 import type { ToolDefinition, ToolResponse, AgentEmoteType } from '../types.js';
 import type { NpcTvRelayClient } from '../relay/client.js';
 import type { ChannelManager } from '../relay/channel-manager.js';
+import { buildTextResponse } from './response.js';
 
 /** Valid emote types */
 const VALID_EMOTES: AgentEmoteType[] = [
@@ -26,10 +27,6 @@ const EMOTE_EMOJI: Record<AgentEmoteType, string> = {
   mind_blown: '🤯',
   ship_it: '🚀',
 };
-
-function buildResponse(text: string): ToolResponse {
-  return { content: [{ type: 'text', text }] };
-}
 
 /**
  * Create the npc_react tool definition.
@@ -63,7 +60,7 @@ export function createReactTool(
     async execute(_id: string, params: Record<string, unknown>): Promise<ToolResponse> {
       try {
         if (!channelManager.isLive()) {
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify({
               status: 'offline',
               message: 'You are not currently streaming. Go live first with npc_go_live.',
@@ -73,14 +70,14 @@ export function createReactTool(
 
         const reg = channelManager.getRegistration();
         if (!reg) {
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify({ status: 'error', message: 'No channel registration found.' }, null, 2),
           );
         }
 
         const emoteType = typeof params.type === 'string' ? params.type : '';
         if (!VALID_EMOTES.includes(emoteType as AgentEmoteType)) {
-          return buildResponse(
+          return buildTextResponse(
             JSON.stringify({
               status: 'error',
               message: `Invalid reaction type "${emoteType}". Must be one of: ${VALID_EMOTES.join(', ')}`,
@@ -93,7 +90,7 @@ export function createReactTool(
 
         const emoji = EMOTE_EMOJI[emoteType as AgentEmoteType] ?? '✨';
 
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify({
             status: 'ok',
             reaction: emoteType,
@@ -105,7 +102,7 @@ export function createReactTool(
         );
       } catch (error) {
         const msg = error instanceof Error ? error.message : String(error);
-        return buildResponse(
+        return buildTextResponse(
           JSON.stringify({
             status: 'error',
             message: `Failed to send reaction: ${msg}`,
