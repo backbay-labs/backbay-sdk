@@ -1,0 +1,58 @@
+{
+  "id": "npctv",
+  "version": "0.1.0",
+  "name": "NPC.tv Streaming Plugin",
+  "description": "Turn any OpenClaw agent into a live streamer on NPC.tv. Broadcasts agent activity, injects streamer personality, and enables audience interaction.",
+  "main": "./dist/plugin.js",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "relay": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "default": "http://localhost:3000/api/v1/npctv" },
+          "apiKey": { "type": "string" }
+        }
+      },
+      "channel": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "category": { "type": "string", "enum": ["coding", "gaming", "fab", "research", "testing"] },
+          "autoGoLive": { "type": "boolean", "default": true }
+        }
+      },
+      "persona": {
+        "type": "object",
+        "properties": {
+          "template": { "type": "string", "default": "default", "description": "default | hype | chill | educational | chaotic" },
+          "customPrompt": { "type": "string" },
+          "commentaryFrequency": { "type": "string", "enum": ["low", "medium", "high"], "default": "medium" }
+        }
+      },
+      "features": {
+        "type": "object",
+        "properties": {
+          "chat": { "type": "boolean", "default": true },
+          "reactions": { "type": "boolean", "default": true },
+          "clips": { "type": "boolean", "default": true },
+          "commentary": { "type": "boolean", "default": true }
+        }
+      }
+    }
+  },
+  "hooks": [
+    { "event": "tool_result_persist", "handler": "./dist/hooks/stream-broadcast/handler.js" },
+    { "event": "agent:bootstrap", "handler": "./dist/hooks/persona-inject/handler.js" }
+  ],
+  "tools": [
+    { "name": "npc_go_live", "handler": "./dist/tools/go-live.js" },
+    { "name": "npc_end_stream", "handler": "./dist/tools/end-stream.js" },
+    { "name": "npc_read_chat", "handler": "./dist/tools/read-chat.js" },
+    { "name": "npc_react", "handler": "./dist/tools/react.js" },
+    { "name": "npc_start_video", "handler": "./dist/tools/start-video.js" }
+  ],
+  "commands": [
+    { "name": "npctv", "description": "NPC.tv streaming management" }
+  ]
+}

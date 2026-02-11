@@ -55,6 +55,8 @@ jobs:
             "packages/notary"
             "packages/witness"
             "packages/witness-react"
+            "packages/npc-tv"
+            "packages/npctv-relay"
           )
 
           DRY_RUN=""

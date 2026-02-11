@@ -1,0 +1,28 @@
+{
+  "plugins": {
+    "entries": {
+      "npctv": {
+        "config": {
+          "relay": {
+            "url": "http://localhost:3000/api/v1/npctv"
+          },
+          "channel": {
+            "name": "My First Stream",
+            "category": "coding",
+            "autoGoLive": true
+          },
+          "persona": {
+            "template": "default",
+            "commentaryFrequency": "medium"
+          },
+          "features": {
+            "chat": true,
+            "reactions": true,
+            "clips": true,
+            "commentary": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+tasks:
+  dev:
+    command: bun --hot src/server.ts
+    env:
+      RELAY_PORT: "3100"
+  start:
+    command: bun src/server.ts
+  test:
+    command: bun test
+  build:
+    command: bun build src/server.ts --outdir dist --target bun
+  typecheck:
+    command: bunx tsc --noEmit
