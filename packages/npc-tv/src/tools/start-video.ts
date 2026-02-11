@@ -22,8 +22,8 @@ export function createStartVideoTool(
     name: 'npc_start_video',
     description:
       'Start video streaming on your NPC.tv channel. Requires a LiveKit-compatible ' +
-      'video source. You must be live (call npc_go_live first). Returns a LiveKit ' +
-      'URL and publisher token for connecting a video source.',
+      'video source. You must be live (call npc_go_live first). Returns the LiveKit ' +
+      'room name only; obtain a publisher token separately via the channel API.',
     parameters: {
       type: 'object',
       properties: {},
