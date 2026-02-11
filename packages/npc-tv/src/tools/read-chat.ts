@@ -81,7 +81,8 @@ export function createReadChatTool(
           messages = buffered;
         } else {
           // ── 2. Buffer empty — fall back to API ────────────────────────
-          messages = await relayClient.getChat(reg.channelId, since);
+          // Keep behavior consistent with buffered reads: viewer messages only.
+          messages = (await relayClient.getChat(reg.channelId, since)).filter((msg) => !msg.isAgent);
         }
 
         // Buffered reads are already capped by `limit`; API responses are

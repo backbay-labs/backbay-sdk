@@ -51,6 +51,41 @@ describe("npc_read_chat", () => {
     expect(payload.messages.map((m) => m.content)).toEqual(["newest", "middle"]);
   });
 
+  test("API fallback filters agent-authored messages", async () => {
+    const registration: ChannelRegistration = {
+      channelId: "ch-test",
+      name: "Test Channel",
+      category: "coding",
+      agentId: "agent-1",
+      status: "live",
+    };
+
+    const relayClient = {
+      getChat: async () =>
+        [
+          { id: "m3", author: "agent", content: "stream update", timestamp: "2026-02-11T03:00:00Z", isAgent: true },
+          { id: "m2", author: "viewer", content: "question", timestamp: "2026-02-11T02:00:00Z", isAgent: false },
+          { id: "m1", author: "viewer", content: "hello", timestamp: "2026-02-11T01:00:00Z", isAgent: false },
+        ] satisfies ChatMessage[],
+    };
+
+    const channelManager = {
+      isLive: () => true,
+      getRegistration: () => registration,
+      drainChatBuffer: (_limit?: number) => [] as ChatMessage[],
+      hasUnreadChat: () => false,
+    };
+
+    const tool = createReadChatTool(relayClient as any, channelManager as any);
+    const response = await tool.execute("tool-1", { limit: 5 });
+    const payload = parseTextResponse(response);
+
+    expect(payload.status).toBe("ok");
+    expect(payload.count).toBe(2);
+    expect(payload.messages.every((m) => !m.isAgent)).toBe(true);
+    expect(payload.messages.map((m) => m.content)).toEqual(["question", "hello"]);
+  });
+
   test("API fallback preserves relay createdAt as timestamp", async () => {
     const registration: ChannelRegistration = {
       channelId: "ch-test",

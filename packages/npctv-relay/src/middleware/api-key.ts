@@ -8,8 +8,6 @@
  *   - `apiKey` query parameter (WebSocket connections)
  */
 
-import type { ChannelRegistry } from "../channel/registry";
-
 /**
  * Extract the API key from a request.
  * Checks x-api-key header, Authorization Bearer, and query param.
@@ -32,27 +30,4 @@ export function extractApiKey(request: Request, url?: URL): string | null {
   }
 
   return null;
-}
-
-/**
- * Validate that the given API key matches the channel's registered key.
- * Returns true if valid, throws an error if not.
- */
-export function validateChannelApiKey(
-  registry: ChannelRegistry,
-  channelId: string,
-  apiKey: string | null,
-): void {
-  if (!apiKey) {
-    throw new Error("Missing API key");
-  }
-
-  const channel = registry.get(channelId);
-  if (!channel) {
-    throw new Error(`Channel ${channelId} not found`);
-  }
-
-  if (channel.apiKey !== apiKey) {
-    throw new Error("Invalid API key for this channel");
-  }
 }
