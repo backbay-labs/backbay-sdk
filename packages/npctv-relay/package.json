@@ -1,0 +1,39 @@
+{
+  "name": "@backbay/npctv-relay",
+  "version": "0.1.0",
+  "description": "NPC.tv real-time relay \u2014 event fanout, chat, and presence for agent streams",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "bun --hot src/server.ts",
+    "start": "bun dist/server.js",
+    "test": "bun test",
+    "build": "bun build src/server.ts --outdir dist --target bun",
+    "typecheck": "bunx tsc --noEmit"
+  },
+  "dependencies": {
+    "elysia": "^1.0.0",
+    "@elysiajs/cors": "^1.0.0"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "typescript": "^5.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backbay/backbay-sdk.git",
+    "directory": "packages/npctv-relay"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Backbay <dev@backbay.industries>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/backbay/backbay-sdk/issues"
+  },
+  "homepage": "https://github.com/backbay/backbay-sdk/tree/main/packages/npctv-relay#readme"
+}
