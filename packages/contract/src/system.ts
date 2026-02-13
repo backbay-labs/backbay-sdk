@@ -14,6 +14,11 @@ export interface ReadyResponse {
   timestamp: string;
 }
 
+export interface LiveResponse {
+  alive: boolean;
+  timestamp: string;
+}
+
 export type IdentityKind = "user" | "guest";
 
 export interface MeResponse {
