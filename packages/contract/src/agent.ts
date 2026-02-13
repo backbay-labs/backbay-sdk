@@ -217,3 +217,137 @@ export interface AcceptRecommendationResponse {
     createdId?: string;
   };
 }
+
+// ─────────────────────────────────────────────────────────────
+// Origin Conversation Agent Types
+// ─────────────────────────────────────────────────────────────
+
+export type ConversationIntent =
+  | "EXPLAIN_CONCEPT"
+  | "GENERATE_QUIZ"
+  | "REVIEW_SESSION"
+  | "PLAN_WEEK"
+  | "GENERAL";
+
+export type ConversationMode = "SOCRATIC" | "DIRECT" | "EXAM_SIM";
+
+export type ConversationStatus = "active" | "archived";
+
+export type PromptType =
+  | "TUTOR"
+  | "RECOMMENDER"
+  | "RAG_QUERY"
+  | "PLANNER"
+  | "GENERAL";
+
+export type OriginRecommendationType =
+  | "ADD_MISSION"
+  | "ADD_MISSION_ITEM"
+  | "SCHEDULE_BLOCK"
+  | "ADJUST_DIFFICULTY"
+  | "REVIEW_TOPIC";
+
+export interface Conversation {
+  id: string;
+  userId: string;
+  title: string | null;
+  status: ConversationStatus;
+  intent: ConversationIntent | null;
+  mode: ConversationMode | null;
+  sessionId: string | null;
+  topicId: string | null;
+  objectiveId: string | null;
+  studyPlanId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ConversationMessage {
+  id: string;
+  conversationId: string;
+  role: MessageRole;
+  content: string;
+  metadata: unknown | null;
+  createdAt: string;
+}
+
+export interface LLMCall {
+  id: string;
+  userId: string;
+  conversationId: string | null;
+  messageId: string | null;
+  modelName: string;
+  promptType: PromptType;
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  latencyMs: number;
+  toolInvocations: unknown | null;
+  createdAt: string;
+}
+
+export interface LLMStats {
+  totalCalls: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
+  totalTokens: number;
+  totalLatencyMs: number;
+  averageLatencyMs: number;
+}
+
+export interface ConversationRecommendation {
+  id: string;
+  userId: string;
+  conversationId: string | null;
+  type: OriginRecommendationType;
+  payload: unknown;
+  status: RecommendationStatus;
+  studyPlanId: string | null;
+  missionItemId: string | null;
+  topicId: string | null;
+  objectiveId: string | null;
+  createdAt: string;
+  resolvedAt: string | null;
+}
+
+export interface StartConversationRequest {
+  intent?: ConversationIntent;
+  mode?: ConversationMode;
+  title?: string;
+  missionId?: string;
+  topicId?: string;
+  objectiveId?: string;
+  sessionId?: string;
+}
+
+export interface UpdateConversationRequest {
+  title?: string;
+  status?: ConversationStatus;
+  intent?: ConversationIntent;
+  mode?: ConversationMode;
+}
+
+export interface ConversationSendMessageRequest {
+  content: string;
+}
+
+export interface ConversationSendMessageResponse {
+  userMessage: ConversationMessage;
+  assistantMessage: ConversationMessage;
+  llmCall: {
+    id: string;
+    modelName: string;
+    inputTokens: number;
+    outputTokens: number;
+    latencyMs: number;
+  };
+}
+
+export interface AcceptConversationRecommendationResponse {
+  recommendation: ConversationRecommendation;
+  applied: {
+    success: boolean;
+    message: string;
+    createdId?: string;
+  };
+}
