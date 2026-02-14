@@ -43,7 +43,12 @@ export default defineConfig({
   dts: false, // DTS via tsc (tsup DTS OOMs with 16 entry points)
   sourcemap: true,
   clean: true,
-  splitting: true,
+  // Turbopack (Next.js) currently fails to resolve tsup/esbuild shared chunks
+  // emitted when `splitting: true` (e.g. dist/chunk-*.js), causing subpath exports
+  // like `@backbay/glia/speakeasy` to evaluate to `undefined` at runtime.
+  //
+  // Prefer self-contained entrypoints for maximum bundler compatibility.
+  splitting: false,
   treeshake: true,
   external: [
     // Peer dependencies
