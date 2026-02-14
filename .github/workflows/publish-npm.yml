@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: "Package to publish (leave empty for all)"
+        description: "Package path to publish (e.g. packages/glia). Leave empty for all."
         required: false
         type: string
       dry-run:
@@ -67,7 +67,7 @@ jobs:
           FILTER="${{ inputs.package }}"
 
           for pkg in "${PACKAGES[@]}"; do
-            if [ -n "$FILTER" ] && [[ ! "$pkg" == *"$FILTER"* ]]; then
+            if [ -n "$FILTER" ] && [ "$pkg" != "$FILTER" ]; then
               echo "Skipping $pkg (filtered)"
               continue
             fi
@@ -75,7 +75,7 @@ jobs:
             if [ -f "$pkg/package.json" ]; then
               echo "Publishing $pkg..."
               cd "$pkg"
-              npm publish --access public $DRY_RUN || echo "Failed to publish $pkg"
+              npm publish --access public --tag latest $DRY_RUN || echo "Failed to publish $pkg"
               cd ../..
             fi
           done
