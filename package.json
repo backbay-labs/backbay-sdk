@@ -24,7 +24,7 @@
     "clean": "rm -rf packages/*/dist packages/*/.turbo node_modules/.cache .turbo",
     "docs:api": "typedoc",
     "changeset": "changeset",
-    "release": "changeset publish",
+    "release": "changeset publish --tag latest",
     "prepare": "husky || true"
   },
   "devDependencies": {
