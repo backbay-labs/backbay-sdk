@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0
+
+### Patch Changes
+
+- [#8](https://github.com/backbay-labs/backbay-sdk/pull/8) [`2d1bace`](https://github.com/backbay-labs/backbay-sdk/commit/2d1bace37fdd3817217472d5c08efbddfa79680b) Thanks [@bb-connor](https://github.com/bb-connor)! - Release all packages — add NPC-TV to README, sync all package versions
+
+- Updated dependencies [[`2d1bace`](https://github.com/backbay-labs/backbay-sdk/commit/2d1bace37fdd3817217472d5c08efbddfa79680b)]:
+  - @backbay/glia-three@0.2.0
+  - @backbay/glia-agent@0.1.1
+  - @backbay/glia-desktop@0.2.0
+  - @backbay/raymond@0.1.1
+  - @backbay/contract@0.1.0
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -8,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Branded types for type-safe IDs (AgentId, RunId, WorkspaceId)
 - Comprehensive hook test suite
 - Package README with quick start guide
@@ -16,12 +30,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Environment layers now support `stylePreset` (`ui` | `cinematic`) for different realism levels
 
 ### Fixed
+
 - `useSync` conflict detection now persists sync metadata and avoids false conflicts after reload
 - Environment particles are less jittery (stable opacity, more natural motion/spawn for weather effects)
 
 ## [0.2.0] - 2026-01-18
 
 ### Added
+
 - **Workspace System** (migrated from @oos/ag-ui-ext)
   - WorkspaceSpec type for agent-composable UI
   - WorkspaceRenderer component
@@ -43,11 +59,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Token types: colors, glass, elevation, motion, controls
 
 ### Changed
+
 - Reorganized exports into 7 entry points for better tree-shaking
 
 ## [0.1.0] - 2026-01-17
 
 ### Added
+
 - **Protocol Layer**
   - BBManifest schema with Zod validation
   - DOM annotation utilities (findAction, findEntity, extractEntity)
@@ -75,6 +93,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - formatNumber(): Number formatting
 
 ### Infrastructure
+
 - TypeScript strict mode
 - Bun build with esbuild
 - Vitest test runner

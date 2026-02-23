@@ -1,6 +1,6 @@
 {
   "name": "@backbay/api-client",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "description": "Typed API client for Backbay services",
   "type": "module",
   "main": "./dist/index.js",
@@ -11,7 +11,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
@@ -23,7 +25,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@backbay/contract": "^0.1.0-alpha.1",
+    "@backbay/contract": "^0.1.0",
     "@elysiajs/eden": "^1.0.30"
   },
   "peerDependencies": {

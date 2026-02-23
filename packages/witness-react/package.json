@@ -1,6 +1,6 @@
 {
   "name": "@backbay/witness-react",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "description": "React hooks and components for Backbay attestation verification",
   "publishConfig": {
     "access": "public"
@@ -28,7 +28,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@backbay/witness": "^0.1.0-alpha.1"
+    "@backbay/witness": "^0.1.0"
   },
   "peerDependencies": {
     "react": "^18.0.0"
