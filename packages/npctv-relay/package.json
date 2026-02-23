@@ -1,6 +1,6 @@
 {
   "name": "@backbay/npctv-relay",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "NPC.tv real-time relay — event fanout, chat, and presence for agent streams",
   "type": "module",
   "main": "dist/server.js",

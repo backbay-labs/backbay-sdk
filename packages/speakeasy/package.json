@@ -1,6 +1,6 @@
 {
   "name": "@backbay/speakeasy",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "description": "P2P encrypted messaging with sigil-based agent handshakes",
   "publishConfig": {
     "access": "public"
@@ -26,7 +26,9 @@
       "import": "./dist/react/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
