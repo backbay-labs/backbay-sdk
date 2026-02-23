@@ -19,7 +19,7 @@
 <br />
 
 <p align="center">
-  <sub>Built by <a href="https://backbay.industries">Backbay Industries</a></sub>
+  <sub>Built by <a href="https://backbay.io">Backbay Industries</a></sub>
 </p>
 
 ---
@@ -41,6 +41,8 @@
 | [`@backbay/notary`](packages/notary) | Web3 integration: IPFS, EAS attestations, Herodotus cross-chain proofs |
 | [`@backbay/witness`](packages/witness) | Browser-side attestation verification via WebAssembly |
 | [`@backbay/witness-react`](packages/witness-react) | React hooks and components for witness verification |
+| [`@backbay/npctv`](packages/npc-tv) | OpenClaw plugin — turn any agent into a live NPC.tv streamer |
+| [`@backbay/npctv-relay`](packages/npctv-relay) | Real-time relay — event fanout, chat, and presence for agent streams |
 
 ### Python
 
