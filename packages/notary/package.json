@@ -1,6 +1,6 @@
 {
   "name": "@backbay/notary",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "description": "Web3 attestations, IPFS, and verification",
   "publishConfig": {
     "access": "public"

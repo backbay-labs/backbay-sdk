@@ -1,6 +1,6 @@
 {
   "name": "@backbay/glia-three",
-  "version": "0.2.0-alpha.5",
+  "version": "0.2.0",
   "publishConfig": {
     "access": "public"
   },
@@ -8,9 +8,18 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-    "./three": { "types": "./dist/three/index.d.ts", "import": "./dist/three/index.js" },
-    "./environment": { "types": "./dist/environment/index.d.ts", "import": "./dist/environment/index.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./three": {
+      "types": "./dist/three/index.d.ts",
+      "import": "./dist/three/index.js"
+    },
+    "./environment": {
+      "types": "./dist/environment/index.d.ts",
+      "import": "./dist/environment/index.js"
+    }
   },
   "files": [
     "dist"
@@ -23,8 +32,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@backbay/contract": "^0.1.0-alpha.1",
-    "@backbay/glia-agent": "^0.1.0",
+    "@backbay/contract": "^0.1.0",
+    "@backbay/glia-agent": "^0.1.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.3.0"
   },

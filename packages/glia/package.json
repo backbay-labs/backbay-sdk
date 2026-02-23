@@ -1,6 +1,6 @@
 {
   "name": "@backbay/glia",
-  "version": "0.2.0-alpha.8",
+  "version": "0.2.0",
   "description": "Reactive primitives for agent affect and thought",
   "publishConfig": {
     "access": "public"
@@ -111,11 +111,11 @@
     "design-drift": "node scripts/design-drift.mjs"
   },
   "dependencies": {
-    "@backbay/contract": "^0.1.0-alpha.1",
-    "@backbay/glia-agent": "^0.1.0",
-    "@backbay/glia-desktop": "^0.2.0-alpha.2",
-    "@backbay/glia-three": "^0.2.0-alpha.5",
-    "@backbay/raymond": "^0.1.0",
+    "@backbay/contract": "^0.1.0",
+    "@backbay/glia-agent": "^0.1.1",
+    "@backbay/glia-desktop": "^0.2.0",
+    "@backbay/glia-three": "^0.2.0",
+    "@backbay/raymond": "^0.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.4.0",
@@ -127,7 +127,9 @@
     "zustand": "^5"
   },
   "peerDependenciesMeta": {
-    "zustand": { "optional": false }
+    "zustand": {
+      "optional": false
+    }
   },
   "optionalDependencies": {
     "@radix-ui/react-accordion": "^1.2.3",
